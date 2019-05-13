@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Edit";
+}
+
+@model Models.ViewModels.EditMachineViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+<form id="form-validate" asp-action="EditMachine" method="post">
+    <input type="hidden" asp-for="Machine.MachineID" />
+    <input type="hidden" asp-for="NewMachine" value="@Model.NewMachine" />
+    <input type="hidden" asp-for="ReturnUrl" value="@Model.ReturnUrl" />
+    <div class="row">
+        <div class="col s12">
+            <div class="row">
+                <div class="input-field col l5 m8 s12 push-l1 push-m2" aria-invalid="true">
+                    <i class="fas fa-qrcode prefix"></i>
+                    <input asp-for="Machine.MachineUniqueId" type="text" class="validate" />
+                    <label asp-for="Machine.MachineUniqueId">Kod Maszyny</label>
+                    <span asp-validation-for="Machine.MachineUniqueId" class="helper-text left-align red-text darken-1"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l5 m8 s12 push-l1 push-m2">
+                    <i class="fa fa-search-location prefix"></i>
+                    <input asp-for="Machine.Location" type="text" class="validate" />
+                    <label asp-for="Machine.Location">Lokacja</label>
+                    <span asp-validation-for="Machine.Location" class="helper-text left-align red-text darken-1"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l5 m8 s12 push-l1 push-m2">
+                    <i class="fas fa-registered prefix"></i>
+                    <input asp-for="Machine.Brand" type="text" class="validate" />
+                    <label asp-for="Machine.Brand">Marka</label>
+                    <span asp-validation-for="Machine.Brand" class="helper-text left-align red-text darken-1"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l5 m8 s12 push-l1 push-m2">
+                    <i class="far fa-registered prefix"></i>
+                    <input asp-for="Machine.Model" type="text" class="validate" />
+                    <label asp-for="Machine.Model">Model</label>
+                    <span asp-validation-for="Machine.Model" class="helper-text left-align red-text darken-1"></span>
+                </div>
+            </div>
+            @if (Model.NewMachine)
+            {
+                <input type="hidden" asp-for="Machine.State" value="True" />
+            }
+            else
+            {
+                <div class="row">
+                    <div class="switch col l5 m8 s12 push-l1 push-m2">
+                        <i class="fas fa-unlock-alt prefix"></i>
+                        <label>
+                            Nieaktywny
+                            <input type="checkbox" asp-for="Machine.State">
+                            <span class="lever"></span>
+                            Aktywny
+                        </label>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col l6 m8 s9 right-align">
+            <div>
+                <a href="@Model.ReturnUrl" class="btn waves-effect waves-light orange darken-2">
+                    Anuluj
+                    <i class="fas fa-times"></i>
+                </a>
+                <button type="submit" class="btn waves-effect waves-light teal darken-1">Dodaj <i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js" type="text/javascript"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/src/jquery.validate.unobtrusive.js"></script>
+}

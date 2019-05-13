@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "name": "asp.net",
+  "private": true,
+  "devDependencies": {
+    "materialize": "1.0.0"
+  },
+  "dependencies": {
+    "jquery": "3.4.0",
+    "font-awesome": "Font-Awesome#5.8.1",
+    "jquery-validation": "1.19.0",
+    "jquery-validation-unobtrusive": "v3.2.11"
+  }
+}

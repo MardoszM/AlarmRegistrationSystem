@@ -1,0 +1,72 @@
+﻿@addTagHelper AlarmRegistrationSystem.Infrastructure.PageLinkTagHelper, AlarmRegistrationSystem
+@model Models.ViewModels.ListMachinesViewModel
+<table class="striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Kod Maszyny</th>
+            <th>Lokacja</th>
+            <th>Marka</th>
+            <th>Model</th>
+            <th>Stan</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Machines.Count() != 0)
+        {
+            @foreach (Models.Machine machine in Model.Machines)
+            {
+                <tr>
+                    <td>@machine.MachineID</td>
+                    <td>@machine.MachineUniqueId</td>
+                    <td>@machine.Location</td>
+                    <td>@machine.Brand</td>
+                    <td>@machine.Model</td>
+                    <td>
+                        @if (machine.State)
+                        {
+                            <span>Aktywny</span>
+                        }
+                        else
+                        {
+                            <span>Nieaktywny</span>
+                        }
+                    </td>
+                    <td>
+                        <a class='dropdown-trigger black-text text-bold' href='' data-target='@machine.MachineID'>...</a>
+                        <ul id='@machine.MachineID' class='dropdown-content'>
+                            <li>
+                                <a asp-action="EditMachine" asp-controller="Admin" asp-route-machineId="@machine.MachineID">
+                                    <i class="fas fa-edit"></i>Edytuj
+                                </a>
+                            </li>
+                            <li>
+                                <a class="DoAndReload modal-trigger" data-target="modal1" 
+                                   data-deletemachineid="@machine.MachineUniqueId" 
+                                   data-mainform="Form" data-mainforminput="DeleteId">Usun</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td class="center-align" colspan="6">Brak maszyn</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div id="modal1" class="modal">
+    <div class="modal-content">
+        <p>Na pewno chcesz usunac maszyne z bazy? </p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-true waves-effect waves-light btn-flat">Tak</a>
+        <a href="#!" class="modal-close waves-effect waves-light btn-flat">Nie</a>
+    </div>
+</div>
+<div class=" row col s12 l8 right-align push-l4">
+    <ul class="pagination" page-model="@Model.PagingInfo" page-class-neutral="pageButton"></ul>
+</div>

@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "_Layout";
+}
+@section styles{
+    <link rel="stylesheet" href="~/Style.css" />
+}
+
+<a class="btn waves-effect waves-light" asp-action="CreateMachine" asp-route-returnUrl="@ViewContext.HttpContext.Request.Path">Dodaj Maszyne</a>
+<h1>Admin Index</h1>
+
+@section scripts{
+    @if (TempData["Message"] != null)
+    {
+        <script type="text/javascript">
+            M.toast({ html: "@TempData["Message"]", classes: "teal darken-3", displayLength: 2500 });
+        </script>
+    }
+}
+

@@ -1,0 +1,11 @@
+﻿input.input-validation-error, textarea.input-validation-error 
+{
+    border-bottom: 1px solid red !important;
+    -webkit-box-shadow: 0 1px 0 0 red !important;
+    box-shadow: 0 1px 0 0 red !important;
+}
+
+.text-bold
+{
+    font-weight: bold !important;
+}
