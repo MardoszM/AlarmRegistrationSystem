@@ -72,6 +72,15 @@
             AjaxAndFunc($url, func);
         })
 
+        $(document).on('click', '#UserBtn', function () {
+            $url = '/Account/GenerateRandomUserName';
+            func = function (result) {
+                $('#UserInput').val(result).addClass('valid');
+                $('#UserLabel').addClass('active');
+            }
+            AjaxAndFunc($url, func);
+        })
+
     </script>
 }
 

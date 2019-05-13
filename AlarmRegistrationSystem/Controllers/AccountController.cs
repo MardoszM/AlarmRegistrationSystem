@@ -56,15 +56,46 @@ namespace AlarmRegistrationSystem.Controllers
             return View();
         }
 
-        public string GenerateRandomPassword(CustomizedPasswordOptions opts = null)
+        public async Task<string> GenerateRandomUserName()
         {
-
+            CustomizedPasswordOptions options = new CustomizedPasswordOptions
+            {
+                RequireNonAlphanumeric = false,
+                RequiredUniqueChars = 0
+            };
             string[] randomChars = new[] {
+                "ABCDEFGHJKLMNOPQRSTUVWXYZ",
+                "abcdefghijkmnopqrstuvwxyz", 
+                "0123456789" };
+
+            string userName;
+            bool value = false;
+            do
+            {   
+                userName = GenerateRandomPassword(options,randomChars);
+
+                AppUser user =  await userManager.FindByNameAsync(userName);
+                if(user == null)
+                {
+                    value = true;
+                }
+
+            } while (!value);
+
+            return userName;
+        }
+
+        public string GenerateRandomPassword(CustomizedPasswordOptions opts = null, string[] randomChars = null)
+        {
+            if (randomChars.Count() == 0)
+            {
+                randomChars = new[] {
                 "ABCDEFGHJKLMNOPQRSTUVWXYZ",    // uppercase 
                 "abcdefghijkmnopqrstuvwxyz",    // lowercase
                 "0123456789",                   // digits
                 "!@#$%&()"                        // non-alphanumeric
-    };
+                };
+            }
             Random rand = new Random(Environment.TickCount);
             List<char> chars = new List<char>();
 
