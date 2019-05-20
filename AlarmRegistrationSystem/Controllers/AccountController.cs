@@ -4,47 +4,54 @@ using System.Linq;
 using System.Threading.Tasks;
 using AlarmRegistrationSystem.Infrastructure;
 using AlarmRegistrationSystem.Models;
+using AlarmRegistrationSystem.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace AlarmRegistrationSystem.Controllers
 {
     public class AccountController : Controller
     {
-        private UserManager<AppUser> userManager;
+        private UserManager<IdentityUser> userManager;
         private RoleManager<IdentityRole> roleManager;
+        private SignInManager<IdentityUser> signInManager;
+        private IConfiguration Configuration { get; }
 
-        public AccountController(UserManager<AppUser> userMgr, RoleManager<IdentityRole> roleMgr)
+        public AccountController(UserManager<IdentityUser> userMgr, RoleManager<IdentityRole> roleMgr, SignInManager<IdentityUser> signInMgr, IConfiguration configuration)
         {
             userManager = userMgr;
             roleManager = roleMgr;
+            signInManager = signInMgr;
+            Configuration = configuration;
         }
-
+        [Authorize]
         public IActionResult CreateAccount() => View();
 
-        public IActionResult ShowUserData(string userName) => View(userManager.FindByNameAsync(userName));
-
         [HttpPost]
-        public async Task<IActionResult> CreateAccount(CreateUserModel model)
+        public async Task<IActionResult> CreateAccount(CreateUserViewModel model)
         {
             if (model != null)
             {
                 AppUser user = new AppUser
                 {
+                    FirstName = model.FirstName,
+                    SecondName = model.SecondName,
+                    Email = model.Email,
                     UserName = model.UserName
                 };
-
-                IdentityResult result = await userManager.CreateAsync(user, model.Password);
-                if(result != null)
+                string password = GenerateRandomPassword(new CustomizedPasswordOptions());
+                string path = Configuration["Data:UserDataFile:Path"];
+                string fileName = Configuration["Data:UserDataFile:FileName"];
+                user.SaveToExcel(password,fileName,path);
+                IdentityResult result = await userManager.CreateAsync(user, password);
+                if (result.Succeeded)
                 {
-                    if(roleManager.FindByNameAsync(model.Role) != null)
+                    if (await roleManager.FindByNameAsync(model.Role) != null)
                     {
-                       await userManager.AddToRoleAsync(user, model.Role);
+                        await userManager.AddToRoleAsync(user, model.Role);
                     }
-                }
-                if (model.WasGenerated)
-                {
-                    return ShowUserData(user.UserName);
                 }
             }
             return RedirectToAction(actionName: "Index", controllerName: "Admin");
@@ -52,19 +59,109 @@ namespace AlarmRegistrationSystem.Controllers
 
         public IActionResult Login(string returnUrl)
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
             ViewBag.returnUrl = returnUrl;
             return View();
         }
 
-        public string GenerateRandomPassword(CustomizedPasswordOptions opts = null)
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
+            if(ModelState.IsValid)
+            {
+                List<Func<string,Task<IdentityUser>>> list = new List<Func<string,Task<IdentityUser>>>();
+                list.Add(userManager.FindByNameAsync);
+                list.Add(userManager.FindByEmailAsync);
+                IdentityUser user = null;
+                foreach(var method in list)
+                {
+                    user = await method(model.LoginName);
+                    if(user != null)
+                    {
+                        break;
+                    }
+                }
 
+                if(user != null)
+                {
+                    await signInManager.SignOutAsync();
+                    var result = await signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
+                    if (result.Succeeded)
+                    {
+                        return (Redirect(model?.ReturnUrl ?? "/Home/Index"));
+                    }
+                }
+            }
+            ModelState.AddModelError("", "Nieprawidłowa nazwa użytkownika/email lub haslo");
+            return View(model);
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction(nameof(Login));
+        }
+
+        public async Task<string> GenerateUserName(string FirstName, string SecondName)
+        {
+            int counter = 1;
+            bool value = false;
+            string userName;
+            string tmpUserName;
+            userName = String.Concat(FirstName.Take(2)) + String.Concat(SecondName.Take(3));
+            tmpUserName = userName;
+            do
+            {
+                value = await VerifyUserName(tmpUserName);
+                if(!value)
+                {
+                    tmpUserName = userName + counter++.ToString();
+                }
+            } while (!value);
+            return tmpUserName;
+        }
+
+
+        public async Task<string> GenerateRandomUserName()
+        {
+            CustomizedPasswordOptions options = new CustomizedPasswordOptions
+            {
+                RequireNonAlphanumeric = false,
+                RequiredUniqueChars = 0
+            };
             string[] randomChars = new[] {
+                "ABCDEFGHJKLMNOPQRSTUVWXYZ",
+                "abcdefghijkmnopqrstuvwxyz", 
+                "0123456789" };
+
+            string userName;
+            bool value = false;
+            do
+            {   
+                userName = GenerateRandomPassword(options,randomChars);
+                value = await VerifyUserName(userName);
+                
+            } while (!value);
+
+            return userName;
+        }
+
+        public string GenerateRandomPassword(CustomizedPasswordOptions opts = null, string[] randomChars = null)
+        {
+            if (randomChars == null)
+            {
+                randomChars = new[] {
                 "ABCDEFGHJKLMNOPQRSTUVWXYZ",    // uppercase 
                 "abcdefghijkmnopqrstuvwxyz",    // lowercase
                 "0123456789",                   // digits
                 "!@#$%&()"                        // non-alphanumeric
-    };
+                };
+            }
             Random rand = new Random(Environment.TickCount);
             List<char> chars = new List<char>();
 
@@ -93,6 +190,32 @@ namespace AlarmRegistrationSystem.Controllers
             }
 
             return new string(chars.ToArray());
+        }
+
+        public async Task<bool> VerifyUserName(string UserName)
+        {
+            IdentityUser user = await userManager.FindByNameAsync(UserName);
+            if (user == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> VerifyEmail(string Email)
+        {
+            IdentityUser user = await userManager.FindByEmailAsync(Email);
+            if(user == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

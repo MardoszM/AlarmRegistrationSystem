@@ -29,7 +29,7 @@ namespace AlarmRegistrationSystem
             services.AddDbContext<ApplicationIdentityDbContext>(options =>
                 options.UseSqlServer(
                     Configuration["Data:AlarmRegistrationSystemIdentity:ConnectionString:DataBase"]));
-            services.AddIdentity<AppUser, IdentityRole>(options =>
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
@@ -41,6 +41,7 @@ namespace AlarmRegistrationSystem
                 .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
                 .AddDefaultTokenProviders();
             services.AddTransient<IMachineRepository, EFMachineRepository>();
+            services.AddMemoryCache();
             services.AddMvc();
         }
 
@@ -60,6 +61,7 @@ namespace AlarmRegistrationSystem
                     name: null,
                     template: "{controller=Account}/{action=CreateAccount}/{id?}");
             });
+            ApplicationIdentityDbContext.AddRoles(app.ApplicationServices).Wait();
             ApplicationIdentityDbContext.CreateAdminAccount(app.ApplicationServices, Configuration).Wait();
         }
     }
