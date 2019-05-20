@@ -18,7 +18,7 @@ namespace AlarmRegistrationSystem.Controllers
 
         private ListMachinesViewModel RepositoryFilter(string state, string searchText, string currentPage)
         {
-            IEnumerable<Machine> repo = repository.Machines as IEnumerable<Machine>;
+            IQueryable<Machine> repo = repository.Machines;
 
             int currPage;
             if (!Int32.TryParse(currentPage, out currPage))

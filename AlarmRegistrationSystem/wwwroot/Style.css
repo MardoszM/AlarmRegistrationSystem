@@ -1,4 +1,5 @@
-﻿input.input-validation-error, textarea.input-validation-error 
+﻿
+input.input-validation-error, textarea.input-validation-error 
 {
     border-bottom: 1px solid red !important;
     -webkit-box-shadow: 0 1px 0 0 red !important;
@@ -9,3 +10,43 @@
 {
     font-weight: bold !important;
 }
+
+.log-form {
+    margin-top: 80px;
+}
+
+.no-margin
+{
+    margin:unset;
+}
+/* Clicking the label does not activate the input without this */
+input[type="text"] + label {
+    pointer-events: none;
+    * {
+    pointer-events: all;
+}
+}
+
+@media only screen and (min-width: 993px) {
+    .log-justify {
+        margin-left: calc(50% - 33.333333%/2) !important;
+    }
+}
+
+    @media only screen and (min-width: 601px) and (max-width: 992px) {
+
+        .log-justify {
+            margin-left: 25% !important;
+        }
+    }
+
+
+    @media only screen and (max-width: 600px) {
+        .log-form {
+            margin-top: 0px;
+        }
+
+        .log-justify {
+            margin-left: calc((100% - 83.33333%)/2) !important;
+        }
+    }

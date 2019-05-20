@@ -65,10 +65,11 @@ function passAttr(trigger) {
 }
 
 
-function AjaxAndFunc($url, func) {
+function AjaxAndFunc($url, func, $data) {
     $.ajax({
         type: 'POST',
         url: $url,
+        data: $data,
         success: function (result) {
             func(result);
         }
