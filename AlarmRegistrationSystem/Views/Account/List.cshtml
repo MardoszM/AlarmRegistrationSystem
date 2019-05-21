@@ -1,0 +1,31 @@
+﻿@model Models.ViewModels.ListViewModel<Models.ViewModels.UserListViewModel>
+@{ 
+    Layout = "_Layout";
+}
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Imie</th>
+            <th>Nazwisko</th>
+            <th>Nazwa Uzytkownika</th>
+            <th>E-mail</th>
+            <th>Typ konta</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var user in Model.Objects)
+        {
+            <tr>
+                <td>@user.User.FirstName</td>
+                <td>@user.User.SecondName</td>
+                <td>@user.User.UserName</td>
+                <td>@user.User.Email</td>
+                <td>@user.Role</td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>

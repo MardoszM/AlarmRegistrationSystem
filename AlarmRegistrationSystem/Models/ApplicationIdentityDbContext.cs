@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AlarmRegistrationSystem.Models
 {
-    public class ApplicationIdentityDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationIdentityDbContext : IdentityDbContext<AppUser>
     {
         public ApplicationIdentityDbContext(DbContextOptions<ApplicationIdentityDbContext> options) 
             : base(options) {}
@@ -30,7 +30,7 @@ namespace AlarmRegistrationSystem.Models
 
         public static async Task CreateAdminAccount(IServiceProvider serviceProvider, IConfiguration configuration)
         {
-            UserManager<IdentityUser> userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            UserManager<AppUser> userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
             RoleManager<IdentityRole> roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
             string username = configuration["Data:AdminUser:Name"];
