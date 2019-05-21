@@ -14,18 +14,54 @@ namespace AlarmRegistrationSystem.Controllers
 {
     public class AccountController : Controller
     {
-        private UserManager<IdentityUser> userManager;
+        private UserManager<AppUser> userManager;
         private RoleManager<IdentityRole> roleManager;
-        private SignInManager<IdentityUser> signInManager;
+        private SignInManager<AppUser> signInManager;
         private IConfiguration Configuration { get; }
+        private IQueryable<AppUser> repository;
 
-        public AccountController(UserManager<IdentityUser> userMgr, RoleManager<IdentityRole> roleMgr, SignInManager<IdentityUser> signInMgr, IConfiguration configuration)
+        public AccountController(UserManager<AppUser> userMgr, RoleManager<IdentityRole> roleMgr, SignInManager<AppUser> signInMgr, IConfiguration configuration)
         {
             userManager = userMgr;
             roleManager = roleMgr;
             signInManager = signInMgr;
             Configuration = configuration;
+            repository = userManager.Users;
         }
+
+        private void TranslateRole(string role)
+        {
+            switch(role)
+            {
+                case "Employes":
+                    role = "Pracownicy";
+                        break;
+                case "Mechanics":
+                    role = "Mechanicy";
+                    break;
+                case "Administrators":
+                    role = "Administratorzy";
+                    break;
+            }
+        }
+
+        [Authorize]
+        public async Task<IActionResult> ListUsers()
+        {
+            UserListViewModel userInfo = new UserListViewModel();
+            ListViewModel<UserListViewModel> model = new ListViewModel<UserListViewModel>();
+            List<UserListViewModel> tmpRepo = new List<UserListViewModel>();
+            foreach(var user in repository)
+            {
+                var result = await userManager.GetRolesAsync(user);
+                string role = result[0];
+                TranslateRole(role);
+                tmpRepo.Add(new UserListViewModel() { User = user, Role = role });
+            }
+            model.Objects = tmpRepo;
+            return View("List", model);
+        }
+
         [Authorize]
         public IActionResult CreateAccount() => View();
 
@@ -74,10 +110,10 @@ namespace AlarmRegistrationSystem.Controllers
         {
             if(ModelState.IsValid)
             {
-                List<Func<string,Task<IdentityUser>>> list = new List<Func<string,Task<IdentityUser>>>();
+                List<Func<string,Task<AppUser>>> list = new List<Func<string,Task<AppUser>>>();
                 list.Add(userManager.FindByNameAsync);
                 list.Add(userManager.FindByEmailAsync);
-                IdentityUser user = null;
+                AppUser user = null;
                 foreach(var method in list)
                 {
                     user = await method(model.LoginName);

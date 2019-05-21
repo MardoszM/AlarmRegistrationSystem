@@ -1,0 +1,8 @@
+[
+  {
+    "controller": "Home",
+    "action": "Index",
+    "linkTitle": "Strona Domowa",
+    "icon": "fas fa-home"
+  }
+]

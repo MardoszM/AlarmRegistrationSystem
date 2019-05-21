@@ -38,7 +38,6 @@ namespace AlarmRegistrationSystem.Infrastructure
 
         public static void SaveToExcel(this AppUser user,string password , string filename = @"UsersPass.xlsx", string path = null)
         {
-            int index;
             if(path == null)
             {
                 path = @"C:\Users\Mateusz\Desktop";
@@ -55,8 +54,9 @@ namespace AlarmRegistrationSystem.Infrastructure
                     worksheet = package.Workbook.Worksheets.Add(tab);
                     worksheet.Cells[1, 1].Value = "Imie";
                     worksheet.Cells[1, 2].Value = "Nazwisko";
-                    worksheet.Cells[1, 3].Value = "e-mail";
-                    worksheet.Cells[1, 4].Value = "Haslo";
+                    worksheet.Cells[1, 3].Value = "Nazwa Uzytkownika";
+                    worksheet.Cells[1, 4].Value = "e-mail";
+                    worksheet.Cells[1, 5].Value = "Haslo";
                 }
                 const int maxRow = 1000000; //One Millon Rows
                 for (int i = worksheet.Dimension.End.Row; i < maxRow; i++)
@@ -65,8 +65,9 @@ namespace AlarmRegistrationSystem.Infrastructure
                     {
                         worksheet.Cells["A" + i].Value = user.FirstName;
                         worksheet.Cells["B" + i].Value = user.SecondName;
-                        worksheet.Cells["C" + i].Value = user.Email;
-                        worksheet.Cells["D" + i].Value = password;
+                        worksheet.Cells["C" + i].Value = user.UserName;
+                        worksheet.Cells["D" + i].Value = user.Email;
+                        worksheet.Cells["E" + i].Value = password;
                         break;
                     }
                 }

@@ -30,15 +30,7 @@
     <div class="row">
 
         <ul id="slide-out" class="sidenav">
-            <li>
-                <div class="user-view">
-                    <div class="row">
-                        <img class="col s6 push-s3" src="~/Images/user.png"/>
-                    </div>
-                    <a href="#name"><span class="black-text name">John Doe</span></a>
-                    <a href="#email"><span class="black-text email">jdandturk@gmail.com</span></a>
-                </div>
-            </li>
+            @await Component.InvokeAsync("Menu")
             <li><a asp-action="Logout" asp-controller="Account"><i class="fas fa-power-off prefix"></i>Wyloguj</a></li>
         </ul>
 

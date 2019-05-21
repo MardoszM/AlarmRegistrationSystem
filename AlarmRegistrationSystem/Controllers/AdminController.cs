@@ -16,7 +16,7 @@ namespace AlarmRegistrationSystem.Controllers
         private IMachineRepository repository;
         private int pageSize = 10;
 
-        private ListMachinesViewModel RepositoryFilter(string state, string searchText, string currentPage)
+        private ListViewModel<Machine> RepositoryFilter(string state, string searchText, string currentPage)
         {
             IQueryable<Machine> repo = repository.Machines;
 
@@ -55,9 +55,9 @@ namespace AlarmRegistrationSystem.Controllers
                 .OrderBy(m => m.MachineID)
                 .Skip((currPage - 1) * pageSize)
                 .Take(pageSize);
-            ListMachinesViewModel viewModel = new ListMachinesViewModel()
+            ListViewModel <Machine>viewModel = new ListViewModel<Machine>()
             {
-                Machines = repo,
+                Objects = repo,
                 PagingInfo = PageModel
             };
             return viewModel;
@@ -67,7 +67,7 @@ namespace AlarmRegistrationSystem.Controllers
 
         public IActionResult ListMachines(string state, string searchText, string currentPage)
         {
-            ListMachinesViewModel viewModel = RepositoryFilter(state, searchText, currentPage);
+            ListViewModel <Machine>viewModel = RepositoryFilter(state, searchText, currentPage);
 
             if (Request.IsAjaxRequest())
             {
@@ -110,7 +110,7 @@ namespace AlarmRegistrationSystem.Controllers
         public IActionResult DeleteMachine(string searchText, string state, string uniqueId, string currentPage)
         {
             repository.DeleteMachine(uniqueId);
-            ListMachinesViewModel viewModel = RepositoryFilter(state, searchText, currentPage);
+            ListViewModel<Machine> viewModel = RepositoryFilter(state, searchText, currentPage);
             return View("Partial/_MachinesTable", viewModel);
         }
 

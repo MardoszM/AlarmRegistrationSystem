@@ -1,5 +1,5 @@
 ﻿@addTagHelper AlarmRegistrationSystem.Infrastructure.PageLinkTagHelper, AlarmRegistrationSystem
-@model Models.ViewModels.ListMachinesViewModel
+@model Models.ViewModels.ListViewModel<Models.Machine>
 <table class="striped">
     <thead>
         <tr>
@@ -12,9 +12,9 @@
         </tr>
     </thead>
     <tbody>
-        @if (Model.Machines.Count() != 0)
+        @if (Model.Objects.Count() != 0)
         {
-            @foreach (Models.Machine machine in Model.Machines)
+            @foreach (Models.Machine machine in Model.Objects)
             {
                 <tr>
                     <td>@machine.MachineID</td>

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +30,7 @@ namespace AlarmRegistrationSystem
             services.AddDbContext<ApplicationIdentityDbContext>(options =>
                 options.UseSqlServer(
                     Configuration["Data:AlarmRegistrationSystemIdentity:ConnectionString:DataBase"]));
-            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            services.AddIdentity<AppUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
@@ -59,7 +60,7 @@ namespace AlarmRegistrationSystem
             {
                 routes.MapRoute(
                     name: null,
-                    template: "{controller=Account}/{action=CreateAccount}/{id?}");
+                    template: "{controller=Account}/{action=ListUsers}/{id?}");
             });
             ApplicationIdentityDbContext.AddRoles(app.ApplicationServices).Wait();
             ApplicationIdentityDbContext.CreateAdminAccount(app.ApplicationServices, Configuration).Wait();

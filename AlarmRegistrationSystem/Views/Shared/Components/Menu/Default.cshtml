@@ -1,0 +1,20 @@
+﻿@model Models.ViewModels.MenuViewModel
+
+<li>
+    <div class="user-view">
+        <div class="row">
+            <img class="col s6 push-s3" src="~/Images/user.png" />
+        </div>
+        <a href="#name"><span class="black-text name">@Model.FirstName @Model.SecondName</span></a>
+        <a href="#email"><span class="black-text email">@Model.Email</span></a>
+    </div>
+    @foreach (var link in Model.Links)
+    {
+        <li>
+            <a asp-action=@link["action"] asp-controller=@link["controller"]>
+                <i class="@link["icon"]"></i>@link["linkTitle"]
+            </a>
+        </li>
+    }
+</li>
+

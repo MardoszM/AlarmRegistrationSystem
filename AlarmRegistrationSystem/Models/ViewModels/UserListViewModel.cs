@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace AlarmRegistrationSystem.Models.ViewModels
 {
-    public class ListMachinesViewModel
+    public class UserListViewModel
     {
-        public IEnumerable<Machine> Machines { get; set; }
-        public PagingInfo PagingInfo { get; set; }
+        public AppUser User { get; set; }
+        public string Role { get; set; }
     }
 }

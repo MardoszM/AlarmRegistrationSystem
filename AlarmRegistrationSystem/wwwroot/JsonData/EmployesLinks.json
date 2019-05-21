@@ -1,0 +1,8 @@
+[
+  {
+    "controller": "Notification",
+    "action": "ReportAccident",
+    "linkTitle": "Zglos awarie",
+    "icon": "fas fa-exclamation"
+  }
+]
