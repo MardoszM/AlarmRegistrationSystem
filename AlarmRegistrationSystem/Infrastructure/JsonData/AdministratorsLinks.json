@@ -1,0 +1,26 @@
+[
+  {
+    "controller": "Account",
+    "action": "ListUsers",
+    "linkTitle": "Wyswietl uzytkownikow",
+    "icon": "fas fa-users"
+  },
+  {
+    "controller": "Account",
+    "action": "CreateAccount",
+    "linkTitle": "Dodaj Uzytkownika",
+    "icon": "fas fa-user-plus"
+  },
+  {
+    "controller": "Admin",
+    "action": "ListMachines",
+    "linkTitle": "Wyswietl maszyny",
+    "icon": "fas fa-cogs"
+  },
+  {
+    "controller": "Admin",
+    "action": "CreateMachine",
+    "linkTitle": "Dodaj maszyne",
+    "icon": "fas fa-cog"
+  }
+]

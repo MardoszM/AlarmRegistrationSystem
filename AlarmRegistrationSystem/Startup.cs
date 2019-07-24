@@ -62,7 +62,7 @@ namespace AlarmRegistrationSystem
                     name: null,
                     template: "{controller=Account}/{action=ListUsers}/{id?}");
             });
-            ApplicationIdentityDbContext.AddRoles(app.ApplicationServices).Wait();
+            ApplicationIdentityDbContext.AddRoles(app.ApplicationServices,env.ContentRootPath).Wait();
             ApplicationIdentityDbContext.CreateAdminAccount(app.ApplicationServices, Configuration).Wait();
         }
     }

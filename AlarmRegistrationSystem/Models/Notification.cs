@@ -8,13 +8,19 @@ using System.Threading.Tasks;
 
 namespace AlarmRegistrationSystem.Models
 {
+    public enum NotificationStates
+    {
+        Aktywne, W_naprawie, Wstrzymane, Zakonczone
+    }
+
     public class Notification
     {
         public int NotificationID { get; set; }
         public string Declarant { get; set; }
-        public Machine Machine { get; set; }
-        public bool State { get; set; }
-        public Description Description { get; set; }
+        public int MachineID { get; set; }
+        public string State { get; set; }
+        public string MainDescription { get; set; }
+        public List<Description> Descriptions { get; set; }
     }
 
     public class Machine
@@ -42,8 +48,7 @@ namespace AlarmRegistrationSystem.Models
     public class Description
     {
         public int DescriptionID { get; set; }
-        public string UserName { get; set; }
+        public string Author { get; set; }
         public string Text { get; set; }
-        public List<int> Responses { get; set; }
     }
 }

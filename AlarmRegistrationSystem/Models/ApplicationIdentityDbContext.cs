@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AlarmRegistrationSystem.Infrastructure;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,10 +17,11 @@ namespace AlarmRegistrationSystem.Models
         public ApplicationIdentityDbContext(DbContextOptions<ApplicationIdentityDbContext> options) 
             : base(options) {}
 
-        public static async Task AddRoles(IServiceProvider serviceProvider)
+        public static async Task AddRoles(IServiceProvider serviceProvider, string rootPath)
         {
             RoleManager<IdentityRole> roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            string[] roles = { "Administrators", "Employes", "Mechanics" };
+            string path = rootPath + "\\Infrastructure\\JsonData\\roles.json";
+            List<string> roles = JsonDataReader.ReadJson<List<string>>(path);
             foreach(string role in roles)
             {
                 if(await roleManager.FindByNameAsync(role) == null)

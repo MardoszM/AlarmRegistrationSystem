@@ -26,9 +26,16 @@ namespace AlarmRegistrationSystem.Infrastructure
         /// </summary>
         public static bool IsStringContains(this string element, string text)
         {
-            if(element.ToLower().Contains(text.ToLower()) || element.ToLower().Replace(" ", "").Contains(text.ToLower()))
+            if (element != null)
             {
-                return true;
+                if (element.ToLower().Contains(text.ToLower()) || element.ToLower().Replace(" ", "").Contains(text.ToLower()))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {

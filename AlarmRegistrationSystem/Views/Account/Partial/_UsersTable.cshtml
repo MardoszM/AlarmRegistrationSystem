@@ -1,0 +1,55 @@
+﻿@addTagHelper AlarmRegistrationSystem.Infrastructure.PageLinkTagHelper, AlarmRegistrationSystem
+@model Models.ViewModels.ListViewModel<Models.ViewModels.UserListViewModel>
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Imie</th>
+            <th>Nazwisko</th>
+            <th>Nazwa Uzytkownika</th>
+            <th>E-mail</th>
+            <th>Typ konta</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Objects)
+        {
+        <tr>
+            <td>@user.User.FirstName</td>
+            <td>@user.User.SecondName</td>
+            <td>@user.User.UserName</td>
+            <td>@user.User.Email</td>
+            <td>@user.Role</td>
+            <td>
+                <a class='dropdown-trigger black-text text-bold' href='' data-target='@user.Id'>...</a>
+                <ul id="@user.Id" class='dropdown-content'>
+                    <li>
+                        <a asp-action="ChangePasswordAbsolutely" asp-controller="Account" asp-route-userName="@user.User.UserName" asp-route-administrator="true">
+                            <i class="fas fa-edit"></i>Zmien hasło
+                        </a>
+                    </li>
+                    <li>
+                        <a class="DoAndReload modal-trigger" data-target="modal1"
+                           data-mainform="Form" data-deleteobjectid="@user.User.UserName" data-mainforminput="DeleteUserName">
+                            <i class="far fa-trash-alt"></i>Usun</a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<div id="modal1" class="modal">
+    <div class="modal-content">
+        <p>Na pewno chcesz usunac uzytkownika? </p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-true waves-effect waves-light btn-flat">Tak</a>
+        <a href="#!" class="modal-close waves-effect waves-light btn-flat">Nie</a>
+    </div>
+    </div>
+    <div class=" row col s12 l12 right-align">
+        <ul class="pagination" page-model="@Model.PagingInfo" page-class-neutral="pageButton"></ul>
+    </div>

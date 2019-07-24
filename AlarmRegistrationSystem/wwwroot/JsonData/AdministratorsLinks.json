@@ -1,8 +1,0 @@
-[
-  {
-    "controller": "Account",
-    "action": "ListUsers",
-    "linkTitle": "Wyswietl uzytkownikow",
-    "icon": "fas fa-users"
-  }
-]

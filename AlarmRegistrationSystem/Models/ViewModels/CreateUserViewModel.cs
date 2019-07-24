@@ -29,7 +29,13 @@ namespace AlarmRegistrationSystem.Models.ViewModels
         [Required(ErrorMessage = "Proszę wprowadzić email")]
         [EmailAddress(ErrorMessage = "Wprowadzony email nie jest poprawny")]
         public string Email { get; set; }
+
         public string Role { get; set; }
 
+        public List<string> roles;
+
+        public string Controller { get; set; }
+
+        public string Action { get; set; }
     }
 }

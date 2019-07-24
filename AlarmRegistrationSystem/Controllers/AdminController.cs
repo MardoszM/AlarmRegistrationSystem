@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace AlarmRegistrationSystem.Controllers
 {
+    [Authorize(Roles = "Administrators")]
     public class AdminController : Controller
     {
         private IMachineRepository repository;
