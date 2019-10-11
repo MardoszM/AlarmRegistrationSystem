@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace AlarmRegistrationSystem.Controllers
 {
@@ -24,8 +25,15 @@ namespace AlarmRegistrationSystem.Controllers
         private IHostingEnvironment hostingEnvironment;
         private List<string> roles = null;
         private int pageSize = 10;
+        private ILogger<AccountController> logger;
+        private ISytemElements systemElements;
 
-        public AccountController(UserManager<AppUser> userMgr, RoleManager<IdentityRole> roleMgr, SignInManager<AppUser> signInMgr, IConfiguration configuration, IHostingEnvironment _hostingEnvironment)
+        private void ErrorAlert(Exception ex, string errorText, string logErrorText)
+        {
+            TempData["Error"] = errorText;
+            logger.LogError(ex + " || " + logErrorText);
+        }
+        public AccountController(UserManager<AppUser> userMgr, RoleManager<IdentityRole> roleMgr, SignInManager<AppUser> signInMgr, IConfiguration configuration, IHostingEnvironment _hostingEnvironment, ILogger<AccountController> log, ISytemElements sysElem)
         {
             userManager = userMgr;
             roleManager = roleMgr;
@@ -33,6 +41,8 @@ namespace AlarmRegistrationSystem.Controllers
             Configuration = configuration;
             repository = userManager.Users;
             hostingEnvironment = _hostingEnvironment;
+            logger = log;
+            systemElements = sysElem;
         }
 
         public static string TranslateRole(string role)
@@ -52,23 +62,18 @@ namespace AlarmRegistrationSystem.Controllers
             return role;
         }
 
-        public static string GetControllerFromPath(string path)
-        {
-            string controller = path.Split('/')[0];
-            return controller;
-        }
-
-        public static string GetActionFromPath(string path)
-        {
-            string action = path.Split('/').Last();
-            return action;
-        }
-
-
         private List<string> GetRoles()
         {
             string path = hostingEnvironment.ContentRootPath + "\\Infrastructure\\JsonData\\roles.json";
-            var roles = JsonDataReader.ReadJson<List<string>>(path);
+            List<string> roles;
+            try 
+            {
+                roles = JsonDataReader.ReadJson<List<string>>(path);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
             return roles;
         }
 
@@ -77,10 +82,17 @@ namespace AlarmRegistrationSystem.Controllers
             ListViewModel<UserListViewModel> model = new ListViewModel<UserListViewModel>();
             List<UserListViewModel> tmpRepo = new List<UserListViewModel>();
             int currPage;
-
             foreach (var user in repository)
             {
-                var result = await userManager.GetRolesAsync(user);
+                IList<string> result;
+                try
+                {
+                    result = await userManager.GetRolesAsync(user);
+                }
+                catch(Exception ex)
+                {
+                    throw ex;
+                }
                 string role = result[0];
                 role = TranslateRole(role);
                 tmpRepo.Add(new UserListViewModel() { User = user, Role = role, Id = user.Id });
@@ -120,8 +132,19 @@ namespace AlarmRegistrationSystem.Controllers
         [Authorize]
         public async Task<IActionResult> ListUsers(string searchRole,string searchText,string currentPage)
         {
-            ListViewModel<UserListViewModel> model = await RepositoryFilter(searchRole,searchText,currentPage);
-            
+            ListViewModel<UserListViewModel> model;
+            try
+            {
+                model = await RepositoryFilter(searchRole, searchText, currentPage);
+            }
+            catch(Exception ex)
+            {
+                ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to List Users, because of RepositoryFilter Exception.");
+                model = new ListViewModel<UserListViewModel>();
+                model.Objects = null;
+                model.PagingInfo = new PagingInfo();
+            }
+
             if (Request.IsAjaxRequest())
             {
                 return View("Partial/_UsersTable", model);
@@ -143,9 +166,19 @@ namespace AlarmRegistrationSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangePasswordAbsolutely(string SpecifiedUserName, string NewPassword)
         {
-            AppUser user = await userManager.FindByNameAsync(SpecifiedUserName);
-            IdentityResult result = await userManager.RemovePasswordAsync(user);
-            IdentityResult result2 = await userManager.AddPasswordAsync(user, NewPassword);
+            IdentityResult result = IdentityResult.Failed();
+            IdentityResult result2 = IdentityResult.Failed();
+            try
+            {
+                AppUser user = await userManager.FindByNameAsync(SpecifiedUserName);
+                result = await userManager.RemovePasswordAsync(user);
+                result2 = await userManager.AddPasswordAsync(user, NewPassword);
+            }
+            catch(Exception ex)
+            {
+                ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to Change User Password Absolutely.");
+            }
+
             if(!result.Succeeded || !result2.Succeeded)
             {
                 TempData["Message"] = "Zmiana hasla zakonczona niepowodzeniem. Wystapil blad"; 
@@ -168,9 +201,17 @@ namespace AlarmRegistrationSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangePassword(string SpecifiedUserName, string OldPassword, string NewPassword)
         {
+            IdentityResult result = IdentityResult.Failed();
+            try
+            {
+                AppUser user = await userManager.FindByNameAsync(SpecifiedUserName);
+                result = await userManager.ChangePasswordAsync(user, OldPassword, NewPassword);
+            }
+            catch(Exception ex)
+            {
+                ErrorAlert(ex, systemElements.ErrorMessages["database"] , "Unable to Change User Password.");
+            }
             
-            AppUser user = await userManager.FindByNameAsync(SpecifiedUserName);
-            IdentityResult result = await userManager.ChangePasswordAsync(user, OldPassword, NewPassword);
             if(result.Succeeded)
             {
                 TempData["Message"] = "Haslo uzytkownika " + SpecifiedUserName + " zostalo zmienione";
@@ -185,28 +226,65 @@ namespace AlarmRegistrationSystem.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteUser(string uniqueUserName, string searchRole, string searchText, string currentPage)
         {
-            AppUser user = await userManager.FindByNameAsync(uniqueUserName);
-            await userManager.DeleteAsync(user);
-            ListViewModel<Models.ViewModels.UserListViewModel> model = await RepositoryFilter(searchRole, searchText, currentPage);
+            ListViewModel<Models.ViewModels.UserListViewModel> model;
+            try
+            {
+                AppUser user = await userManager.FindByNameAsync(uniqueUserName);
+                await userManager.DeleteAsync(user);
+                model = await RepositoryFilter(searchRole, searchText, currentPage);
+            }
+            catch(Exception ex)
+            {
+                ErrorAlert(ex, systemElements.ErrorMessages["database"] , "Unable to Delete User.");
+                model = new ListViewModel<UserListViewModel>();
+                model.Objects = null;
+                model.PagingInfo = new PagingInfo();
+            }
+
             return View("Partial/_UsersTable", model);
         }
 
         [Authorize]
-        public IActionResult CreateAccount(string returnurl = "Admin/Index")
+        public async Task<IActionResult> CreateAccount(string returnurl = "/Admin/Index")
         {
-            string controller = GetControllerFromPath(returnurl);
-            string action = GetActionFromPath(returnurl);
+            string controller = returnurl.GetControllerFromPath();
+            string action = returnurl.GetActionFromPath();
             if(roles == null)
             {
-                roles = GetRoles();
+                try
+                {
+                    roles = GetRoles();
+                }
+                catch(Exception ex)
+                {
+                    ErrorAlert(ex, systemElements.ErrorMessages["system"], "Unable to Create Account because of file (JSonRead) Exception");
+                }
             }
-            CreateUserViewModel model = new CreateUserViewModel()
+            CreateUserViewModel model = new CreateUserViewModel();
+            roles = null;
+            if(roles != null)
             {
-                roles = roles,
-                Controller = controller,
-                Action = action
-            };
-            return View(model);
+                model.roles = roles;
+                model.Controller = controller;
+                model.Action = action;
+                return View(model);
+            }
+            else
+            {
+                ListViewModel<UserListViewModel> viewModel;
+                try
+                {
+                    viewModel = await RepositoryFilter(null, null, null);
+                }
+                catch(Exception ex)
+                {
+                    ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to Create Account because of RepositoryFilter (database) Exception");
+                    viewModel = new ListViewModel<UserListViewModel>();
+                    viewModel.Objects = null;
+                    viewModel.PagingInfo = new PagingInfo();
+                }
+                return View("List",viewModel);
+            }
         }
 
         [HttpPost]
@@ -225,7 +303,15 @@ namespace AlarmRegistrationSystem.Controllers
                 string path = Configuration["Data:UserDataFile:Path"];
                 string fileName = Configuration["Data:UserDataFile:FileName"];
                 user.SaveToExcel(password,fileName,path);
-                IdentityResult result = await userManager.CreateAsync(user, password);
+                IdentityResult result = IdentityResult.Failed();
+                try
+                {
+                    result = await userManager.CreateAsync(user, password);
+                }
+                catch(Exception ex)
+                {
+                    ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to Create Account. CreateAsync Exception");
+                }
                 if (result.Succeeded)
                 {
                     if (await roleManager.FindByNameAsync(model.Role) != null)
@@ -253,16 +339,28 @@ namespace AlarmRegistrationSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if(ModelState.IsValid)
+            bool error = false;
+
+            if (ModelState.IsValid)
             {
                 List<Func<string,Task<AppUser>>> list = new List<Func<string,Task<AppUser>>>();
+
                 list.Add(userManager.FindByNameAsync);
                 list.Add(userManager.FindByEmailAsync);
+                
                 AppUser user = null;
                 foreach(var method in list)
                 {
-                    user = await method(model.LoginName);
-                    if(user != null)
+                    try
+                    {
+                        user = await method(model.LoginName);
+                    }
+                    catch(Exception ex)
+                    {
+                        ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to Login, because of Check User via FindBy Name/Email Exception.");
+                        error = true;
+                    }
+                    if (user != null)
                     {
                         break;
                     }
@@ -271,14 +369,25 @@ namespace AlarmRegistrationSystem.Controllers
                 if(user != null)
                 {
                     await signInManager.SignOutAsync();
-                    var result = await signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
-                    if (result.Succeeded)
+                    Microsoft.AspNetCore.Identity.SignInResult result = Microsoft.AspNetCore.Identity.SignInResult.Failed;
+                    try
+                    {
+                        result = await signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
+                    }
+                    catch(Exception ex)
+                    {
+                        ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to Login, because of PasswordSignInAsync Exception");
+                    }
+                        if (result.Succeeded)
                     {
                         return (Redirect(model?.ReturnUrl ?? "/Home/Index"));
                     }
                 }
             }
-            ModelState.AddModelError("Error", "Nieprawidłowa nazwa użytkownika/email lub haslo");
+            if(!error)
+            {
+                ModelState.AddModelError("Error", "Nieprawidłowa nazwa użytkownika/email lub haslo");
+            }
             return View(model);
         }
 
@@ -291,7 +400,14 @@ namespace AlarmRegistrationSystem.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
-            await signInManager.SignOutAsync();
+            try
+            {
+                await signInManager.SignOutAsync();
+            }
+            catch(Exception ex)
+            {
+                ErrorAlert(ex, systemElements.ErrorMessages["system"], "Unable to Logout user. SignOutAsync Exception");
+            }
             return RedirectToAction(nameof(Login));
         }
 
@@ -305,8 +421,17 @@ namespace AlarmRegistrationSystem.Controllers
             tmpUserName = userName;
             do
             {
-                value = await VerifyUserName(tmpUserName);
-                if(!value)
+                try
+                {
+                    value = await VerifyUserName(tmpUserName);
+                }
+                catch(Exception ex)
+                {
+                    ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to VerifyUserName. <- Exception.");
+                    value = true;
+                    tmpUserName = String.Empty;
+                }
+                if (!value)
                 {
                     tmpUserName = userName + counter++.ToString();
                 }
@@ -330,9 +455,17 @@ namespace AlarmRegistrationSystem.Controllers
             string userName;
             bool value = false;
             do
-            {   
-                userName = GenerateRandomPassword(options,randomChars);
-                value = await VerifyUserName(userName);
+            {
+                userName = GenerateRandomPassword(options, randomChars);
+                
+                try
+                {
+                    value = await VerifyUserName(userName);
+                }
+                catch(Exception ex)
+                {
+                    ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to VerifyUserName. <- Exception");
+                }
                 
             } while (!value);
 
@@ -382,7 +515,17 @@ namespace AlarmRegistrationSystem.Controllers
 
         public async Task<bool> VerifyUserName(string UserName)
         {
-            IdentityUser user = await userManager.FindByNameAsync(UserName);
+            IdentityUser user = null;
+            try
+            {
+                user = await userManager.FindByNameAsync(UserName);
+            }
+            catch(Exception ex)
+            {
+                ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to verify UserName because of FindByNameAsync (database) Exception");
+                user = null;
+            }
+
             if (user == null)
             {
                 return true;
@@ -395,8 +538,18 @@ namespace AlarmRegistrationSystem.Controllers
 
         public async Task<bool> VerifyEmail(string Email)
         {
-            IdentityUser user = await userManager.FindByEmailAsync(Email);
-            if(user == null)
+            IdentityUser user = null;
+
+            try 
+            {
+                user = await userManager.FindByEmailAsync(Email);
+            }
+            catch(Exception ex)
+            {
+                ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to VerifyEmail, because of FindByEmailAsync (database) Exception.");
+                user = null;
+            }
+            if (user == null)
             {
                 return true;
             }

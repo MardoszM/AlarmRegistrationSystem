@@ -11,9 +11,16 @@ namespace AlarmRegistrationSystem.Infrastructure
     {
         public static T ReadJson <T>(string path)
         {
-            T tmp;
-            string jsonData = File.ReadAllText(path);
-            tmp = JsonConvert.DeserializeObject<T>(jsonData);
+            T tmp = default(T);
+            try
+            {
+                string jsonData = File.ReadAllText(path);
+                tmp = JsonConvert.DeserializeObject<T>(jsonData);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
             return tmp;
         }
     }

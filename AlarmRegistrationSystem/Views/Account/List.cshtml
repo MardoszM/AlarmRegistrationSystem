@@ -1,6 +1,7 @@
 ﻿@model Models.ViewModels.ListViewModel<Models.ViewModels.UserListViewModel>
 @{
     Layout = "_Layout";
+    ViewData["Title"] = "Wyswietl Uzytkownikow";
 }
 <div class="row col s12 main">
     <form id="Form" class="search-form" asp-controller="Account" asp-action="ListUsers" data-container="UsersTable">
@@ -63,10 +64,4 @@
         });
 
     </script>
-    @if (TempData["Message"] != null)
-    {
-        <script type="text/javascript">
-            M.toast({ html: "@TempData["Message"]", classes: "teal darken-3", displayLength: 2500 });
-        </script>
-    }
 }

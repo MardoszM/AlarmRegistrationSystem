@@ -1,0 +1,6 @@
+﻿@if (TempData["Error"] != null)
+{
+    <script type="text/javascript">
+            M.toast({ html: "@TempData["Error"]", classes: "amber darken-1 special", displayLength: 2500 });
+    </script>
+}

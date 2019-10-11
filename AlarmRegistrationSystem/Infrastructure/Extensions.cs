@@ -81,6 +81,18 @@ namespace AlarmRegistrationSystem.Infrastructure
                 package.Save();
             }
         }
+
+        public static string GetControllerFromPath(this string path)
+        {
+            string controller = path.Split('/')[1];
+            return controller;
+        }
+
+        public static string GetActionFromPath(this string path)
+        {
+            string controller = path.Split('/').Last();
+            return controller;
+        }
     }
 }
 

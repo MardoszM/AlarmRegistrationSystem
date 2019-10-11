@@ -15,11 +15,28 @@ namespace AlarmRegistrationSystem.Models
 
         public Machine DeleteMachine(string uniqueId)
         {
-            Machine machine = context.Machines.FirstOrDefault(m => m.MachineUniqueId == uniqueId);
+            Machine machine = null;
+            try
+            {
+                machine = context.Machines.FirstOrDefault(m => m.MachineUniqueId == uniqueId);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
             if (machine != null)
             {
-                context.Machines.Remove(machine);
-                context.SaveChanges();
+
+                try
+                {
+                    context.Machines.Remove(machine);
+                    context.SaveChanges();
+                }
+                catch(Exception ex)
+                {
+                    context.Machines.Add(machine as Machine);
+                    throw ex;
+                }
             }
             return machine;
         }
@@ -29,7 +46,14 @@ namespace AlarmRegistrationSystem.Models
             bool value = false;
             if(machine.MachineID == 0)
             {
-                context.Machines.Add(machine);
+                try
+                {
+                    context.Machines.Add(machine);
+                }
+                catch(Exception ex)
+                {
+                    throw ex;
+                }
                 value = true;
             }
             else
@@ -45,7 +69,15 @@ namespace AlarmRegistrationSystem.Models
                     value = true;
                 }
             }
-            context.SaveChanges();
+            try
+            {
+                context.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+                context.Machines.Add(machine);
+                throw ex;
+            }
             return value;
         }
     }

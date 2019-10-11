@@ -4,14 +4,16 @@ using AlarmRegistrationSystem.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AlarmRegistrationSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190916111729_NotificationUpdate2.0")]
+    partial class NotificationUpdate20
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,11 +31,13 @@ namespace AlarmRegistrationSystem.Migrations
 
                     b.Property<DateTime>("LastModification");
 
-                    b.Property<int>("NotificationID");
+                    b.Property<int?>("NotificationID");
 
                     b.Property<string>("Text");
 
                     b.HasKey("DescriptionID");
+
+                    b.HasIndex("NotificationID");
 
                     b.ToTable("Descriptions");
                 });
@@ -74,18 +78,22 @@ namespace AlarmRegistrationSystem.Migrations
 
                     b.Property<string>("Declarant");
 
-                    b.Property<string>("MachineUniqueID")
-                        .IsRequired();
+                    b.Property<int>("MachineUniqueID");
 
-                    b.Property<string>("MainDescription")
-                        .IsRequired()
-                        .HasMaxLength(1000);
+                    b.Property<string>("MainDescription");
 
                     b.Property<int>("State");
 
                     b.HasKey("NotificationID");
 
                     b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("AlarmRegistrationSystem.Models.Description", b =>
+                {
+                    b.HasOne("AlarmRegistrationSystem.Models.Notification")
+                        .WithMany("Descriptions")
+                        .HasForeignKey("NotificationID");
                 });
 #pragma warning restore 612, 618
         }

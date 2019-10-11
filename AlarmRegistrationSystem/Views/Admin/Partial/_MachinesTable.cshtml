@@ -12,7 +12,7 @@
         </tr>
     </thead>
     <tbody>
-        @if (Model.Objects.Count() != 0)
+        @if (Model.Objects != null && Model.Objects?.Count() != 0)
         {
             @foreach (Models.Machine machine in Model.Objects)
             {
@@ -41,10 +41,11 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="DoAndReload modal-trigger" data-target="modal1" 
-                                   data-deleteobjectid="@machine.MachineUniqueId" 
+                                <a class="DoAndReload modal-trigger" data-target="modal1"
+                                   data-deleteobjectid="@machine.MachineUniqueId"
                                    data-mainform="Form" data-mainforminput="DeleteId">
-                                <i class="far fa-trash-alt"></i>Usun</a>
+                                    <i class="far fa-trash-alt"></i>Usun
+                                </a>
                             </li>
                         </ul>
                     </td>
@@ -71,3 +72,21 @@
 <div class=" row col s12 l8 right-align push-l4">
     <ul class="pagination" page-model="@Model.PagingInfo" page-class-neutral="pageButton"></ul>
 </div>
+<div id="ShowMessage"></div>
+<script src="~/Scripts.js" type="text/javascript"></script>
+<script src="~/lib/jquery/dist/jquery.js" type="text/javascript"></script>
+<script src="~/lib/materialize/dist/js/materialize.js" type="text/javascript"></script>
+<script>
+        var $url = '/System/CheckError';
+        var $func = function (result) {
+            $('#ShowError').html(result);
+        }
+        AjaxAndFunc($url, $func, null);
+    </script>
+<script>
+        var $url = '/System/CheckMessage';
+        var $func = function (result) {
+            $('#ShowMessage').html(result);
+        }
+        AjaxAndFunc($url, $func, null);
+    </script>

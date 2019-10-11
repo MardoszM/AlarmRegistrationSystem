@@ -13,30 +13,38 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var user in Model.Objects)
+        @if (Model.Objects != null && Model.Objects?.Count() != 0)
         {
-        <tr>
-            <td>@user.User.FirstName</td>
-            <td>@user.User.SecondName</td>
-            <td>@user.User.UserName</td>
-            <td>@user.User.Email</td>
-            <td>@user.Role</td>
-            <td>
-                <a class='dropdown-trigger black-text text-bold' href='' data-target='@user.Id'>...</a>
-                <ul id="@user.Id" class='dropdown-content'>
-                    <li>
-                        <a asp-action="ChangePasswordAbsolutely" asp-controller="Account" asp-route-userName="@user.User.UserName" asp-route-administrator="true">
-                            <i class="fas fa-edit"></i>Zmien hasło
-                        </a>
-                    </li>
-                    <li>
-                        <a class="DoAndReload modal-trigger" data-target="modal1"
-                           data-mainform="Form" data-deleteobjectid="@user.User.UserName" data-mainforminput="DeleteUserName">
-                            <i class="far fa-trash-alt"></i>Usun</a>
-                    </li>
-                </ul>
-            </td>
-        </tr>
+            @foreach (var user in Model.Objects)
+            {
+                <tr>
+                    <td>@user.User.FirstName</td>
+                    <td>@user.User.SecondName</td>
+                    <td>@user.User.UserName</td>
+                    <td>@user.User.Email</td>
+                    <td>@user.Role</td>
+                    <td>
+                        <a class='dropdown-trigger black-text text-bold' href='' data-target='@user.Id'>...</a>
+                        <ul id="@user.Id" class='dropdown-content'>
+                            <li>
+                                <a asp-action="ChangePasswordAbsolutely" asp-controller="Account" asp-route-userName="@user.User.UserName" asp-route-administrator="true">
+                                    <i class="fas fa-edit"></i>Zmien hasło
+                                </a>
+                            </li>
+                            <li>
+                                <a class="DoAndReload modal-trigger" data-target="modal1"
+                                   data-mainform="Form" data-deleteobjectid="@user.User.UserName" data-mainforminput="DeleteUserName">
+                                    <i class="far fa-trash-alt"></i>Usun
+                                </a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr><td class="center-align" colspan="5">Brak Uzytkownikow</td></tr>
         }
     </tbody>
 </table>
@@ -49,7 +57,25 @@
         <a href="#!" class="modal-true waves-effect waves-light btn-flat">Tak</a>
         <a href="#!" class="modal-close waves-effect waves-light btn-flat">Nie</a>
     </div>
-    </div>
-    <div class=" row col s12 l12 right-align">
-        <ul class="pagination" page-model="@Model.PagingInfo" page-class-neutral="pageButton"></ul>
-    </div>
+</div>
+<div class=" row col s12 l12 right-align">
+    <ul class="pagination" page-model="@Model.PagingInfo" page-class-neutral="pageButton"></ul>
+</div>
+<div id="ShowMessage"></div>
+<script src="~/Scripts.js" type="text/javascript"></script>
+<script src="~/lib/jquery/dist/jquery.js" type="text/javascript"></script>
+<script src="~/lib/materialize/dist/js/materialize.js" type="text/javascript"></script>
+<script>
+    var $url = '/System/CheckError';
+    var $func = function (result) {
+        $('#ShowError').html(result);
+    }
+    AjaxAndFunc($url, $func, null);
+</script>
+<script>
+    var $url = '/System/CheckMessage';
+    var $func = function (result) {
+        $('#ShowMessage').html(result);
+    }
+    AjaxAndFunc($url, $func, null);
+</script>
