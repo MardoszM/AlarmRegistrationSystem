@@ -9,6 +9,13 @@ namespace AlarmRegistrationSystem.Models
     {
         IQueryable<Notification> Notifications { get; }
         bool SaveNotification(Notification notification);
-        Notification DeleteNotification(int id);
+        Notification DeleteNotification(int Id);
+    }
+
+    public interface IDescriptionRepository
+    {
+        IQueryable<Description> Descriptions { get; }
+        bool SaveDescription(Description description);
+        Description DeleteDescription(int Id);
     }
 }

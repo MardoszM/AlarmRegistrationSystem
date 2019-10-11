@@ -43,12 +43,12 @@ function changeCurrentPage(obj) {
 function deleteActivator(obj, action) {
     var mainForm = $(obj).data('mainform');
     var mainFormInput = $(obj).data('mainforminput');
-    var deleteMachineId = $(obj).data('deletemachineid');
+    var deleteObjectId = $(obj).data('deleteobjectid');
     var container = $('#' + mainForm).data('container');
     var oldAction = $('#' + mainForm).attr('action');
 
     $('#' + mainForm).attr('action', action);
-    $('#' + mainFormInput).attr('value', deleteMachineId);
+    $('#' + mainFormInput).attr('value', deleteObjectId);
     var func = (function () {
         $('#' + mainForm).attr('action', oldAction);
     });
@@ -56,12 +56,12 @@ function deleteActivator(obj, action) {
 }
 
 function passAttr(trigger) {
-    var deleteMachineId = $(trigger).data('deletemachineid');
+    var deleteMachineId = $(trigger).data('deleteobjectid');
     var mainForm = $(trigger).data('mainform');
     var mainFormInput = $(trigger).data('mainforminput');
     $('.modal-true').attr("data-mainform", mainForm);
     $('.modal-true').attr('data-mainforminput', mainFormInput);
-    $('.modal-true').attr("data-deletemachineid", deleteMachineId);
+    $('.modal-true').attr("data-deleteobjectid", deleteMachineId);
 }
 
 

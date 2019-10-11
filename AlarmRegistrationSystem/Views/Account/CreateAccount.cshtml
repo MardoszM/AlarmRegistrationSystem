@@ -1,6 +1,7 @@
 ﻿@model Models.ViewModels.CreateUserViewModel
 @{
     Layout = "_Layout";
+    ViewData["Title"] = "Dodaj Uzytkownika";
 }
 
 <form id="Form" asp-action="CreateAccount" asp-controller="Account" method="post">
@@ -25,8 +26,8 @@
             <div class="row">
                 <div class="input-field col l4 m6 s9 push-l1 push-m2">
                     <i class="fas fa-at prefix"></i>
-                    <input id="SNameInput" asp-for="Email" type="text" class="validate" />
-                    <label id="SNameLabel" asp-for="Email">Email</label>
+                    <input id="EmailInput" asp-for="Email" type="text" class="validate" />
+                    <label id="EmailLabel" asp-for="Email">Email</label>
                     <span asp-validation-for="Email" class="helper-text left-align red-text darken-1"></span>
                 </div>
             </div>
@@ -42,9 +43,17 @@
                 <div class="input-field col l4 m6 s9 push-l1 push-m2 left-align">
                     <i class="fas fa-id-card prefix"></i>
                     <select asp-for="Role">
-                        <option value="Employes" selected>Pracownik</option>
-                        <option value="Mechanics">Mechanik</option>
-                        <option value="Administrators">Administrator</option>
+                        @foreach (string role in Model.roles)
+                        {
+                            @if (role == Model.roles.First())
+                            {
+                                <option value="@role" selected>@Controllers.AccountController.TranslateRole(role)</option>
+                            }
+                            else
+                            {
+                                <option value="@role">@Controllers.AccountController.TranslateRole(role)</option>
+                            }
+                        }
                     </select>
                     <label>Typ Konta</label>
                 </div>
@@ -54,7 +63,7 @@
     <div class="row">
         <div class="col l5 m7 s9 right-align">
             <div>
-                <a href="/Admin/Index" class="btn waves-effect waves-light orange darken-2">
+                <a asp-controller="@Model.Controller" asp-action="@Model.Action" class="btn waves-effect waves-light orange darken-2">
                     Anuluj
                     <i class="fas fa-times"></i>
                 </a>

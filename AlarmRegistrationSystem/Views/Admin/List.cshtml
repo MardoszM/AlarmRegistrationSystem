@@ -1,6 +1,7 @@
 ﻿@model Models.ViewModels.ListViewModel<Models.Machine>
 @{
     Layout = "_Layout";
+    ViewData["Title"] = "Wyswietl Maszyny";
 }
 
 <div>
@@ -48,7 +49,7 @@
             $('.modal').modal();
             searchActivator('Form');
         });
-        $(document).ajaxComplete(function(){
+        $(document).ajaxComplete(function () {
             $('.dropdown-trigger').dropdown();
             $('.modal').modal();
         });
@@ -62,13 +63,9 @@
         });
 
         $(document).on('click', '.modal-true', function () {
-            deleteActivator(this, "/admin/DeleteMachine" );
+            $('#modal1').modal("close");
+            deleteActivator(this, "/admin/DeleteMachine");
         });
     </script>
-    @if (TempData["Message"] != null)
-    {
-        <script type="text/javascript">
-            M.toast({ html: "@TempData["Message"]", classes: "teal darken-3", displayLength: 2500 });
-        </script>
-    }
+
 }

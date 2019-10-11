@@ -7,6 +7,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using NLog.Web;
 
 namespace AlarmRegistrationSystem
 {
@@ -14,11 +15,31 @@ namespace AlarmRegistrationSystem
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            try
+            {
+                logger.Debug("init main");
+                CreateWebHostBuilder(args).Build().Run();
+            }
+            catch(Exception ex)
+            {
+                logger.Error(ex, "Stopped program because of exception");
+                throw;
+            }
+            finally
+            {
+                NLog.LogManager.Shutdown();
+            }
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging(log =>
+               {
+                   log.ClearProviders();
+                   log.SetMinimumLevel(LogLevel.Trace);
+               })
+                .UseNLog()
                 .UseStartup<Startup>()
                 .UseDefaultServiceProvider(options =>
                 options.ValidateScopes = false);

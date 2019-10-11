@@ -26,9 +26,16 @@ namespace AlarmRegistrationSystem.Infrastructure
         /// </summary>
         public static bool IsStringContains(this string element, string text)
         {
-            if(element.ToLower().Contains(text.ToLower()) || element.ToLower().Replace(" ", "").Contains(text.ToLower()))
+            if (element != null)
             {
-                return true;
+                if (element.ToLower().Contains(text.ToLower()) || element.ToLower().Replace(" ", "").Contains(text.ToLower()))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
@@ -73,6 +80,18 @@ namespace AlarmRegistrationSystem.Infrastructure
                 }
                 package.Save();
             }
+        }
+
+        public static string GetControllerFromPath(this string path)
+        {
+            string controller = path.Split('/')[1];
+            return controller;
+        }
+
+        public static string GetActionFromPath(this string path)
+        {
+            string controller = path.Split('/').Last();
+            return controller;
         }
     }
 }

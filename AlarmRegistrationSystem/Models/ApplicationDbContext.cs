@@ -11,5 +11,7 @@ namespace AlarmRegistrationSystem.Models
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public DbSet<Machine> Machines { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Description> Descriptions { get; set; }
     }
 }

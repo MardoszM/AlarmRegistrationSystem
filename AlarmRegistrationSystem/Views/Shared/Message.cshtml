@@ -1,0 +1,6 @@
+﻿@if (TempData["Message"] != null)
+{
+    <script type="text/javascript">
+           M.toast({ html: "@TempData["Message"]", classes: "teal darken-3", displayLength: 2500 });
+    </script>
+}

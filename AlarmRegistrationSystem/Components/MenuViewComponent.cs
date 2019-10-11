@@ -1,4 +1,5 @@
-﻿using AlarmRegistrationSystem.Models;
+﻿using AlarmRegistrationSystem.Infrastructure;
+using AlarmRegistrationSystem.Models;
 using AlarmRegistrationSystem.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -18,15 +19,6 @@ namespace AlarmRegistrationSystem.Components
         private readonly IHostingEnvironment _hostingEnvironment;
         private List<Dictionary<string, string>> links;
 
-        public List<Dictionary<string, string>> ReadFromJson(string path)
-        {
-            List<Dictionary<string, string>> tmpList;
-            string jsonData = File.ReadAllText(path);
-            tmpList = JsonConvert.DeserializeObject(jsonData, typeof(List<Dictionary<string, string>>)) 
-                as List<Dictionary<string, string>>;
-            return tmpList;
-        }
-
         public MenuViewComponent(UserManager<AppUser> userManager, IHostingEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
@@ -39,8 +31,8 @@ namespace AlarmRegistrationSystem.Components
             AppUser user = await userManager.FindByNameAsync(User.Identity.Name);
             var roles = await userManager.GetRolesAsync(user);
             string role = roles[0];
-            string path = _hostingEnvironment.ContentRootPath + "\\wwwroot\\JsonData\\" + role + "Links.json";
-            links = ReadFromJson(path);
+            string path = _hostingEnvironment.ContentRootPath + "\\Infrastructure\\JsonData\\" + role + "Links.json";
+            links = JsonDataReader.ReadJson<List<Dictionary<string,string>>>(path);
             MenuViewModel model = new MenuViewModel
             {
                 Links = links,
@@ -49,7 +41,7 @@ namespace AlarmRegistrationSystem.Components
                 Email = user.Email
             };
 
-            return View(model:model);
+            return View(model);
         }
     };
 }

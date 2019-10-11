@@ -11,20 +11,20 @@
 </head>
 <body>
     <div class="row col s12 card-panel teal lighten-2 valign-wrapper" style="padding:0.50rem;">
-        <div class="col s1">
+        <div class="col s2">
             <a href="#" data-target="slide-out" id="menuIcon" class="sidenav-trigger">
                 <i class="fas fa-bars fa-2x black-text"></i>
             </a>
         </div>
-        <div class="col s11 white-text offset-s3">
-                <h5 class="hide-on-small-only no-margin valign-wrapper">
-                    <img src="~/android-chrome-192x192.png" style="width:3rem;" />
-                    Alarm Registration System
-                </h5>
-                <h5 class="hide-on-med-and-up no-margin valign-wrapper">
-                    <img src="~/android-chrome-192x192.png" style="width:3rem;" />
-                    ARS
-                </h5>
+        <div class="col s10 white-text offset-s3">
+            <h5 class="hide-on-small-only no-margin valign-wrapper">
+                <img src="~/android-chrome-192x192.png" style="width:3rem;" />
+                Alarm Registration System
+            </h5>
+            <h5 class="hide-on-med-and-up no-margin valign-wrapper">
+                <img src="~/android-chrome-192x192.png" style="width:3rem;" />
+                ARS
+            </h5>
         </div>
     </div>
     <div class="row">
@@ -39,8 +39,8 @@
                 @RenderBody()
             </div>
             <div class="footer-copyright section">
-                <div>
-                    <h6>&copy ,All rights reserved.</h6>
+                <div class="row col s12">
+                    <h6>&copy 2019 Alarm Registration System, All rights reserved.</h6>
                 </div>
             </div>
         </div>
@@ -56,3 +56,11 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+<div id="ShowError">
+    @if (TempData["Error"] != null)
+    {
+        <script type="text/javascript">
+            M.toast({ html: "@TempData["Error"]", classes: "amber darken-1 special", displayLength: 2500 });
+        </script>
+    }
+</div>

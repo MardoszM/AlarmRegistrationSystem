@@ -9,5 +9,6 @@ namespace AlarmRegistrationSystem.Models.ViewModels
     {
         public AppUser User { get; set; }
         public string Role { get; set; }
+        public string Id { get; set; }
     }
 }

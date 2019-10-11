@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace AlarmRegistrationSystem
 {
@@ -41,7 +42,10 @@ namespace AlarmRegistrationSystem
             })
                 .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
                 .AddDefaultTokenProviders();
+            services.AddSingleton<ISytemElements, SystemElements>();
             services.AddTransient<IMachineRepository, EFMachineRepository>();
+            services.AddTransient<INotificationRepository, EFNotificationRepository>();
+            services.AddTransient<IDescriptionRepository, EFDescriptionRepository>();
             services.AddMemoryCache();
             services.AddMvc();
         }
@@ -60,9 +64,9 @@ namespace AlarmRegistrationSystem
             {
                 routes.MapRoute(
                     name: null,
-                    template: "{controller=Account}/{action=ListUsers}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
-            ApplicationIdentityDbContext.AddRoles(app.ApplicationServices).Wait();
+            ApplicationIdentityDbContext.AddRoles(app.ApplicationServices,env.ContentRootPath).Wait();
             ApplicationIdentityDbContext.CreateAdminAccount(app.ApplicationServices, Configuration).Wait();
         }
     }

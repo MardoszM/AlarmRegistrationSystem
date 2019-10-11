@@ -1,15 +1,76 @@
-﻿
+﻿@model Models.ViewModels.ReportAccidentViewModel
 @{
     ViewData["Title"] = "Zglos awarie";
     Layout = "_Layout";
 }
 
-<div asp-validation-summary="All" class="red-text"></div>
 
 <div class="row">
-    <form asp-action="ReportAccident" method="post" class="col s12">
+    <form asp-controller="Notification" asp-action="AddNotification" method="post" class="col s12">
         <div class="row">
-            @*TODO Wybranie Maszyny.*@
+            <div class="col s10 input-field col l4 m6 s9 offset-l1 offset-m2">
+                <i class="fas fa-fingerprint prefix"></i>
+                <input id="autocomplete-input" asp-for="Notification.MachineUniqueID" type="text" class="autocomplete validate" />
+                <label for="autocomplete-input" asp-for="Notification.MachineUniqueID">Kod Maszyny</label>
+                <span asp-validation-for="Notification.MachineUniqueID" class="helper-text left-align red-text darken-1"></span>
+            </div>
+
+            <div id="tip" class="input-field left-align hide col s1">
+                <i class="tooltipped" data-position="right" data-tooltip="W przypadku braku maszyny o podanym kodzie skontaktuj się z administratorem systemu"><i class="small far fa-question-circle amber-text darken-4"></i></i>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12 m7 l5 offset-l1 offset-m2">
+                <i class="fas fa-keyboard prefix"></i>
+                <textarea id="textarea" asp-for="Notification.MainDescription" class="materialize-textarea" data-length="1000"></textarea>
+                <label asp-for="Notification.MainDescription">Opis awarii</label>
+                <span asp-validation-for="Notification.MainDescription" class="helper-text left-align red-text darken-1"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col l6 m9 s12 right-align">
+                <a asp-controller="@Model.Controller" asp-action="@Model.Action" class="btn waves-effect waves-light orange darken-2">
+                    Anuluj
+                    <i class="fas fa-times"></i>
+                </a>
+                <button type="submit" class="btn waves-effect waves-light teal darken-1">Dodaj <i class="fas fa-paper-plane"></i></button>
+            </div>
         </div>
     </form>
 </div>
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js" type="text/javascript"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/src/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts.js" type="text/javascript"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.tooltipped').tooltip();
+            $('textarea#textarea').characterCounter();
+            $('#Notification_MachineUniqueID').change(function () {
+                var $this = $(this);
+                setTimeout(function () {
+                    if ($this.hasClass('input-validation-error')) {
+                        $('#tip').removeClass('hide');
+                    } else {
+                        $('#tip').addClass('hide');
+                    }
+                }, 220);
+            })
+
+            let $url = "/Notification/MachineCodes";
+            let $func = function (response) {
+                var codes = {};
+                for (let i = 0; i < response.length; i++) {
+                    codes[response[i]] = null;
+                }
+                $('input.autocomplete').autocomplete({
+                    data: codes,
+                     });
+            }
+            AjaxAndFunc($url, $func, null);
+            
+        });
+    </script>
+}
