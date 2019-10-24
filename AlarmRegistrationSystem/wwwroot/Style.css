@@ -17,8 +17,32 @@ input.input-validation-error, textarea.input-validation-error
 
 .no-margin
 {
+    margin:unset !important;
+}
+
+.no-border
+{
+    border:none !important;
+}
+
+.no-padding
+{
+    padding:unset;
+}
+
+.pad-015{
+    padding:0.15rem !important;
+}
+
+.select-dropdown{
+    color:white;
+}
+
+.selectwhite .select-wrapper input.select-dropdown {
+    border-bottom: unset !important;
     margin:unset;
 }
+
 /* Clicking the label does not activate the input without this */
 input[type="text"] + label {
     pointer-events: none;

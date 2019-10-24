@@ -8,6 +8,7 @@ using AlarmRegistrationSystem.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
 namespace AlarmRegistrationSystem.Controllers
@@ -17,7 +18,7 @@ namespace AlarmRegistrationSystem.Controllers
         private IMachineRepository machineRepository;
         private INotificationRepository notificationRepository;
         private ILogger<NotificationController> logger;
-        private ISytemElements systemElements;
+        private IStringLocalizer<SharedResources> localizer;
 
         private void ErrorAlert(Exception ex, string errorText, string logErrorText)
         {
@@ -25,12 +26,12 @@ namespace AlarmRegistrationSystem.Controllers
             logger.LogError(ex + " || " + logErrorText);
         }
 
-        public NotificationController(INotificationRepository notificationRepository, IMachineRepository machineRepository, ILogger<NotificationController> logger, ISytemElements sytemElements)
+        public NotificationController(INotificationRepository notificationRepository, IMachineRepository machineRepository, ILogger<NotificationController> logger, IStringLocalizer<SharedResources> localizer)
         {
             this.machineRepository = machineRepository;
             this.notificationRepository = notificationRepository;
             this.logger = logger;
-            this.systemElements = sytemElements;
+            this.localizer = localizer;
         }
 
         [Authorize]
@@ -53,7 +54,7 @@ namespace AlarmRegistrationSystem.Controllers
             {
                 notification.CreationDate = DateTime.Now;
                 notification.Declarant = User.Identity.Name;
-                notification.State = NotificationStates.Aktywne;
+                notification.State = NotificationStates.Active;
             }
             bool value = false;
             try
@@ -62,7 +63,7 @@ namespace AlarmRegistrationSystem.Controllers
             }
             catch(Exception ex)
             {
-                ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to SaveNotification, <- Exception");
+                ErrorAlert(ex, localizer["database"], "Unable to SaveNotification, <- Exception");
             }
             if(value)
             {
@@ -77,8 +78,23 @@ namespace AlarmRegistrationSystem.Controllers
         [Authorize]
         public IActionResult DisplayNotification(int notificationID)
         {
-            Notification model = notificationRepository.Notifications.FirstOrDefault(n => n.NotificationID == notificationID);
-            if (model != null)
+            DisplayNotificationViewModel model = new DisplayNotificationViewModel();
+            try
+            {
+                model.Notification = notificationRepository.Notifications
+                    .FirstOrDefault(n => n.NotificationID == notificationID);
+                
+                model.MachineLocation = machineRepository.Machines
+                    .Where(m => m.MachineUniqueId == model.Notification.MachineUniqueID)
+                    .Select(m => m.Location).SingleOrDefault();
+            }
+            catch(Exception ex)
+            {
+                ErrorAlert(ex, localizer["database"], "Unable to Display notification, because of FirstOrDefault or SingleOrDefault Exception");
+                //Wroc do wyswietl zgloszenia
+            }
+
+            if (model != null && model.Notification != null && model.MachineLocation != null)
             {
                 return View(model);
             }
@@ -88,10 +104,68 @@ namespace AlarmRegistrationSystem.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult AddDescription(int notificationId)
+        {
+            Notification model = null ;
+            try
+            {
+                model = notificationRepository.Notifications.FirstOrDefault(n => n.NotificationID == notificationId);
+            }
+            catch(Exception ex)
+            {
+                ErrorAlert(ex, localizer["database"], "Unable to show AddDescription View to notification, because of FirstOrDefault Exception");
+                //blad
+            }
+            if (model != null)
+            {
+                return View(new Description() { NotificationID = notificationId});
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        public IActionResult AddDescriptionFinally(Description description)
+        {
+            if (ModelState.IsValid)
+            {
+                description.Author = Request.HttpContext.User.Identity.Name;
+                description.LastModification = DateTime.Now;
+                bool result = false;
+
+                try
+                {
+                   result = notificationRepository.SaveDescription(description);
+                }
+                catch(Exception ex)
+                {
+                    ErrorAlert(ex, localizer["database"], "Unable to AddDescriptionFinally, because of SaveDescription Exception");
+                }
+                if (!result)
+                {
+                    //wyswietlenie dokumentacji ostatnia strona
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            return RedirectToAction("Index","Home");
+        }
+
         public bool VerifyMachineId(ReportAccidentViewModel model)
        {
-            Machine machine = machineRepository.Machines.FirstOrDefault(m => m.MachineUniqueId == model.Notification.MachineUniqueID);
-            if(model.Notification.MachineUniqueID != null)
+            Machine machine = null;
+            try
+            { 
+                machine = machineRepository.Machines.FirstOrDefault(m => m.MachineUniqueId == model.Notification.MachineUniqueID);
+            }
+            catch(Exception ex)
+            {
+                ErrorAlert(ex, localizer["database"], "Unable to VerifyMachineID, because of database Exception");
+                return false;
+            }
+            if (model.Notification.MachineUniqueID != null)
             {
                 if(machine != null)
                 {
@@ -112,8 +186,17 @@ namespace AlarmRegistrationSystem.Controllers
         [HttpPost]
         public List<string> MachineCodes()
         {
-            List<string> MachineCodes = machineRepository.Machines.Select(m => m.MachineUniqueId).ToList();
-            return MachineCodes;
+            List<string> machineCodes = null;
+            try
+            {
+                machineCodes = machineRepository.Machines.Select(m => m.MachineUniqueId).ToList();
+            }
+            catch(Exception ex)
+            {
+                ErrorAlert(ex, localizer["database"], "Unable to get MachineCodes, because of database Exception");
+            }
+             
+            return machineCodes;
         }
     }
 }

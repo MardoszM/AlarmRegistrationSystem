@@ -1,4 +1,48 @@
-﻿@{ 
+﻿@model Models.ViewModels.DisplayNotificationViewModel
+@{
     Layout = "_Layout";
-    ViewData["Title"] = "Zgłoszenie: " + Context.Request.Query["notificationId"];
+    ViewData["Title"] = Localizer["accident"] + ": " + Context.Request.Query["notificationId"];
 }
+<div class="col s12">
+    <div class="row">
+        <div class="input-field col m2 s6 no-margin push-l2 push-m2">
+            <h6 class="blue-grey-text no-margin">@Localizer["author"]</h6>
+            <h5 class="red-text text-accent-2">@Model.Notification.Declarant</h5>
+        </div>
+        <div class="input-field col m2 right pull-l4">
+            <input class="no-border grey-text text-darken-1" type="date" asp-for="@Model.Notification.CreationDate" disabled />
+            <label class="grey-text text-darken-1" asp-for="@Model.Notification.CreationDate.Date">@Localizer["accidentdate"]</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="input-field col m2 push-l1 push-m2">
+            <input class="no-border black-text" type="text" asp-for="@Model.Notification.MachineUniqueID" disabled />
+            <label class="blue-grey-text" asp-for="@Model.Notification.MachineUniqueID">@Localizer["machinecode"]</label>
+        </div>
+        <div class="input-field col m2 push-l2 push-m2">
+            <input class="no-border black-text" type="text" asp-for="@Model.MachineLocation" disabled />
+            <label class="blue-grey-text" asp-for="@Model.MachineLocation">@Localizer["machinelocation"]</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="input-field col m2 push-l1 push-m2">
+            <input id="State" class="no-border black-text" type="text" asp-for="@Model.Notification.State" disabled />
+            <label class="blue-grey-text" asp-for="@Model.Notification.State">@Localizer["accidentstate"]</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="input-field col m6 push-l1 push-m2">
+            <textarea class="materialize-textarea black-text" asp-for="@Model.Notification.MainDescription" disabled></textarea>
+            <label class="blue-grey-text" asp-for="@Model.Notification.MainDescription">@Localizer["accidentdescription"]</label>
+        </div>
+    </div>
+</div>
+
+<div class="row center">
+    <button class="btn btn-block" asp-action="AddDescription" asp-controller="Notification">
+        @Localizer["accidentdescription"]
+    </button>
+</div>

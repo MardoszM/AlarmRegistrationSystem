@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="~/Style.css" />
 }
 
-<a class="btn waves-effect waves-light" asp-action="CreateMachine" asp-route-returnUrl="@ViewContext.HttpContext.Request.Path">Dodaj Maszyne</a>
+<a class="btn waves-effect waves-light" asp-action="CreateMachine" asp-route-returnUrl="@ViewContext.HttpContext.Request.Path">@Localizer["addmachine"]</a>
 <h1>Admin Index</h1>
 
 @section scripts{

@@ -9,25 +9,25 @@ namespace AlarmRegistrationSystem.Models.ViewModels
 {
     public class CreateUserViewModel
     {
-        [Required(ErrorMessage = "Proszę wprowadzić imię.")]
-        [StringLength(maximumLength: 30, ErrorMessage = "Imie musi zawierac co najmniej 2 znaki", MinimumLength = 2)]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Imie może zawierać tylko litery")]
+        [Required(ErrorMessage = "entername")]
+        [StringLength(maximumLength: 30, ErrorMessage = "namelength", MinimumLength = 2)]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "namechars")]
         public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "Proszę wprowadzić nazwisko.")]
-        [StringLength(maximumLength: 30, ErrorMessage = "Nazwisko musi zawierac co najmniej 3 znaki", MinimumLength = 3)]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Nazwisko może zawierać tylko litery")]
+        [Required(ErrorMessage = "enterlastname")]
+        [StringLength(maximumLength: 30, ErrorMessage = "lastnamelength", MinimumLength = 3)]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "lastnamechars")]
         public string SecondName { get; set; }
-        [Required(ErrorMessage = "Proszę wporwadzić nazwę użytkownika")]
+        [Required(ErrorMessage = "enterusername")]
         
-        [Remote(action: "VerifyUserName", controller: "Account", ErrorMessage = "Podana nazwa użytkownika jest już zajęta")]
-        [StringLength(maximumLength:15, ErrorMessage = "Nazwa użytkownika musi zawierać od 5 do 15 znaków", MinimumLength = 5)]
-        [RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "Nazwa Uzytkownika może zawierać tylko litery i cyfry")]
+        [Remote(action: "VerifyUserName", controller: "Account", ErrorMessage = "usernametaken")]
+        [StringLength(maximumLength:15, ErrorMessage = "usernamelength", MinimumLength = 5)]
+        [RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "usernamechars")]
         public string UserName { get; set; }
 
-        [Remote(action: "VerifyEmail", controller: "Account", ErrorMessage = "Podany adres email jest już zajęty")]
-        [Required(ErrorMessage = "Proszę wprowadzić email")]
-        [EmailAddress(ErrorMessage = "Wprowadzony email nie jest poprawny")]
+        [Remote(action: "VerifyEmail", controller: "Account", ErrorMessage = "emailtaken")]
+        [Required(ErrorMessage = "enteremail")]
+        [EmailAddress(ErrorMessage = "wrongemail")]
         public string Email { get; set; }
 
         public string Role { get; set; }

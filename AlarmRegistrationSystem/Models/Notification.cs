@@ -10,20 +10,22 @@ namespace AlarmRegistrationSystem.Models
 {
     public enum NotificationStates
     {
-        Aktywne, W_naprawie, Wstrzymane, Zakonczone
+        Active, In_repair, On_hold, Finish
     }
 
     public class Notification
     {
+        internal int notificationId;
+
         public int NotificationID { get; set; }
         public string Declarant { get; set; }
-        [Remote(action:"VerifyMachineId", controller: "Notification", ErrorMessage = "Maszyna o takim kodzie nie istnieje w systemie", AdditionalFields = nameof(MachineUniqueID))]
-        [Required(ErrorMessage = "Proszę wprowadzić kod Maszyny z usterką")]
+        [Remote(action:"VerifyMachineId", controller: "Notification", ErrorMessage = "machineidtaken", AdditionalFields = nameof(MachineUniqueID))]
+        [Required(ErrorMessage = "entermachineidwithfault")]
         public string MachineUniqueID { get; set; }
         public NotificationStates State { get; set; }
-        [MinLength(20, ErrorMessage = "Opis usterki musi być dluzszy")]
-        [MaxLength(1000, ErrorMessage = "Opis usterki musi być krotszy")]
-        [Required(ErrorMessage = "Proszę wprowadzić opis awarii")]
+        [MinLength(20, ErrorMessage = "longerfaultdescription")]
+        [MaxLength(1000, ErrorMessage = "shorterfaultdescription")]
+        [Required(ErrorMessage = "enteraccidentdescription")]
         public string MainDescription { get; set; }
         public DateTime CreationDate { get; set; }
 
@@ -35,19 +37,19 @@ namespace AlarmRegistrationSystem.Models
 
         public bool State { get; set; }
 
-        [Remote(action: "VerifyId", controller: "Admin", ErrorMessage = "Takie ID istnieje w systemie.", AdditionalFields = nameof(MachineID))]
-        [Required(ErrorMessage = "Proszę wporwadzić unikalny kod maszyny")]
-        [StringLength(15, MinimumLength = 3, ErrorMessage = "Proszę wprowadzić kod składający się co najmniej z 3 znaków")]
-        [RegularExpression("^[a-zA-Z0-9]*$", ErrorMessage = "Dozwolone znaki to [a-z][A-Z][0-9]")]
+        [Remote(action: "VerifyId", controller: "Admin", ErrorMessage = "idtaken.", AdditionalFields = nameof(MachineID))]
+        [Required(ErrorMessage = "enteruniqueid")]
+        [StringLength(15, MinimumLength = 3, ErrorMessage = "uniqueidlength")]
+        [RegularExpression("^[a-zA-Z0-9]*$", ErrorMessage = "uniqueidchars")]
         public string MachineUniqueId { get; set; }
 
-        [Required(ErrorMessage = "Proszę wprowadzić lokalizację maszyny")]
+        [Required(ErrorMessage = "enterlocation")]
         public string Location { get; set; }
 
-        [Required(ErrorMessage = "Proszę wprowadzić Markę")]
+        [Required(ErrorMessage = "enterbrand")]
         public string Brand { get; set; }
 
-        [Required(ErrorMessage = "Proszę wprowadzić Model")]
+        [Required(ErrorMessage = "entermodel")]
         public string Model { get; set; }
     }
 
@@ -56,6 +58,10 @@ namespace AlarmRegistrationSystem.Models
         public int DescriptionID { get; set; }
         public int NotificationID { get; set; }
         public string Author { get; set; }
+
+        [MinLength(20, ErrorMessage = "longerdescriptiontext")]
+        [MaxLength(1000, ErrorMessage = "shorterdescriptiontext")]
+        [Required(ErrorMessage = "enterdescriptiontext")]
         public string Text { get; set; }
         public DateTime LastModification { get; set; }
     }

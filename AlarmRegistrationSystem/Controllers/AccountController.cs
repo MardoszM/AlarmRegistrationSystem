@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
 namespace AlarmRegistrationSystem.Controllers
@@ -26,14 +27,14 @@ namespace AlarmRegistrationSystem.Controllers
         private List<string> roles = null;
         private int pageSize = 10;
         private ILogger<AccountController> logger;
-        private ISytemElements systemElements;
+        private readonly IStringLocalizer<SharedResources> localizer;
 
         private void ErrorAlert(Exception ex, string errorText, string logErrorText)
         {
             TempData["Error"] = errorText;
             logger.LogError(ex + " || " + logErrorText);
         }
-        public AccountController(UserManager<AppUser> userMgr, RoleManager<IdentityRole> roleMgr, SignInManager<AppUser> signInMgr, IConfiguration configuration, IHostingEnvironment _hostingEnvironment, ILogger<AccountController> log, ISytemElements sysElem)
+        public AccountController(UserManager<AppUser> userMgr, RoleManager<IdentityRole> roleMgr, SignInManager<AppUser> signInMgr, IConfiguration configuration, IHostingEnvironment _hostingEnvironment, ILogger<AccountController> log, IStringLocalizer<SharedResources> _localizer)
         {
             userManager = userMgr;
             roleManager = roleMgr;
@@ -42,26 +43,8 @@ namespace AlarmRegistrationSystem.Controllers
             repository = userManager.Users;
             hostingEnvironment = _hostingEnvironment;
             logger = log;
-            systemElements = sysElem;
+            localizer = _localizer;
         }
-
-        public static string TranslateRole(string role)
-        {
-            switch (role)
-            {
-                case "Employes":
-                    role = "Pracownicy";
-                    break;
-                case "Mechanics":
-                    role = "Mechanicy";
-                    break;
-                case "Administrators":
-                    role = "Administratorzy";
-                    break;
-            }
-            return role;
-        }
-
         private List<string> GetRoles()
         {
             string path = hostingEnvironment.ContentRootPath + "\\Infrastructure\\JsonData\\roles.json";
@@ -94,7 +77,7 @@ namespace AlarmRegistrationSystem.Controllers
                     throw ex;
                 }
                 string role = result[0];
-                role = TranslateRole(role);
+                role = localizer[role];
                 tmpRepo.Add(new UserListViewModel() { User = user, Role = role, Id = user.Id });
             }
 
@@ -113,8 +96,14 @@ namespace AlarmRegistrationSystem.Controllers
                 ).ToList();
                 currPage = 1;
             }
-
-            searchRole = AccountController.TranslateRole(searchRole);
+            if(searchRole != null)
+            {
+                searchRole = localizer[searchRole];
+            }
+            else
+            {
+                searchRole = "";
+            }
             if (searchRole != "" && searchRole != null)
             {
                 tmpRepo = tmpRepo.Where(u => u.Role == searchRole).ToList();
@@ -139,7 +128,7 @@ namespace AlarmRegistrationSystem.Controllers
             }
             catch(Exception ex)
             {
-                ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to List Users, because of RepositoryFilter Exception.");
+                ErrorAlert(ex, localizer["database"], "Unable to List Users, because of RepositoryFilter Exception.");
                 model = new ListViewModel<UserListViewModel>();
                 model.Objects = null;
                 model.PagingInfo = new PagingInfo();
@@ -176,16 +165,16 @@ namespace AlarmRegistrationSystem.Controllers
             }
             catch(Exception ex)
             {
-                ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to Change User Password Absolutely.");
+                ErrorAlert(ex, localizer["database"], "Unable to Change User Password Absolutely.");
             }
 
             if(!result.Succeeded || !result2.Succeeded)
             {
-                TempData["Message"] = "Zmiana hasla zakonczona niepowodzeniem. Wystapil blad"; 
+                TempData["Message"] = localizer["passworderror"]; 
             }
             else
             {
-                TempData["Message"] = "Haslo uzytkownika " + SpecifiedUserName + " zostalo zmienione]";
+                TempData["Message"] = localizer["userpassword"] + ": " + SpecifiedUserName + " " + localizer["waschanged"] + ".";
             }
             return RedirectToAction("ListUsers");
         }
@@ -209,16 +198,16 @@ namespace AlarmRegistrationSystem.Controllers
             }
             catch(Exception ex)
             {
-                ErrorAlert(ex, systemElements.ErrorMessages["database"] , "Unable to Change User Password.");
+                ErrorAlert(ex, localizer["database"] , "Unable to Change User Password.");
             }
             
             if(result.Succeeded)
             {
-                TempData["Message"] = "Haslo uzytkownika " + SpecifiedUserName + " zostalo zmienione";
+                TempData["Message"] = localizer["userpassword"] + ": " + SpecifiedUserName + " " + localizer["waschanged"] + ".";
             }
             else
             {
-                TempData["Message"] = "Zmiana hasla nie zostala ukonczona. Wystapil blad.";
+                TempData["Message"] = localizer["passworderror"];
             }
             return RedirectToAction("ListUsers");
         }
@@ -235,7 +224,7 @@ namespace AlarmRegistrationSystem.Controllers
             }
             catch(Exception ex)
             {
-                ErrorAlert(ex, systemElements.ErrorMessages["database"] , "Unable to Delete User.");
+                ErrorAlert(ex, localizer["database"] , "Unable to Delete User.");
                 model = new ListViewModel<UserListViewModel>();
                 model.Objects = null;
                 model.PagingInfo = new PagingInfo();
@@ -257,11 +246,10 @@ namespace AlarmRegistrationSystem.Controllers
                 }
                 catch(Exception ex)
                 {
-                    ErrorAlert(ex, systemElements.ErrorMessages["system"], "Unable to Create Account because of file (JSonRead) Exception");
+                    ErrorAlert(ex, localizer["system"], "Unable to Create Account because of file (JSonRead) Exception");
                 }
             }
             CreateUserViewModel model = new CreateUserViewModel();
-            roles = null;
             if(roles != null)
             {
                 model.roles = roles;
@@ -278,7 +266,7 @@ namespace AlarmRegistrationSystem.Controllers
                 }
                 catch(Exception ex)
                 {
-                    ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to Create Account because of RepositoryFilter (database) Exception");
+                    ErrorAlert(ex, localizer["database"], "Unable to Create Account because of RepositoryFilter (database) Exception");
                     viewModel = new ListViewModel<UserListViewModel>();
                     viewModel.Objects = null;
                     viewModel.PagingInfo = new PagingInfo();
@@ -310,7 +298,7 @@ namespace AlarmRegistrationSystem.Controllers
                 }
                 catch(Exception ex)
                 {
-                    ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to Create Account. CreateAsync Exception");
+                    ErrorAlert(ex, localizer["database"], "Unable to Create Account. CreateAsync Exception");
                 }
                 if (result.Succeeded)
                 {
@@ -357,7 +345,7 @@ namespace AlarmRegistrationSystem.Controllers
                     }
                     catch(Exception ex)
                     {
-                        ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to Login, because of Check User via FindBy Name/Email Exception.");
+                        ErrorAlert(ex, localizer["database"], "Unable to Login, because of Check User via FindBy Name/Email Exception.");
                         error = true;
                     }
                     if (user != null)
@@ -376,7 +364,7 @@ namespace AlarmRegistrationSystem.Controllers
                     }
                     catch(Exception ex)
                     {
-                        ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to Login, because of PasswordSignInAsync Exception");
+                        ErrorAlert(ex, localizer["database"], "Unable to Login, because of PasswordSignInAsync Exception");
                     }
                         if (result.Succeeded)
                     {
@@ -386,7 +374,7 @@ namespace AlarmRegistrationSystem.Controllers
             }
             if(!error)
             {
-                ModelState.AddModelError("Error", "Nieprawidłowa nazwa użytkownika/email lub haslo");
+                ModelState.AddModelError("Error", localizer["wronglogin"]);
             }
             return View(model);
         }
@@ -406,7 +394,7 @@ namespace AlarmRegistrationSystem.Controllers
             }
             catch(Exception ex)
             {
-                ErrorAlert(ex, systemElements.ErrorMessages["system"], "Unable to Logout user. SignOutAsync Exception");
+                ErrorAlert(ex, localizer["system"], "Unable to Logout user. SignOutAsync Exception");
             }
             return RedirectToAction(nameof(Login));
         }
@@ -427,7 +415,7 @@ namespace AlarmRegistrationSystem.Controllers
                 }
                 catch(Exception ex)
                 {
-                    ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to VerifyUserName. <- Exception.");
+                    ErrorAlert(ex, localizer["database"], "Unable to VerifyUserName. <- Exception.");
                     value = true;
                     tmpUserName = String.Empty;
                 }
@@ -464,7 +452,7 @@ namespace AlarmRegistrationSystem.Controllers
                 }
                 catch(Exception ex)
                 {
-                    ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to VerifyUserName. <- Exception");
+                    ErrorAlert(ex, localizer["database"], "Unable to VerifyUserName. <- Exception");
                 }
                 
             } while (!value);
@@ -522,7 +510,7 @@ namespace AlarmRegistrationSystem.Controllers
             }
             catch(Exception ex)
             {
-                ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to verify UserName because of FindByNameAsync (database) Exception");
+                ErrorAlert(ex, localizer["database"], "Unable to verify UserName because of FindByNameAsync (database) Exception");
                 user = null;
             }
 
@@ -546,7 +534,7 @@ namespace AlarmRegistrationSystem.Controllers
             }
             catch(Exception ex)
             {
-                ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to VerifyEmail, because of FindByEmailAsync (database) Exception.");
+                ErrorAlert(ex, localizer["database"], "Unable to VerifyEmail, because of FindByEmailAsync (database) Exception.");
                 user = null;
             }
             if (user == null)

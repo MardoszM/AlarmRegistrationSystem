@@ -12,12 +12,11 @@ namespace AlarmRegistrationSystem.Models
 
         public IQueryable<Notification> Notifications => context.Notifications;
 
-        public IDescriptionRepository DescriptionRepository;
+        public IQueryable<Description> Descriptions => context.Descriptions;
 
-        public EFNotificationRepository(ApplicationDbContext ctx, IDescriptionRepository description)
+        public EFNotificationRepository(ApplicationDbContext ctx)
         {
             context = ctx;
-            DescriptionRepository = description;
         }
 
         public Notification DeleteNotification(int NotificationId)
@@ -36,10 +35,10 @@ namespace AlarmRegistrationSystem.Models
             {
                 try
                 {
-                    var descriptions = context.Descriptions.Where(d => d.NotificationID == NotificationId).ToList();
+                    var descriptions = Descriptions.Where(d => d.NotificationID == NotificationId).ToList();
                     foreach (Description response in descriptions)
                     {
-                        DescriptionRepository.DeleteDescription(response.DescriptionID);
+                        DeleteDescription(response.DescriptionID);
                     }
                     context.Notifications.Remove(notification);
                     context.SaveChanges();
@@ -95,85 +94,75 @@ namespace AlarmRegistrationSystem.Models
             }
             return value;
         }
-    }
-}
 
-
-public class EFDescriptionRepository :IDescriptionRepository
-{
-    ApplicationDbContext context;
-
-    public EFDescriptionRepository(ApplicationDbContext ctx) => context = ctx;
-
-    public IQueryable<Description> Descriptions => context.Descriptions;
-
-    public Description DeleteDescription(int DescriptionId)
-    {
-        Description description = null;
-        try
+        public Description DeleteDescription(int DescriptionId)
         {
-            description = context.Descriptions.FirstOrDefault(n => n.DescriptionID == DescriptionId);
-        }
-        catch(Exception ex)
-        {
-            throw ex;
-        }
-
-        if (description != null)
-        {
+            Description description = null;
             try
             {
-                context.Descriptions.Remove(description);
-                context.SaveChanges();
+                description = context.Descriptions.FirstOrDefault(n => n.DescriptionID == DescriptionId);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
-        }
-        return description;
-    }
 
-    public bool SaveDescription(Description description)
-    {
-        bool value = false;
-        if (description.DescriptionID == 0)
-        {
-            try
+            if (description != null)
             {
-                context.Descriptions.Add(description);
+                try
+                {
+                    context.Descriptions.Remove(description);
+                    context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
-            value = true;
+            return description;
         }
-        else
+
+        public bool SaveDescription(Description description)
         {
-            Description dbDescription = null;
-            try
+            bool value = false;
+            if (description.DescriptionID == 0)
             {
-                dbDescription = context.Descriptions.FirstOrDefault(d => d.DescriptionID == description.DescriptionID);
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
-            if (dbDescription != null)
-            {
-                dbDescription.Text = description.Text;
+                try
+                {
+                    context.Descriptions.Add(description);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
                 value = true;
             }
+            else
+            {
+                Description dbDescription = null;
+                try
+                {
+                    dbDescription = context.Descriptions.FirstOrDefault(d => d.DescriptionID == description.DescriptionID);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                if (dbDescription != null)
+                {
+                    dbDescription.Text = description.Text;
+                    value = true;
+                }
+            }
+            try
+            {
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return value;
         }
-        try
-        { 
-            context.SaveChanges();
-        }
-        catch(Exception ex)
-        {
-            throw ex;
-        }
-        return value;
     }
 }

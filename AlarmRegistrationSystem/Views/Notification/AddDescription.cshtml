@@ -1,0 +1,27 @@
+﻿@model Models.Description
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = Localizer["adddocumentationitem"] + " " + Model.NotificationID;
+}
+
+<form asp-action="AddDescriptionFinally" asp-controller="Notification">
+    <div class="row">
+        <div class="input-field col s12 m7 l5 offset-l1 offset-m2">
+            <i class="fas fa-keyboard prefix"></i>
+            <textarea id="textarea" asp-for="Text" class="materialize-textarea" data-length="1000"></textarea>
+            <label asp-for="Text">@Localizer["accidentdescription"]</label>
+            <span asp-validation-for="Text" class="helper-text left-align red-text darken-1"></span>
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js" type="text/javascript"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/src/jquery.validate.unobtrusive.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('textarea#textarea').characterCounter();
+        })
+    </script>
+}
