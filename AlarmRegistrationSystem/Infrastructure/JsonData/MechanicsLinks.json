@@ -2,7 +2,7 @@
   {
     "controller": "Home",
     "action": "Index",
-    "linkTitle": "Strona Domowa",
+    "linkTitle": "homepage",
     "icon": "fas fa-home"
   }
 ]

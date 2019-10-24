@@ -1,6 +1,6 @@
 ﻿@model Models.ViewModels.LoginViewModel
 @{ 
-    ViewData["Title"] = "Logowanie";
+    ViewData["Title"] = Localizer["login"];
 }
 <!DOCTYPE html>
 <html>
@@ -14,7 +14,7 @@
     <div class="row log-form">
         <div class="col s10 m6 l4 log-justify">
             <div class="row">
-                <h3 class="teal-text">Panel Logowania</h3>
+                <h3 class="teal-text">@Localizer["loginpanel"]</h3>
             </div>
             <form asp-action="Login" asp-controller="Account">
                 <div class="row">
@@ -24,7 +24,7 @@
                     <div class="input-field" aria-invalid="true">
                         <i class="fas fa-user prefix"></i>
                         <input asp-for="LoginName" type="text" class="validate" />
-                        <label asp-for="LoginName">Nazwa Uzytkownika/email</label>
+                        <label asp-for="LoginName">@Localizer["username"]/@Localizer["email"]</label>
                         <span asp-validation-for="LoginName" class="red-text darken-2"></span>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                     <div class="input-field" aria-invalid="true">
                         <i class="fas fa-key prefix"></i>
                         <input asp-for="Password" type="password" class="validate" />
-                        <label asp-for="Password">Hasło</label>
+                        <label asp-for="Password">@Localizer["password"]</label>
                         <span asp-validation-for="Password" class="red-text darken-2"></span>
                     </div>
                 </div>
@@ -40,15 +40,15 @@
                     <p class="col s6">
                         <label asp-for="RememberMe">
                             <input asp-for="RememberMe" type="checkbox" />
-                            <span class="teal-text">Zapamietaj mnie</span>
+                            <span class="teal-text">@Localizer["rememberme"]</span>
                         </label>
                     </p>
                     <p class="col s6 right-align">
-                        <a href="#" class="btn waves-effect waves-light orange">Zapomnialem hasla</a>
+                        <a href="#" class="btn waves-effect waves-light orange">@Localizer["forgotpassword"]</a>
                     </p>
                 </div>
                 <div class="row right-align">
-                    <button type="submit" class="btn waves-effect waves-light teal darken-1">Zaloguj</button>
+                    <button type="submit" class="btn waves-effect waves-light teal darken-1">@Localizer["logme"]</button>
                 </div>
             </form>
         </div>

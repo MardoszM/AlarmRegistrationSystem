@@ -8,6 +8,7 @@ using AlarmRegistrationSystem.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
 namespace AlarmRegistrationSystem.Controllers
@@ -18,8 +19,16 @@ namespace AlarmRegistrationSystem.Controllers
         private IMachineRepository repository;
         private int pageSize = 10;
         private ILogger<AdminController> logger;
-        private ISytemElements systemElements;
-        
+        private readonly IStringLocalizer<SharedResources> localizer;
+
+
+        public AdminController(IMachineRepository repository, ILogger<AdminController> logger, IStringLocalizer<SharedResources> localizer)
+        {
+            this.repository = repository;
+            this.logger = logger;
+            this.localizer = localizer;
+        }
+
         private void ErrorAlert(Exception ex, string errorText, string logErrorText)
         {
             TempData["Error"] = errorText;
@@ -81,13 +90,6 @@ namespace AlarmRegistrationSystem.Controllers
             return viewModel;
         }
 
-        public AdminController(IMachineRepository repository, ILogger<AdminController> logger, ISytemElements systemElements)
-        {
-            this.repository = repository;
-            this.logger = logger;
-            this.systemElements = systemElements;
-        }
-
         public IActionResult ListMachines(string state, string searchText, string currentPage)
         {
             ListViewModel<Machine> viewModel;
@@ -106,7 +108,7 @@ namespace AlarmRegistrationSystem.Controllers
                     TotalItems = 0
                 };
                 viewModel.Objects = null;
-                ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to List Machines because of RepositoryFilter (database) Exception.");
+                ErrorAlert(ex, localizer["database"], "Unable to List Machines because of RepositoryFilter (database) Exception.");
             }
 
             if (Request.IsAjaxRequest())
@@ -125,7 +127,7 @@ namespace AlarmRegistrationSystem.Controllers
             }
             catch (Exception ex)
             {
-                ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to Show Edit Machine View because of FirstOrDefault from database Exception");
+                ErrorAlert(ex, localizer["database"], "Unable to Show Edit Machine View because of FirstOrDefault from database Exception");
                 return View("List", new ListViewModel<Machine>() { 
                 PagingInfo = new PagingInfo ()
                 });
@@ -137,7 +139,7 @@ namespace AlarmRegistrationSystem.Controllers
             }
             catch(Exception ex)
             {
-                ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to Show Edit Machine View because of FirstOrDefault from database Exception");
+                ErrorAlert(ex, localizer["database"], "Unable to Show Edit Machine View because of FirstOrDefault from database Exception");
                 return View("List", new ListViewModel<Machine>()
                 {
                     PagingInfo = new PagingInfo { CurrentPage = 1, ItemsPerPage = 1, TotalItems = 0 }
@@ -164,18 +166,18 @@ namespace AlarmRegistrationSystem.Controllers
                 catch(Exception ex)
                 {
                     value = false;
-                    ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to Edit Machine because FirstOrDefault / SaveMachine (database) Exception");
+                    ErrorAlert(ex, localizer["database"], "Unable to Edit Machine because FirstOrDefault / SaveMachine (database) Exception");
                 }
 
                 if(value)
                 {
                     if (tmpMachine == null)
                     {
-                        TempData["Message"] = "Maszyna została dodana";
+                        TempData["Message"] = localizer["machineadded"];
                     }
                     else
                     {
-                        TempData["Message"] = "Maszyna została edytowana";
+                        TempData["Message"] = localizer["machineeddited"];
                     }
                 }
                 return Redirect(model.ReturnUrl);
@@ -197,11 +199,11 @@ namespace AlarmRegistrationSystem.Controllers
             catch(Exception ex)
             {
                 machine = null;
-                ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to Delete Machine because of DeleteMachine (database) Exception");
+                ErrorAlert(ex, localizer["database"], "Unable to Delete Machine because of DeleteMachine (database) Exception");
             }
             if(machine != null)
             {
-                TempData["Message"] = "Maszyna zostala usunieta";
+                TempData["Message"] = localizer["machinedeleted"];
             }
             ListViewModel<Machine> viewModel = null;
             try
@@ -213,7 +215,7 @@ namespace AlarmRegistrationSystem.Controllers
                 viewModel = new ListViewModel<Machine>();
                 viewModel.PagingInfo = new PagingInfo();
                 viewModel.Objects = null;
-                ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to Delete Machine, beacuse of RepositoryFilter (database) Exception");
+                ErrorAlert(ex, localizer["database"], "Unable to Delete Machine, beacuse of RepositoryFilter (database) Exception");
             }
             return View("Partial/_MachinesTable", viewModel);
         }
@@ -235,7 +237,7 @@ namespace AlarmRegistrationSystem.Controllers
             }
             catch(Exception ex)
             {
-                ErrorAlert(ex, systemElements.ErrorMessages["database"], "Unable to VerifyID because of FirstOrDefault (database) Exception");
+                ErrorAlert(ex, localizer["database"], "Unable to VerifyID because of FirstOrDefault (database) Exception");
             }
             if (model.Machine.MachineID == 0)
             {

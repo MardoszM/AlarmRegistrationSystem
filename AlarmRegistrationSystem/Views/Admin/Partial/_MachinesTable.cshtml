@@ -3,12 +3,12 @@
 <table class="striped">
     <thead>
         <tr>
-            <th>Id</th>
-            <th>Kod Maszyny</th>
-            <th>Lokacja</th>
-            <th>Marka</th>
-            <th>Model</th>
-            <th>Stan</th>
+            <th>@Localizer["id"]</th>
+            <th>@Localizer["machinecode"]</th>
+            <th>@Localizer["location"]</th>
+            <th>@Localizer["brand"]</th>
+            <th>@Localizer["model"]</th>
+            <th>@Localizer["state"]</th>
         </tr>
     </thead>
     <tbody>
@@ -25,11 +25,11 @@
                     <td>
                         @if (machine.State)
                         {
-                            <span>Aktywny</span>
+                            <span>@Localizer["active"]</span>
                         }
                         else
                         {
-                            <span>Nieaktywny</span>
+                            <span>@Localizer["inactive"]</span>
                         }
                     </td>
                     <td>
@@ -37,14 +37,14 @@
                         <ul id='@machine.MachineID' class='dropdown-content'>
                             <li>
                                 <a asp-action="EditMachine" asp-controller="Admin" asp-route-machineId="@machine.MachineID">
-                                    <i class="fas fa-edit"></i>Edytuj
+                                    <i class="fas fa-edit"></i>@Localizer["edit"]
                                 </a>
                             </li>
                             <li>
                                 <a class="DoAndReload modal-trigger" data-target="modal1"
                                    data-deleteobjectid="@machine.MachineUniqueId"
                                    data-mainform="Form" data-mainforminput="DeleteId">
-                                    <i class="far fa-trash-alt"></i>Usun
+                                    <i class="far fa-trash-alt"></i>@Localizer["delete"]
                                 </a>
                             </li>
                         </ul>
@@ -55,18 +55,18 @@
         else
         {
             <tr>
-                <td class="center-align" colspan="6">Brak maszyn</td>
+                <td class="center-align" colspan="6">@Localizer["nomachines"]</td>
             </tr>
         }
     </tbody>
 </table>
 <div id="modal1" class="modal">
     <div class="modal-content">
-        <p>Na pewno chcesz usunac maszyne z bazy? </p>
+        <p>@Localizer["wantdeletemachine"] </p>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-true waves-effect waves-light btn-flat">Tak</a>
-        <a href="#!" class="modal-close waves-effect waves-light btn-flat">Nie</a>
+        <a href="#!" class="modal-true waves-effect waves-light btn-flat">@Localizer["yes"]</a>
+        <a href="#!" class="modal-close waves-effect waves-light btn-flat">@Localizer["no"]</a>
     </div>
 </div>
 <div class=" row col s12 l8 right-align push-l4">

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AlarmRegistrationSystem.Controllers;
 using AlarmRegistrationSystem.Models;
@@ -9,10 +11,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace AlarmRegistrationSystem
 {
@@ -25,7 +31,7 @@ namespace AlarmRegistrationSystem
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration["Data:AlarmRegistrationSystem:ConnectionString:DataBase"]));
             services.AddDbContext<ApplicationIdentityDbContext>(options =>
@@ -42,12 +48,17 @@ namespace AlarmRegistrationSystem
             })
                 .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
                 .AddDefaultTokenProviders();
-            services.AddSingleton<ISytemElements, SystemElements>();
             services.AddTransient<IMachineRepository, EFMachineRepository>();
             services.AddTransient<INotificationRepository, EFNotificationRepository>();
-            services.AddTransient<IDescriptionRepository, EFDescriptionRepository>();
             services.AddMemoryCache();
-            services.AddMvc();
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddMvc()
+                .AddViewLocalization()
+                    .AddDataAnnotationsLocalization(options => {
+                         options.DataAnnotationLocalizerProvider = (type, factory) =>
+                             factory.Create(typeof(SharedResources));
+                     });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +69,17 @@ namespace AlarmRegistrationSystem
                 app.UseDeveloperExceptionPage();
                 app.UseStatusCodePages();
             }
+
+            IList<CultureInfo> supportedCultures = new List<CultureInfo> {
+                                                            new CultureInfo("pl"),
+                                                            new CultureInfo("en"),
+                                                            };
+            app.UseRequestLocalization(new RequestLocalizationOptions{
+                DefaultRequestCulture = new RequestCulture("en"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
+
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvc(routes =>
@@ -66,6 +88,7 @@ namespace AlarmRegistrationSystem
                     name: null,
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
             ApplicationIdentityDbContext.AddRoles(app.ApplicationServices,env.ContentRootPath).Wait();
             ApplicationIdentityDbContext.CreateAdminAccount(app.ApplicationServices, Configuration).Wait();
         }

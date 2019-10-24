@@ -1,0 +1,444 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="accident" xml:space="preserve">
+    <value>Zgloszenie</value>
+  </data>
+  <data name="accidentdate" xml:space="preserve">
+    <value>Data zgloszenia</value>
+  </data>
+  <data name="accidentdescription" xml:space="preserve">
+    <value>Opis awarii</value>
+  </data>
+  <data name="accidentstate" xml:space="preserve">
+    <value>Stan zgloszenia</value>
+  </data>
+  <data name="accounttype" xml:space="preserve">
+    <value>Typ Konta</value>
+  </data>
+  <data name="active" xml:space="preserve">
+    <value>Aktywny</value>
+  </data>
+  <data name="actualpassword" xml:space="preserve">
+    <value>Proszę wprowadzic obecne haslo</value>
+  </data>
+  <data name="actualpasswordagain" xml:space="preserve">
+    <value>Proszę ponownie wprowadzic obecne haslo</value>
+  </data>
+  <data name="add" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="adddocumentationitem" xml:space="preserve">
+    <value>Dodaj element dokumentacji</value>
+  </data>
+  <data name="addmachine" xml:space="preserve">
+    <value>Dodaj maszyne</value>
+  </data>
+  <data name="adduser" xml:space="preserve">
+    <value>Dodaj Uzytkownika</value>
+  </data>
+  <data name="Administrators" xml:space="preserve">
+    <value>Administratorzy</value>
+  </data>
+  <data name="all" xml:space="preserve">
+    <value>Wszystkie</value>
+  </data>
+  <data name="author" xml:space="preserve">
+    <value>Autor</value>
+  </data>
+  <data name="back" xml:space="preserve">
+    <value>Powrot</value>
+  </data>
+  <data name="brand" xml:space="preserve">
+    <value>Marka</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="casenomachines" xml:space="preserve">
+    <value>W przypadku braku maszyny o podanym kodzie skontaktuj się z administratorem systemu</value>
+  </data>
+  <data name="changepassword" xml:space="preserve">
+    <value>Zmien Haslo</value>
+  </data>
+  <data name="changepasswordabsolutely" xml:space="preserve">
+    <value>Zmien Haslo bezwzględnie</value>
+  </data>
+  <data name="currentpassword" xml:space="preserve">
+    <value>Obecne Haslo</value>
+  </data>
+  <data name="database" xml:space="preserve">
+    <value>Baza danych jest niedostepna. Skontaktuj sie z administratorem systemu.</value>
+  </data>
+  <data name="delete" xml:space="preserve">
+    <value>Usun</value>
+  </data>
+  <data name="displaymachines" xml:space="preserve">
+    <value>Wyswietl maszyny</value>
+  </data>
+  <data name="displayusers" xml:space="preserve">
+    <value>Wyswietl uzytkownikow</value>
+  </data>
+  <data name="edit" xml:space="preserve">
+    <value>Edytuj</value>
+  </data>
+  <data name="editmachine" xml:space="preserve">
+    <value>Edytuj Maszyne</value>
+  </data>
+  <data name="email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="emailtaken" xml:space="preserve">
+    <value>Podany adres e-mail jest już zajęty</value>
+  </data>
+  <data name="Employes" xml:space="preserve">
+    <value>Pracownicy</value>
+  </data>
+  <data name="enteraccidentdescription" xml:space="preserve">
+    <value>Proszę wprowadzić opis awarii</value>
+  </data>
+  <data name="enterbrand" xml:space="preserve">
+    <value>Prosze wprowadzić Markę</value>
+  </data>
+  <data name="enterdescriptiontext" xml:space="preserve">
+    <value>Prosze wprowadzić opis</value>
+  </data>
+  <data name="enteremail" xml:space="preserve">
+    <value>Proszę wprowadzić email</value>
+  </data>
+  <data name="enterlastname" xml:space="preserve">
+    <value>Proszę wprowadzić nazwisko</value>
+  </data>
+  <data name="enterlocation" xml:space="preserve">
+    <value>Proszę wprowadzić lokalizację maszyny</value>
+  </data>
+  <data name="entermachineidwithfault" xml:space="preserve">
+    <value>Proszę wprowadzić kod Maszyny z usterką</value>
+  </data>
+  <data name="entermodel" xml:space="preserve">
+    <value>Prosze wprowadzić Model</value>
+  </data>
+  <data name="entername" xml:space="preserve">
+    <value>Proszę wprowadzić imię</value>
+  </data>
+  <data name="enternewpassword" xml:space="preserve">
+    <value>Proszę wprowadzic nowe haslo</value>
+  </data>
+  <data name="enteruniqueid" xml:space="preserve">
+    <value>Prosze wprowadzic kod maszyny</value>
+  </data>
+  <data name="enterusername" xml:space="preserve">
+    <value>Proszę wporwadzić nazwę użytkownika</value>
+  </data>
+  <data name="finish" xml:space="preserve">
+    <value>Zakonczone</value>
+  </data>
+  <data name="forgotpassword" xml:space="preserve">
+    <value>Zapomnialem Hasla</value>
+  </data>
+  <data name="homepage" xml:space="preserve">
+    <value>Strona Domowa</value>
+  </data>
+  <data name="id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="inactive" xml:space="preserve">
+    <value>Nieaktywny</value>
+  </data>
+  <data name="lastnamechars" xml:space="preserve">
+    <value>Nazwisko może zawierać tylko litery</value>
+  </data>
+  <data name="lastnamelength" xml:space="preserve">
+    <value>Nazwisko musi zawierac co najmniej 3 znaki</value>
+  </data>
+  <data name="location" xml:space="preserve">
+    <value>Lokacja</value>
+  </data>
+  <data name="login" xml:space="preserve">
+    <value>Logowanie</value>
+  </data>
+  <data name="loginpanel" xml:space="preserve">
+    <value>Panel Logowania</value>
+  </data>
+  <data name="loginusername" xml:space="preserve">
+    <value>Prosze wprowadzic nazwe uzytkownika lub e-mail</value>
+  </data>
+  <data name="logme" xml:space="preserve">
+    <value>Zaloguj</value>
+  </data>
+  <data name="logout" xml:space="preserve">
+    <value>Wyloguj</value>
+  </data>
+  <data name="longerdescriptiontext" xml:space="preserve">
+    <value>Opis musi być dluzszy</value>
+  </data>
+  <data name="longerfaultdescription" xml:space="preserve">
+    <value>Opis usterki musi być dluzszy</value>
+  </data>
+  <data name="machinecode" xml:space="preserve">
+    <value>Kod Maszyny</value>
+  </data>
+  <data name="machinedeleted" xml:space="preserve">
+    <value>Maszyna zostala usunieta</value>
+  </data>
+  <data name="machineeddited" xml:space="preserve">
+    <value>Maszyna została edytowana</value>
+  </data>
+  <data name="machineidtaken" xml:space="preserve">
+    <value>Maszyna o takim kodzie nie istnieje w systemie</value>
+  </data>
+  <data name="machinelocation" xml:space="preserve">
+    <value>Lokacja maszyny</value>
+  </data>
+  <data name="machinewasadded" xml:space="preserve">
+    <value>Maszyna została dodana</value>
+  </data>
+  <data name="mainpage" xml:space="preserve">
+    <value>Strona Glowna</value>
+  </data>
+  <data name="Mechanics" xml:space="preserve">
+    <value>Mechanicy</value>
+  </data>
+  <data name="model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="name" xml:space="preserve">
+    <value>Imie</value>
+  </data>
+  <data name="namechars" xml:space="preserve">
+    <value>Imie może zawierać tylko litery</value>
+  </data>
+  <data name="namelength" xml:space="preserve">
+    <value>Imie musi zawierac co najmniej 2 znaki</value>
+  </data>
+  <data name="newpassword" xml:space="preserve">
+    <value>Nowe haslo</value>
+  </data>
+  <data name="no" xml:space="preserve">
+    <value>Nie</value>
+  </data>
+  <data name="nomachines" xml:space="preserve">
+    <value>Brak Maszyn</value>
+  </data>
+  <data name="nousers" xml:space="preserve">
+    <value>Brak Uzytkownikow</value>
+  </data>
+  <data name="pageunavailable" xml:space="preserve">
+    <value>Strona ktora chcesz odwiedzic jest dla ciebie niedostepna.</value>
+  </data>
+  <data name="password" xml:space="preserve">
+    <value>Prosze wprowadzic haslo</value>
+  </data>
+  <data name="passworderror" xml:space="preserve">
+    <value>Wystapil blad. Zmiana hasla zakonczona niepowodzeniem.</value>
+  </data>
+  <data name="passwordlength" xml:space="preserve">
+    <value>Haslo musi zawierać pomiedzy 8 a 15 znaków</value>
+  </data>
+  <data name="passwordrequirement" xml:space="preserve">
+    <value>Hasło musi składać się z 8 do 15 znaków oraz zawierać: małą, dużą literę, liczbę z zakresu [0-9] oraz znak z zakresu: \"#$^+=!*()@%&amp;\"</value>
+  </data>
+  <data name="passwordsdoesnotequal" xml:space="preserve">
+    <value>Podane Haslo nie jest takie same jak poprzednie</value>
+  </data>
+  <data name="rememberme" xml:space="preserve">
+    <value>Zapamietaj mnie</value>
+  </data>
+  <data name="repeatcurrentpassword" xml:space="preserve">
+    <value>Powtorz obecne haslo</value>
+  </data>
+  <data name="reportaccident" xml:space="preserve">
+    <value>Zglos awarie</value>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>Wyszukaj</value>
+  </data>
+  <data name="shorterdescriptiontext" xml:space="preserve">
+    <value>Opis musi być krotszy</value>
+  </data>
+  <data name="shorterfaultdescription" xml:space="preserve">
+    <value>Opis usterki musi być krotszy</value>
+  </data>
+  <data name="sorry" xml:space="preserve">
+    <value>Przepraszamy.</value>
+  </data>
+  <data name="state" xml:space="preserve">
+    <value>Stan</value>
+  </data>
+  <data name="stateactive" xml:space="preserve">
+    <value>Aktywne</value>
+  </data>
+  <data name="stateinrepair" xml:space="preserve">
+    <value>W Naprawie</value>
+  </data>
+  <data name="stateonhold" xml:space="preserve">
+    <value>Wstrzymane</value>
+  </data>
+  <data name="surname" xml:space="preserve">
+    <value>Nazwisko</value>
+  </data>
+  <data name="system" xml:space="preserve">
+    <value>Wystapil blad systemu. Skontaktuj sie z administratorem systemu.</value>
+  </data>
+  <data name="uniqueidchars" xml:space="preserve">
+    <value>Dozwolone znaki to [a-z][A-Z][0-9]</value>
+  </data>
+  <data name="uniqueidlength" xml:space="preserve">
+    <value>Proszę wprowadzić kod składający się co najmniej z 3 znaków</value>
+  </data>
+  <data name="uniqueidtaken" xml:space="preserve">
+    <value>Takie ID istnieje w systemie</value>
+  </data>
+  <data name="user" xml:space="preserve">
+    <value>Uzytkownik</value>
+  </data>
+  <data name="username" xml:space="preserve">
+    <value>Nazwa Uzytkownika</value>
+  </data>
+  <data name="usernamechars" xml:space="preserve">
+    <value>Nazwa Uzytkownika może zawierać tylko litery i cyfry</value>
+  </data>
+  <data name="usernamelength" xml:space="preserve">
+    <value>Nazwa użytkownika musi zawierać od 5 do 15 znaków</value>
+  </data>
+  <data name="usernametaken" xml:space="preserve">
+    <value>Podana nazwa użytkownika jest już zajęta</value>
+  </data>
+  <data name="userpassword" xml:space="preserve">
+    <value>Haslo uzytkownika</value>
+  </data>
+  <data name="wantdeletemachine" xml:space="preserve">
+    <value>Na pewno chcesz usunac maszyne z bazy?</value>
+  </data>
+  <data name="wantdeleteuser" xml:space="preserve">
+    <value>Na pewno chcesz usunac uzytkownika?</value>
+  </data>
+  <data name="waschanged" xml:space="preserve">
+    <value>zostalo zmienione.</value>
+  </data>
+  <data name="wrongemail" xml:space="preserve">
+    <value>Wprowadzony email nie jest poprawny</value>
+  </data>
+  <data name="wronglogin" xml:space="preserve">
+    <value>Nieprawidłowa nazwa użytkownika/email lub haslo</value>
+  </data>
+  <data name="yes" xml:space="preserve">
+    <value>Tak</value>
+  </data>
+</root>

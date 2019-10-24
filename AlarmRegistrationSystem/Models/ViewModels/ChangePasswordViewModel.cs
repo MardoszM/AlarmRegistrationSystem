@@ -10,17 +10,17 @@ namespace AlarmRegistrationSystem.Models.ViewModels
     {
         public string SpecifiedUserName { get; set; }
 
-        [Required(ErrorMessage = "Proszę wprowadzic obecne haslo")]
-        [StringLength(maximumLength: 15 ,MinimumLength = 8, ErrorMessage = "Haslo musi zawierać pomiedzy 8 a 15 znaków")]
+        [Required(ErrorMessage = "actualpassword")]
+        [StringLength(maximumLength: 15 ,MinimumLength = 8, ErrorMessage = "passwordlength")]
         public string OldPassword { get; set; }
 
-        [Required(ErrorMessage = "Proszę wprowadzic obecne haslo ponownie")]
-        [Compare("OldPassword",ErrorMessage = "Podane Haslo nie jest takie same jak poprzednie")]
+        [Required(ErrorMessage = "actualpasswordagain")]
+        [Compare("OldPassword",ErrorMessage = "passwordsdoesnotequal")]
         public string SecondOldPassword { get; set; }
 
-        [Required(ErrorMessage = "Proszę wprowadzic nowe haslo")]
+        [Required(ErrorMessage = "enternewpassword")]
         //[StringLength(maximumLength: 15 , MinimumLength = 8, ErrorMessage = "Nowe haslo musi zawierać od 8 do 15 znaków")]
-        [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[#$^+=!*()@%&]).{8,15}", ErrorMessage = "Hasło musi składać się z 8 do 15 znaków oraz zawierać: małą, dużą literę, liczbę z zakresu [0-9] oraz znak z zakresu: \"#$^+=!*()@%&\"")]
+        [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[#$^+=!*()@%&]).{8,15}", ErrorMessage = "passwordrequirement")]
         public string NewPassword { get; set; }
     }
 }

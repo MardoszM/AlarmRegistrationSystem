@@ -1,6 +1,6 @@
 ﻿@model Models.ViewModels.ReportAccidentViewModel
 @{
-    ViewData["Title"] = "Zglos awarie";
+    ViewData["Title"] = Localizer["reportaccident"];
     Layout = "_Layout";
 }
 
@@ -11,29 +11,29 @@
             <div class="col s10 input-field col l4 m6 s9 offset-l1 offset-m2">
                 <i class="fas fa-fingerprint prefix"></i>
                 <input id="autocomplete-input" asp-for="Notification.MachineUniqueID" type="text" class="autocomplete validate" />
-                <label for="autocomplete-input" asp-for="Notification.MachineUniqueID">Kod Maszyny</label>
+                <label for="autocomplete-input" asp-for="Notification.MachineUniqueID">@Localizer["machinecode"]</label>
                 <span asp-validation-for="Notification.MachineUniqueID" class="helper-text left-align red-text darken-1"></span>
             </div>
 
             <div id="tip" class="input-field left-align hide col s1">
-                <i class="tooltipped" data-position="right" data-tooltip="W przypadku braku maszyny o podanym kodzie skontaktuj się z administratorem systemu"><i class="small far fa-question-circle amber-text darken-4"></i></i>
+                <i class="tooltipped" data-position="right" data-tooltip="@Localizer["casenomachines"]"><i class="small far fa-question-circle amber-text darken-4"></i></i>
             </div>
         </div>
         <div class="row">
             <div class="input-field col s12 m7 l5 offset-l1 offset-m2">
                 <i class="fas fa-keyboard prefix"></i>
                 <textarea id="textarea" asp-for="Notification.MainDescription" class="materialize-textarea" data-length="1000"></textarea>
-                <label asp-for="Notification.MainDescription">Opis awarii</label>
+                <label asp-for="Notification.MainDescription">@Localizer["accidentdescription"]</label>
                 <span asp-validation-for="Notification.MainDescription" class="helper-text left-align red-text darken-1"></span>
             </div>
         </div>
         <div class="row">
             <div class="col l6 m9 s12 right-align">
                 <a asp-controller="@Model.Controller" asp-action="@Model.Action" class="btn waves-effect waves-light orange darken-2">
-                    Anuluj
+                    @Localizer["cancel"]
                     <i class="fas fa-times"></i>
                 </a>
-                <button type="submit" class="btn waves-effect waves-light teal darken-1">Dodaj <i class="fas fa-paper-plane"></i></button>
+                <button type="submit" class="btn waves-effect waves-light teal darken-1">@Localizer["add"] <i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </form>

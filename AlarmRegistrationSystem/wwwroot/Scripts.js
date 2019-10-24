@@ -75,3 +75,14 @@ function AjaxAndFunc($url, func, $data) {
         }
     });
 }
+
+function ChangeLanguage($culture) {
+    var $url = "/system/SetLanguage2";
+    var func = function (result) {
+        if (result !== null) {
+            window.location.reload();
+        }
+    };
+        var $data = { culture: $culture };
+        AjaxAndFunc($url, func, $data);
+}

@@ -2,7 +2,7 @@
 
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Edytuj Maszyne";
+    ViewData["Title"] = Localizer["editmachine"];
 }
 
 <form id="form-validate" asp-action="EditMachine" method="post">
@@ -15,7 +15,7 @@
                 <div class="input-field col l5 m8 s12 push-l1 push-m2" aria-invalid="true">
                     <i class="fas fa-qrcode prefix"></i>
                     <input asp-for="Machine.MachineUniqueId" type="text" class="validate" />
-                    <label asp-for="Machine.MachineUniqueId">Kod Maszyny</label>
+                    <label asp-for="Machine.MachineUniqueId">@Localizer["machinecode"]</label>
                     <span asp-validation-for="Machine.MachineUniqueId" class="helper-text left-align red-text darken-1"></span>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                 <div class="input-field col l5 m8 s12 push-l1 push-m2">
                     <i class="fa fa-search-location prefix"></i>
                     <input asp-for="Machine.Location" type="text" class="validate" />
-                    <label asp-for="Machine.Location">Lokacja</label>
+                    <label asp-for="Machine.Location">@Localizer["location"]</label>
                     <span asp-validation-for="Machine.Location" class="helper-text left-align red-text darken-1"></span>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                 <div class="input-field col l5 m8 s12 push-l1 push-m2">
                     <i class="fas fa-registered prefix"></i>
                     <input asp-for="Machine.Brand" type="text" class="validate" />
-                    <label asp-for="Machine.Brand">Marka</label>
+                    <label asp-for="Machine.Brand">@Localizer["brand"]</label>
                     <span asp-validation-for="Machine.Brand" class="helper-text left-align red-text darken-1"></span>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                 <div class="input-field col l5 m8 s12 push-l1 push-m2">
                     <i class="far fa-registered prefix"></i>
                     <input asp-for="Machine.Model" type="text" class="validate" />
-                    <label asp-for="Machine.Model">Model</label>
+                    <label asp-for="Machine.Model">@Localizer["model"]</label>
                     <span asp-validation-for="Machine.Model" class="helper-text left-align red-text darken-1"></span>
                 </div>
             </div>
@@ -53,10 +53,10 @@
                     <div class="switch col l5 m8 s12 push-l1 push-m2">
                         <i class="fas fa-unlock-alt prefix"></i>
                         <label>
-                            Nieaktywny
+                            @Localizer["inactive"]
                             <input type="checkbox" asp-for="Machine.State">
                             <span class="lever"></span>
-                            Aktywny
+                            @Localizer["active"]
                         </label>
                     </div>
                 </div>
@@ -67,10 +67,10 @@
         <div class="col l6 m8 s9 right-align">
             <div>
                 <a href="@Model.ReturnUrl" class="btn waves-effect waves-light orange darken-2">
-                    Anuluj
+                    @Localizer["cancel"]
                     <i class="fas fa-times"></i>
                 </a>
-                <button type="submit" class="btn waves-effect waves-light teal darken-1">Dodaj <i class="fas fa-paper-plane"></i></button>
+                <button type="submit" class="btn waves-effect waves-light teal darken-1">@Localizer["add"] <i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>

@@ -8,10 +8,10 @@ namespace AlarmRegistrationSystem.Models.ViewModels
 {
     public class LoginViewModel
     {
-        [Required(ErrorMessage = "Prosze wprowadzic nazwe uzytkownika lub e-mail")]
+        [Required(ErrorMessage = "loginusername")]
         public string LoginName { get; set; }
 
-        [Required(ErrorMessage = "Prosze wprowadzic haslo")]
+        [Required(ErrorMessage = "password")]
         public string Password { get; set; }
 
         public bool RememberMe { get; set; }
