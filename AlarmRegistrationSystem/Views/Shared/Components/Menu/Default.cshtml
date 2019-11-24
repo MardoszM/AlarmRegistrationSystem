@@ -5,7 +5,8 @@
         <div class="row">
             <img class="col s6 push-s3" src="~/Images/user.png" />
         </div>
-        <a href="#name"><span class="black-text name">@Model.FirstName @Model.SecondName</span></a>
+        <a href="#userName" class="center-align"><span class="black-text name">@Model.UserName</span></a>
+        <a href="#name"><span class="black-text email">@Model.FirstName @Model.SecondName</span></a>
         <a href="#email"><span class="black-text email">@Model.Email</span></a>
     </div>
     @foreach (var link in Model.Links)

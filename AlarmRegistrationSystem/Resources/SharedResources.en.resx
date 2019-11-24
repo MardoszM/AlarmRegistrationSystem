@@ -126,6 +126,12 @@
   <data name="accidentdescription" xml:space="preserve">
     <value>Accident Description</value>
   </data>
+  <data name="accidentdocumentation" xml:space="preserve">
+    <value>Accident Documentation</value>
+  </data>
+  <data name="accidenthasbeenadded" xml:space="preserve">
+    <value>Accident has been added</value>
+  </data>
   <data name="accidentstate" xml:space="preserve">
     <value>Accident state</value>
   </data>
@@ -144,8 +150,11 @@
   <data name="add" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="adddocumentationelement" xml:space="preserve">
+    <value>Add component to documentation</value>
+  </data>
   <data name="adddocumentationitem" xml:space="preserve">
-    <value>Add documentation item</value>
+    <value>Add documentation item of notification</value>
   </data>
   <data name="addmachine" xml:space="preserve">
     <value>Add Machine</value>
@@ -155,6 +164,9 @@
   </data>
   <data name="Administrators" xml:space="preserve">
     <value>Administrators</value>
+  </data>
+  <data name="alarmreason" xml:space="preserve">
+    <value>Parts constituting main reason of failure</value>
   </data>
   <data name="all" xml:space="preserve">
     <value>All</value>
@@ -171,8 +183,14 @@
   <data name="cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="cannotdeleteanythig" xml:space="preserve">
+    <value>Cannot delete anything</value>
+  </data>
   <data name="casenomachines" xml:space="preserve">
     <value>If there is no machine with the given code, please contact to the system administrator</value>
+  </data>
+  <data name="change" xml:space="preserve">
+    <value>Exchange</value>
   </data>
   <data name="changepassword" xml:space="preserve">
     <value>Change Password</value>
@@ -189,17 +207,32 @@
   <data name="delete" xml:space="preserve">
     <value>Delete</value>
   </data>
+  <data name="deleteallunused" xml:space="preserve">
+    <value>Delete all unused</value>
+  </data>
+  <data name="descriptionelement" xml:space="preserve">
+    <value>Description of the work done</value>
+  </data>
   <data name="displaymachines" xml:space="preserve">
     <value>Display Machines</value>
   </data>
   <data name="displayusers" xml:space="preserve">
     <value>Display Users</value>
   </data>
+  <data name="documentationfornotification" xml:space="preserve">
+    <value>Documentation for notification number</value>
+  </data>
   <data name="edit" xml:space="preserve">
     <value>Edit</value>
   </data>
+  <data name="editdocumentationitem" xml:space="preserve">
+    <value>Edit documentation item of notification</value>
+  </data>
   <data name="editmachine" xml:space="preserve">
     <value>Edit Machine</value>
+  </data>
+  <data name="editnotification" xml:space="preserve">
+    <value>Edit notification text</value>
   </data>
   <data name="email" xml:space="preserve">
     <value>E-mail</value>
@@ -246,6 +279,12 @@
   <data name="enterusername" xml:space="preserve">
     <value>Enter User Name</value>
   </data>
+  <data name="exchange" xml:space="preserve">
+    <value>Change order</value>
+  </data>
+  <data name="exchangeparts" xml:space="preserve">
+    <value>Change references to part in notifications</value>
+  </data>
   <data name="finish" xml:space="preserve">
     <value>Finish</value>
   </data>
@@ -258,8 +297,20 @@
   <data name="id" xml:space="preserve">
     <value>Id</value>
   </data>
+  <data name="idtaken" xml:space="preserve">
+    <value>Id is already taken</value>
+  </data>
   <data name="inactive" xml:space="preserve">
     <value>Inactive</value>
+  </data>
+  <data name="in_repair" xml:space="preserve">
+    <value>In Repair</value>
+  </data>
+  <data name="isempty" xml:space="preserve">
+    <value>is empty.</value>
+  </data>
+  <data name="lastmodification" xml:space="preserve">
+    <value>Last modification</value>
   </data>
   <data name="lastnamechars" xml:space="preserve">
     <value>Last Name can contain only letters</value>
@@ -312,6 +363,9 @@
   <data name="mainpage" xml:space="preserve">
     <value>Main Page</value>
   </data>
+  <data name="managesubasseblies" xml:space="preserve">
+    <value>Manage Subassemblies</value>
+  </data>
   <data name="Mechanics" xml:space="preserve">
     <value>Mechanics</value>
   </data>
@@ -339,8 +393,17 @@
   <data name="nousers" xml:space="preserve">
     <value>No Users</value>
   </data>
+  <data name="on_hold" xml:space="preserve">
+    <value>Withheld</value>
+  </data>
+  <data name="origin" xml:space="preserve">
+    <value>Original</value>
+  </data>
   <data name="pageunavailable" xml:space="preserve">
     <value>The page you want to visit is not available to you</value>
+  </data>
+  <data name="partexist" xml:space="preserve">
+    <value>Part already exist</value>
   </data>
   <data name="password" xml:space="preserve">
     <value>Enter Password</value>
@@ -357,11 +420,17 @@
   <data name="passwordsdoesnotequal" xml:space="preserve">
     <value>The password you entered is not the same as the previous one</value>
   </data>
+  <data name="placeholder" xml:space="preserve">
+    <value>Add part that influence to failure</value>
+  </data>
   <data name="rememberme" xml:space="preserve">
     <value>Remember Me</value>
   </data>
   <data name="repeatcurrentpassword" xml:space="preserve">
     <value>Repeat current password</value>
+  </data>
+  <data name="replacement" xml:space="preserve">
+    <value>Replacement</value>
   </data>
   <data name="reportaccident" xml:space="preserve">
     <value>Report Accident</value>
@@ -369,11 +438,17 @@
   <data name="search" xml:space="preserve">
     <value>Search</value>
   </data>
+  <data name="secondaryplaceholder" xml:space="preserve">
+    <value>Add another part</value>
+  </data>
   <data name="shorterdescriptiontext" xml:space="preserve">
     <value>Description text must be shorter</value>
   </data>
   <data name="shorterfaultdescription" xml:space="preserve">
     <value>Description must be shorter</value>
+  </data>
+  <data name="showdocumentation" xml:space="preserve">
+    <value>Show whole documentation</value>
   </data>
   <data name="sorry" xml:space="preserve">
     <value>Sorry.</value>
@@ -390,17 +465,26 @@
   <data name="stateonhold" xml:space="preserve">
     <value>On Hold</value>
   </data>
+  <data name="subassemblyname" xml:space="preserve">
+    <value>Part name</value>
+  </data>
+  <data name="subbassemblynameyouwanttoadd" xml:space="preserve">
+    <value>Part name</value>
+  </data>
   <data name="surname" xml:space="preserve">
     <value>Surname</value>
   </data>
   <data name="system" xml:space="preserve">
     <value>A system error has occurred. Contact the system administrator.</value>
   </data>
+  <data name="unabletoaddnotification" xml:space="preserve">
+    <value>Unable to add notification</value>
+  </data>
   <data name="uniqueidchars" xml:space="preserve">
     <value>Allowed characters: [a-z] [A-Z] [0-9]</value>
   </data>
   <data name="uniqueidlength" xml:space="preserve">
-    <value>Code must have at least 3 characters</value>
+    <value>Code must have at least 3 characters and 15 characters maximally</value>
   </data>
   <data name="uniqueidtaken" xml:space="preserve">
     <value>Id was already taken</value>
@@ -423,8 +507,14 @@
   <data name="userpassword" xml:space="preserve">
     <value>Password of user</value>
   </data>
+  <data name="wantdeletedescription" xml:space="preserve">
+    <value>Are you sure you want to delete documentation component?</value>
+  </data>
   <data name="wantdeletemachine" xml:space="preserve">
-    <value>Are you sure you want to delete user?</value>
+    <value>Are you sure you want to delete machine?</value>
+  </data>
+  <data name="wantdeletesubassembly" xml:space="preserve">
+    <value>Are you sure you want to delete part (parts)?</value>
   </data>
   <data name="wantdeleteuser" xml:space="preserve">
     <value>Are you sure you want to delete user?</value>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AlarmRegistrationSystem.Controllers;
+using AlarmRegistrationSystem.Hubs;
 using AlarmRegistrationSystem.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -52,7 +53,8 @@ namespace AlarmRegistrationSystem
             services.AddTransient<INotificationRepository, EFNotificationRepository>();
             services.AddMemoryCache();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
-            services.AddMvc()
+            services.AddSignalR();
+            services.AddMvc()   
                 .AddViewLocalization()
                     .AddDataAnnotationsLocalization(options => {
                          options.DataAnnotationLocalizerProvider = (type, factory) =>
@@ -87,6 +89,10 @@ namespace AlarmRegistrationSystem
                 routes.MapRoute(
                     name: null,
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chatHub");
             });
 
             ApplicationIdentityDbContext.AddRoles(app.ApplicationServices,env.ContentRootPath).Wait();

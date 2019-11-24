@@ -66,18 +66,33 @@ namespace AlarmRegistrationSystem.Infrastructure
                     worksheet.Cells[1, 5].Value = "Haslo";
                 }
                 const int maxRow = 1000000; //One Millon Rows
-                for (int i = worksheet.Dimension.End.Row; i < maxRow; i++)
-                {
-                    if (worksheet.Cells["A" + i].Value == null)
+                    for (int i = worksheet.Dimension.Start.Row; i < maxRow; i++)
                     {
-                        worksheet.Cells["A" + i].Value = user.FirstName;
-                        worksheet.Cells["B" + i].Value = user.SecondName;
-                        worksheet.Cells["C" + i].Value = user.UserName;
-                        worksheet.Cells["D" + i].Value = user.Email;
-                        worksheet.Cells["E" + i].Value = password;
-                        break;
+                        if (user.Id == null)
+                        {
+                            if (worksheet.Cells["A" + i].Value == null)
+                            {
+                                worksheet.Cells["A" + i].Value = user.FirstName;
+                                worksheet.Cells["B" + i].Value = user.SecondName;
+                                worksheet.Cells["C" + i].Value = user.UserName;
+                                worksheet.Cells["D" + i].Value = user.Email;
+                                worksheet.Cells["E" + i].Value = password;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if (worksheet.Cells["C" + i].Value.ToString().ToLower() == user.NormalizedUserName.ToLower())
+                            {
+                                worksheet.Cells["A" + i].Value = user.FirstName;
+                                worksheet.Cells["B" + i].Value = user.SecondName;
+                                worksheet.Cells["C" + i].Value = user.UserName;
+                                worksheet.Cells["D" + i].Value = user.Email;
+                                worksheet.Cells["E" + i].Value = password;
+                                break;
+                            }
+                        }
                     }
-                }
                 package.Save();
             }
         }

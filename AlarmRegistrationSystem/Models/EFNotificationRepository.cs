@@ -6,13 +6,17 @@ using System.Threading.Tasks;
 
 namespace AlarmRegistrationSystem.Models
 {
-    public class EFNotificationRepository :INotificationRepository
+    public class EFNotificationRepository : INotificationRepository
     {
         ApplicationDbContext context;
 
         public IQueryable<Notification> Notifications => context.Notifications;
 
         public IQueryable<Description> Descriptions => context.Descriptions;
+
+        public IQueryable<EmergencySubassembly> EmergencySubassemblies => context.EmergencySubassemblies;
+
+        public IQueryable<NotificationES> NotificationEs => context.NotificationEs;
 
         public EFNotificationRepository(ApplicationDbContext ctx)
         {
@@ -26,7 +30,7 @@ namespace AlarmRegistrationSystem.Models
             {
                 notification = context.Notifications.FirstOrDefault(n => n.NotificationID == NotificationId);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -43,7 +47,7 @@ namespace AlarmRegistrationSystem.Models
                     context.Notifications.Remove(notification);
                     context.SaveChanges();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     throw ex;
                 }
@@ -54,13 +58,13 @@ namespace AlarmRegistrationSystem.Models
         public bool SaveNotification(Notification notification)
         {
             bool value = false;
-            if(notification.NotificationID == 0)
+            if (notification.NotificationID == 0)
             {
                 try
                 {
                     context.Notifications.Add(notification);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     throw ex;
                 }
@@ -73,7 +77,7 @@ namespace AlarmRegistrationSystem.Models
                 {
                     dbNotification = context.Notifications.FirstOrDefault(n => n.NotificationID == notification.NotificationID);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     throw ex;
                 }
@@ -88,7 +92,7 @@ namespace AlarmRegistrationSystem.Models
             {
                 context.SaveChanges();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -164,5 +168,147 @@ namespace AlarmRegistrationSystem.Models
             }
             return value;
         }
+
+        public EmergencySubassembly DeleteSubassembly(int subassemblyId)
+        {
+            EmergencySubassembly subassembly = null;
+            try
+            {
+                subassembly = context.EmergencySubassemblies.FirstOrDefault(s => s.Id == subassemblyId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            if (subassembly != null)
+            {
+                try
+                {
+                    context.EmergencySubassemblies.Remove(subassembly);
+                    context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return subassembly;
+        }
+
+        public bool SaveSubassembly(EmergencySubassembly subassembly)
+        {
+            bool value = false;
+            if (subassembly.Id == 0)
+            {
+                try
+                {
+                    context.EmergencySubassemblies.Add(subassembly);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                value = true;
+            }
+            else
+            {
+                EmergencySubassembly tmpsubassembly = null;
+                try
+                {
+                    tmpsubassembly = context.EmergencySubassemblies.FirstOrDefault(s => s.Id == subassembly.Id);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                if (tmpsubassembly != null)
+                {
+                    tmpsubassembly.Name = subassembly.Name;
+                    value = true;
+                }
+            }
+            try
+            {
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return value;
+        }
+
+        public NotificationES DeleteNotificationES(int notificationESId)
+        {
+            NotificationES notificationES = null;
+            try
+            {
+                notificationES = context.NotificationEs.FirstOrDefault(e => e.Id == notificationESId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            if (notificationES != null)
+            {
+                try
+                {
+                    context.NotificationEs.Remove(notificationES);
+                    context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return notificationES;
+        }
+
+        public bool SaveNotificationES(NotificationES notificationES)
+        {
+            bool value = false;
+            if (notificationES.Id == 0)
+            {
+                try
+                {
+                    context.NotificationEs.Add(notificationES);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                value = true;
+            }
+            else
+            {
+                NotificationES tmpnotificationES = null;
+                try
+                {
+                    tmpnotificationES = context.NotificationEs.FirstOrDefault(e => e.Id == notificationES.Id);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                if (tmpnotificationES != null)
+                {
+                    tmpnotificationES.NotificationId = tmpnotificationES.NotificationId;
+                    tmpnotificationES.ESId = tmpnotificationES.ESId;
+                    value = true;
+                }
+            }
+            try
+            {
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return value;
+        }
+
     }
 }

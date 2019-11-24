@@ -1,48 +1,187 @@
 ﻿@model Models.ViewModels.DisplayNotificationViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = Localizer["accident"] + ": " + Context.Request.Query["notificationId"];
+    ViewData["Title"] = Localizer["accident"].Value + ": " + Context.Request.Query["notificationId"];
 }
+
 <div class="col s12">
+    <form id="Form" data-container="DescriptionsCollection">
+        <input id="DeleteDescription" name="descriptionId" value="" type="hidden" />
+    </form>
+
     <div class="row">
-        <div class="input-field col m2 s6 no-margin push-l2 push-m2">
-            <h6 class="blue-grey-text no-margin">@Localizer["author"]</h6>
-            <h5 class="red-text text-accent-2">@Model.Notification.Declarant</h5>
+        <div class="col m2 s6 no-margin left-align push-l1 push-m2">
+            <h6 class="teal-text text-darken-2 no-margin">@Localizer["author"]</h6>
+            <h5 class="deep-orange-text">@Model.Notification.Declarant</h5>
         </div>
-        <div class="input-field col m2 right pull-l4">
-            <input class="no-border grey-text text-darken-1" type="date" asp-for="@Model.Notification.CreationDate" disabled />
-            <label class="grey-text text-darken-1" asp-for="@Model.Notification.CreationDate.Date">@Localizer["accidentdate"]</label>
+        <div class="col l2 m3 s6 push-l4 push-m6 no-margin left-align mobile-right">
+            <h6 class="orange-text text-accent-2 label_size no-margin">@Localizer["accidentdate"]</h6>
+            <h6 class="no-border orange-text text-accent-2 input_size">
+            @Model.Notification.CreationDate.ToString("dd/MM/yy")
+            </h6>
         </div>
     </div>
 
     <div class="row">
-        <div class="input-field col m2 push-l1 push-m2">
-            <input class="no-border black-text" type="text" asp-for="@Model.Notification.MachineUniqueID" disabled />
-            <label class="blue-grey-text" asp-for="@Model.Notification.MachineUniqueID">@Localizer["machinecode"]</label>
+        <div class="col l4 s6 push-l1 push-m2 no-margin left-align">
+            <h6 class="teal-text text-darken-2 label_size no-margin">@Localizer["machinecode"]</h6>
+            <h6 class="no-border black-text input_size">@Model.Notification.MachineUniqueID</h6>
         </div>
-        <div class="input-field col m2 push-l2 push-m2">
-            <input class="no-border black-text" type="text" asp-for="@Model.MachineLocation" disabled />
-            <label class="blue-grey-text" asp-for="@Model.MachineLocation">@Localizer["machinelocation"]</label>
+        <div class="col l2 s6 push-l2 push-m2 no-margin left-align mobile-right">
+            <h6 class="teal-text text-darken-2 label_size no-margin">@Localizer["machinelocation"]</h6>
+            <h6 class="no-border black-tex input_size">@Model.MachineLocation</h6>
+        </div>
+    </div>
+    <div class="row">
+        @if (User.IsInRole("Administrators") || User.IsInRole("Mechanics"))
+        {
+            <div class="input-field col l2 push-l1 push-m2 no-margin left-align">
+                <select id="notificationState">
+                    @foreach (string value in Enum.GetNames(Model.Notification.State.GetType()))
+                    {
+                        @if (value == Model.Notification.State.ToString())
+                        {
+                            <option value="@value" selected>@Localizer[value.ToLower()]</option>
+                        }
+                        else
+                        {
+                            <option value="@value">@Localizer[value.ToLower()]</option>
+                        }
+                    }
+                </select>
+                <label>@Localizer["accidentstate"]</label>
+            </div>
+        }
+        else
+        {
+
+            <div class="input-field col l2 push-l1 push-m2 no-margin left-align">
+                <h6 class="teal-text text-darken-2 label_size no-margin">@Localizer["accidentstate"]</h6>
+                <h6 id="State" class="no-border black-text input_size">@Localizer[Enum.GetName(typeof(
+                                            Models.NotificationStates), Model.Notification.State).ToLower()]</h6>
+            </div>
+
+        }
+    </div>
+
+    <div class="row">
+        <div class="input-field col l6 m8 s12 push-l1 push-m2" style="padding-right:unset;">
+            <div class="col s2 right right-align" style="padding-right:1.5rem;">
+                @if (this.User.Identity.Name == Model.Notification.Declarant || this.User.IsInRole("Administrators"))
+                {
+                    <a class='dropdown-trigger black-text text-bold' style="position:absolute;" href='' 
+                       data-target='@Model.Notification.NotificationID'>...</a>
+                    <ul id='@Model.Notification.NotificationID' class='dropdown-content'>
+                        <li>
+                            <a asp-action="ReportAccident" asp-controller="Notification" 
+                               asp-route-returnUrl="@Context.Request.Path"
+                               asp-route-notificationId="@Model.Notification.NotificationID">
+                                <i class="fas fa-edit"></i>@Localizer["edit"]
+                            </a>
+                        </li>
+                    </ul>
+                }
+            </div>
+            <h6 class="teal-text text-darken-2 label_size no-margin left-align">@Localizer["accidentdescription"]</h6>
+            <textarea class="materialize-textarea black-text" style="padding-top:1.5rem;" 
+                      asp-for="@Model.Notification.MainDescription" disabled></textarea>
         </div>
     </div>
 
     <div class="row">
-        <div class="input-field col m2 push-l1 push-m2">
-            <input id="State" class="no-border black-text" type="text" asp-for="@Model.Notification.State" disabled />
-            <label class="blue-grey-text" asp-for="@Model.Notification.State">@Localizer["accidentstate"]</label>
+        <div class="col l6 m8 s12 push-l1 push-m2">
+            <p class="caption left-align teal-text text-darken-2">@Localizer["alarmreason"]</p>
+            <div id="parts" class="chips chips-autocomplete input-field left-align" style="width:100%;">
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="input-field col m6 push-l1 push-m2">
-            <textarea class="materialize-textarea black-text" asp-for="@Model.Notification.MainDescription" disabled></textarea>
-            <label class="blue-grey-text" asp-for="@Model.Notification.MainDescription">@Localizer["accidentdescription"]</label>
-        </div>
+</div>
+<div class="row">
+    <div class="col l6 m8 s12 push-l1 push-m2">
+        <h6 class="col m12 s10 left-align bottomline no-padding teal-text text-darken-2" style="margin-left:0.75rem;">
+            @Localizer["accidentdocumentation"]
+        </h6>
+        @if (Model.Descriptions.Count == 0)
+        {
+            <h6 class="col black-text">@Localizer["documentationfornotification"] @Model.Notification.NotificationID @Localizer["isempty"]</h6>
+        }
+        else
+        {
+            <div id="DescriptionsCollection" class="row">
+                    @await Html.PartialAsync("Partial/Description", Model)
+            </div>
+        }
+    </div>
+</div>
+@if (!Model.IsMore)
+{
+    <div class="row col l6 m8 s12 push-l1 push-m2">
+        <form asp-action="AddDescription" asp-controller="Notification" method="get">
+            <input type="hidden" value="@Model.Notification.NotificationID" name="notificationId" />
+            <button type="submit" class="btn btn-block center-block">
+                <i class="fas fa-folder-plus"></i>
+                @Localizer["adddocumentationelement"]
+            </button>
+        </form>
+    </div>
+}
+else
+{
+    <div class="row col l6 m8 s12 push-l1 push-m2">
+        <form asp-action="ShowDocumentation" asp-controller="Notification" method="post">
+            <input type="hidden" value="@Model.Notification.NotificationID" name="notificationId" />
+            <button type="submit" class="btn btn-block center-block">
+                <i class="fas fa-folder-open"></i>
+                @Localizer["showdocumentation"]
+            </button>
+        </form>
+    </div>
+}
+
+<div id="modal1" class="modal">
+    <div class="modal-content">
+        <p>@Localizer["wantdeletedescription"] </p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-true waves-effect waves-light btn-flat">@Localizer["yes"]</a>
+        <a href="#!" class="modal-close waves-effect waves-light btn-flat">@Localizer["no"]</a>
     </div>
 </div>
 
-<div class="row center">
-    <button class="btn btn-block" asp-action="AddDescription" asp-controller="Notification">
-        @Localizer["accidentdescription"]
-    </button>
-</div>
+@section scripts{
+    <script src="~/Scripts.js" type="text/javascript"></script>
+    <script>
+        $(document).ready(function () {
+            $('.dropdown-trigger').dropdown();
+            $('#modal1').modal();
+
+            ChipsInit();
+
+            //Change Notification State on switch change
+            $('#notificationState').change(function () {
+                $url = "/Notification/changeNotificationnState";
+                let notificationId = new URLSearchParams(window.location.search).get('notificationId');
+                $data = "notificationId=" + notificationId + "&state=" + $(this).val();
+                AjaxAndFunc($url, null, $data);
+
+            })
+        });
+
+
+        $(document).ajaxComplete(function () {
+            $('.dropdown-trigger').dropdown();
+            $('.modal').modal();
+        });    
+
+        $(document).on('click', '.DoAndReload', function () {
+            passAttr(this);
+        });
+
+        $(document).on('click', '.modal-true', function () {
+            $('#modal1').modal("close");
+            deleteActivator(this, '/Notification/DeleteDescription');
+        });
+
+    </script>
+}

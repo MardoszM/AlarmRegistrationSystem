@@ -126,6 +126,12 @@
   <data name="accidentdescription" xml:space="preserve">
     <value>Opis awarii</value>
   </data>
+  <data name="accidentdocumentation" xml:space="preserve">
+    <value>Dokumentacja Awarii</value>
+  </data>
+  <data name="accidenthasbeenadded" xml:space="preserve">
+    <value>Zgloszenie zostalo dodane</value>
+  </data>
   <data name="accidentstate" xml:space="preserve">
     <value>Stan zgloszenia</value>
   </data>
@@ -144,8 +150,11 @@
   <data name="add" xml:space="preserve">
     <value>Dodaj</value>
   </data>
+  <data name="adddocumentationelement" xml:space="preserve">
+    <value>Dodaj komponent dokumentacji</value>
+  </data>
   <data name="adddocumentationitem" xml:space="preserve">
-    <value>Dodaj element dokumentacji</value>
+    <value>Dodaj element dokumentacji zgloszenia</value>
   </data>
   <data name="addmachine" xml:space="preserve">
     <value>Dodaj maszyne</value>
@@ -155,6 +164,9 @@
   </data>
   <data name="Administrators" xml:space="preserve">
     <value>Administratorzy</value>
+  </data>
+  <data name="alarmreason" xml:space="preserve">
+    <value>Czesci stanowiace glowna przyczyne awarii</value>
   </data>
   <data name="all" xml:space="preserve">
     <value>Wszystkie</value>
@@ -171,8 +183,14 @@
   <data name="cancel" xml:space="preserve">
     <value>Anuluj</value>
   </data>
+  <data name="cannotdeleteanythig" xml:space="preserve">
+    <value>Nie mozna nic usunac</value>
+  </data>
   <data name="casenomachines" xml:space="preserve">
     <value>W przypadku braku maszyny o podanym kodzie skontaktuj się z administratorem systemu</value>
+  </data>
+  <data name="change" xml:space="preserve">
+    <value>Wymien</value>
   </data>
   <data name="changepassword" xml:space="preserve">
     <value>Zmien Haslo</value>
@@ -189,17 +207,32 @@
   <data name="delete" xml:space="preserve">
     <value>Usun</value>
   </data>
+  <data name="deleteallunused" xml:space="preserve">
+    <value>Usun nieuzywane</value>
+  </data>
+  <data name="descriptionelement" xml:space="preserve">
+    <value>Opis wykonanej pracy</value>
+  </data>
   <data name="displaymachines" xml:space="preserve">
     <value>Wyswietl maszyny</value>
   </data>
   <data name="displayusers" xml:space="preserve">
     <value>Wyswietl uzytkownikow</value>
   </data>
+  <data name="documentationfornotification" xml:space="preserve">
+    <value>Dokumentacja dla zgloszenia numer</value>
+  </data>
   <data name="edit" xml:space="preserve">
     <value>Edytuj</value>
   </data>
+  <data name="editdocumentationitem" xml:space="preserve">
+    <value>Edytuj element dokumnetacji zgloszenia</value>
+  </data>
   <data name="editmachine" xml:space="preserve">
     <value>Edytuj Maszyne</value>
+  </data>
+  <data name="editnotification" xml:space="preserve">
+    <value>Edytuj tekst zgloszenia</value>
   </data>
   <data name="email" xml:space="preserve">
     <value>E-mail</value>
@@ -246,6 +279,12 @@
   <data name="enterusername" xml:space="preserve">
     <value>Proszę wporwadzić nazwę użytkownika</value>
   </data>
+  <data name="exchange" xml:space="preserve">
+    <value>Zmien kolejnosc</value>
+  </data>
+  <data name="exchangeparts" xml:space="preserve">
+    <value>Zamien odwolania do czesci w zgloszeniach</value>
+  </data>
   <data name="finish" xml:space="preserve">
     <value>Zakonczone</value>
   </data>
@@ -258,8 +297,20 @@
   <data name="id" xml:space="preserve">
     <value>Id</value>
   </data>
+  <data name="idtaken" xml:space="preserve">
+    <value>Id jest juz zajete</value>
+  </data>
   <data name="inactive" xml:space="preserve">
     <value>Nieaktywny</value>
+  </data>
+  <data name="in_repair" xml:space="preserve">
+    <value>W naprawie</value>
+  </data>
+  <data name="isempty" xml:space="preserve">
+    <value>jest pusta.</value>
+  </data>
+  <data name="lastmodification" xml:space="preserve">
+    <value>Ostatnia modyfikacja</value>
   </data>
   <data name="lastnamechars" xml:space="preserve">
     <value>Nazwisko może zawierać tylko litery</value>
@@ -291,6 +342,9 @@
   <data name="longerfaultdescription" xml:space="preserve">
     <value>Opis usterki musi być dluzszy</value>
   </data>
+  <data name="machineadded" xml:space="preserve">
+    <value>Maszyna zostala dodana</value>
+  </data>
   <data name="machinecode" xml:space="preserve">
     <value>Kod Maszyny</value>
   </data>
@@ -311,6 +365,9 @@
   </data>
   <data name="mainpage" xml:space="preserve">
     <value>Strona Glowna</value>
+  </data>
+  <data name="managesubasseblies" xml:space="preserve">
+    <value>Zarzadzaj podzespolami</value>
   </data>
   <data name="Mechanics" xml:space="preserve">
     <value>Mechanicy</value>
@@ -339,8 +396,17 @@
   <data name="nousers" xml:space="preserve">
     <value>Brak Uzytkownikow</value>
   </data>
+  <data name="on_hold" xml:space="preserve">
+    <value>Wstrzymane</value>
+  </data>
+  <data name="origin" xml:space="preserve">
+    <value>Oryginal</value>
+  </data>
   <data name="pageunavailable" xml:space="preserve">
     <value>Strona ktora chcesz odwiedzic jest dla ciebie niedostepna.</value>
+  </data>
+  <data name="partexist" xml:space="preserve">
+    <value>Taka czesc juz istnieje</value>
   </data>
   <data name="password" xml:space="preserve">
     <value>Prosze wprowadzic haslo</value>
@@ -357,11 +423,17 @@
   <data name="passwordsdoesnotequal" xml:space="preserve">
     <value>Podane Haslo nie jest takie same jak poprzednie</value>
   </data>
+  <data name="placeholder" xml:space="preserve">
+    <value>Dodaj czesc wplywajaca na awarie.</value>
+  </data>
   <data name="rememberme" xml:space="preserve">
     <value>Zapamietaj mnie</value>
   </data>
   <data name="repeatcurrentpassword" xml:space="preserve">
     <value>Powtorz obecne haslo</value>
+  </data>
+  <data name="replacement" xml:space="preserve">
+    <value>Zamiennik</value>
   </data>
   <data name="reportaccident" xml:space="preserve">
     <value>Zglos awarie</value>
@@ -369,11 +441,17 @@
   <data name="search" xml:space="preserve">
     <value>Wyszukaj</value>
   </data>
+  <data name="secondaryplaceholder" xml:space="preserve">
+    <value>Dodaj kolejna czesc</value>
+  </data>
   <data name="shorterdescriptiontext" xml:space="preserve">
     <value>Opis musi być krotszy</value>
   </data>
   <data name="shorterfaultdescription" xml:space="preserve">
     <value>Opis usterki musi być krotszy</value>
+  </data>
+  <data name="showdocumentation" xml:space="preserve">
+    <value>Wyswietl cala dokumentacje</value>
   </data>
   <data name="sorry" xml:space="preserve">
     <value>Przepraszamy.</value>
@@ -390,17 +468,26 @@
   <data name="stateonhold" xml:space="preserve">
     <value>Wstrzymane</value>
   </data>
+  <data name="subassemblyname" xml:space="preserve">
+    <value>Nazwa czesci</value>
+  </data>
+  <data name="subbassemblynameyouwanttoadd" xml:space="preserve">
+    <value>Nazwa czesci</value>
+  </data>
   <data name="surname" xml:space="preserve">
     <value>Nazwisko</value>
   </data>
   <data name="system" xml:space="preserve">
     <value>Wystapil blad systemu. Skontaktuj sie z administratorem systemu.</value>
   </data>
+  <data name="unabletoaddnotification" xml:space="preserve">
+    <value>Nie udalo sie dodac zgloszenia</value>
+  </data>
   <data name="uniqueidchars" xml:space="preserve">
     <value>Dozwolone znaki to [a-z][A-Z][0-9]</value>
   </data>
   <data name="uniqueidlength" xml:space="preserve">
-    <value>Proszę wprowadzić kod składający się co najmniej z 3 znaków</value>
+    <value>Proszę wprowadzić kod składający się z 3 do15 znaków</value>
   </data>
   <data name="uniqueidtaken" xml:space="preserve">
     <value>Takie ID istnieje w systemie</value>
@@ -423,8 +510,14 @@
   <data name="userpassword" xml:space="preserve">
     <value>Haslo uzytkownika</value>
   </data>
+  <data name="wantdeletedescription" xml:space="preserve">
+    <value>Na pewno chcesz usunac komponent dokumentacji z bazy?</value>
+  </data>
   <data name="wantdeletemachine" xml:space="preserve">
     <value>Na pewno chcesz usunac maszyne z bazy?</value>
+  </data>
+  <data name="wantdeletesubassembly" xml:space="preserve">
+    <value>Na pewno chcesz usunac czesc (czesci) z bazy?</value>
   </data>
   <data name="wantdeleteuser" xml:space="preserve">
     <value>Na pewno chcesz usunac uzytkownika?</value>

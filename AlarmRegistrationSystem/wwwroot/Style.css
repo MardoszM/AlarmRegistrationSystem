@@ -20,6 +20,10 @@ input.input-validation-error, textarea.input-validation-error
     margin:unset !important;
 }
 
+.no-margin-top{
+    margin-top:unset !important;
+}
+
 .no-border
 {
     border:none !important;
@@ -34,13 +38,18 @@ input.input-validation-error, textarea.input-validation-error
     padding:0.15rem !important;
 }
 
-.select-dropdown{
+
+.selectwhite input{
     color:white;
 }
 
 .selectwhite .select-wrapper input.select-dropdown {
     border-bottom: unset !important;
-    margin:unset;
+    margin: unset;
+}
+
+.bottomline {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42) !important;
 }
 
 /* Clicking the label does not activate the input without this */
@@ -49,6 +58,108 @@ input[type="text"] + label {
     * {
     pointer-events: all;
 }
+}
+
+.list:first-child {
+    margin-top:unset;
+}
+
+.list
+{
+    margin-top: 2rem;
+}
+
+.log-background{
+    background-image: url("../Images/login_background.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.log-element{
+    background: rgb(255, 255, 255,0.7);
+    padding-left: 2.5rem !important;
+    padding-right: 2.5rem !important;
+}
+
+.max-height {
+    height: 100%;
+}
+
+.btn-link{
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  /*optional*/
+  font-family: arial, sans-serif;
+  /*input has OS specific font-family*/
+  cursor: pointer;
+}
+
+.input_size{
+    font-size:1.05rem;
+    height:3rem;
+    font-weight:450;
+}
+
+.label_size {
+    font-size: 0.8rem;
+    font-weight:450;
+}
+
+.email{
+    padding-bottom:unset !important;
+}
+
+.chips .input{
+    width: 50% !important;
+}
+
+.border-top{
+    border-top: 1px solid gray;
+}
+
+.no-padding-left{
+    padding-left:unset !important;
+}
+
+.no-padding-right{
+    padding-left:unset !important;
+}
+
+.no-padding-sides{
+    padding-left: unset !important;
+    padding-right: unset !important;
+}
+
+.padding-top{
+    padding-top:1rem !important;
+}
+
+.padding-right2{
+    padding-right:2rem !important;
+}
+
+.selectwhite .select-wrapper{
+    float:right !important;
+}
+
+.fontsize_1{
+    font-size:1rem !important;
+}
+
+.fontsize_08{
+    font-size: 0.8rem !important;
+}
+
+.align_btn_to_inputfield{
+    margin-top: 0.6rem;
+}
+.margin-left7{
+    margin-left: 0.7rem;
+}
+
+.select-dropdown li img{
+    margin-top: 1rem;
 }
 
 @media only screen and (min-width: 993px) {
@@ -66,11 +177,20 @@ input[type="text"] + label {
 
 
     @media only screen and (max-width: 600px) {
-        .log-form {
-            margin-top: 0px;
-        }
-
         .log-justify {
             margin-left: calc((100% - 83.33333%)/2) !important;
+        }
+        svg {
+            display: none;
+        }
+        .mobile-right{
+            float:right !important;
+            text-align: right !important;
+        }
+        .mobile-no-padding{
+            padding:unset !important;
+        }
+        .mobile-no-margin-left {
+            margin-left: unset !important;
         }
     }

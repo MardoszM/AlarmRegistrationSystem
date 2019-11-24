@@ -10,11 +10,21 @@ namespace AlarmRegistrationSystem.Models
         IQueryable<Notification> Notifications { get; }
         IQueryable<Description> Descriptions { get; }
 
+        IQueryable<EmergencySubassembly> EmergencySubassemblies { get; }
+
+        IQueryable<NotificationES> NotificationEs { get; }
+
         bool SaveNotification(Notification notification);
         Notification DeleteNotification(int Id);
 
         bool SaveDescription(Description description);
         Description DeleteDescription(int Id);
+
+        bool SaveSubassembly(EmergencySubassembly emergencySubassembly);
+        EmergencySubassembly DeleteSubassembly(int subassemblyId);
+
+        bool SaveNotificationES(NotificationES notificationES);
+        NotificationES DeleteNotificationES(int notificationESId);
 
     }
 }

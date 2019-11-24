@@ -10,5 +10,9 @@ namespace AlarmRegistrationSystem.Models.ViewModels
         public Notification Notification { get; set; }
 
         public string MachineLocation { get; set; }
+
+        public List<Description> Descriptions { get; set; }
+
+        public bool IsMore { get; set; } = false;
     }
 }

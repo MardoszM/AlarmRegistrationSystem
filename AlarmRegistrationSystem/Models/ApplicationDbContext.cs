@@ -13,5 +13,7 @@ namespace AlarmRegistrationSystem.Models
         public DbSet<Machine> Machines { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Description> Descriptions { get; set; }
+        public DbSet<EmergencySubassembly> EmergencySubassemblies { get; set; }
+        public DbSet<NotificationES> NotificationEs { get; set; }
     }
 }

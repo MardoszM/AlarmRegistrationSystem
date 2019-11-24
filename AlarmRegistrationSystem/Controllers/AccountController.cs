@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AlarmRegistrationSystem.Controllers.SystemFunctionality;
+using AlarmRegistrationSystem.Hubs;
 using AlarmRegistrationSystem.Infrastructure;
 using AlarmRegistrationSystem.Models;
 using AlarmRegistrationSystem.Models.ViewModels;
@@ -9,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -16,7 +19,7 @@ using Microsoft.Extensions.Logging;
 namespace AlarmRegistrationSystem.Controllers
 {
     [Authorize(Roles = "Administrators")]
-    public class AccountController : Controller
+    public class AccountController : BasicController
     {
         private UserManager<AppUser> userManager;
         private RoleManager<IdentityRole> roleManager;
@@ -26,15 +29,8 @@ namespace AlarmRegistrationSystem.Controllers
         private IHostingEnvironment hostingEnvironment;
         private List<string> roles = null;
         private int pageSize = 10;
-        private ILogger<AccountController> logger;
-        private readonly IStringLocalizer<SharedResources> localizer;
 
-        private void ErrorAlert(Exception ex, string errorText, string logErrorText)
-        {
-            TempData["Error"] = errorText;
-            logger.LogError(ex + " || " + logErrorText);
-        }
-        public AccountController(UserManager<AppUser> userMgr, RoleManager<IdentityRole> roleMgr, SignInManager<AppUser> signInMgr, IConfiguration configuration, IHostingEnvironment _hostingEnvironment, ILogger<AccountController> log, IStringLocalizer<SharedResources> _localizer)
+        public AccountController(UserManager<AppUser> userMgr, RoleManager<IdentityRole> roleMgr, SignInManager<AppUser> signInMgr, IConfiguration configuration, IHostingEnvironment _hostingEnvironment, ILogger<AccountController> log, IStringLocalizer<SharedResources> _localizer, IHubContext<ChatHub> connector) :base(connector, _localizer, log)
         {
             userManager = userMgr;
             roleManager = roleMgr;
@@ -42,8 +38,6 @@ namespace AlarmRegistrationSystem.Controllers
             Configuration = configuration;
             repository = userManager.Users;
             hostingEnvironment = _hostingEnvironment;
-            logger = log;
-            localizer = _localizer;
         }
         private List<string> GetRoles()
         {
@@ -65,17 +59,12 @@ namespace AlarmRegistrationSystem.Controllers
             ListViewModel<UserListViewModel> model = new ListViewModel<UserListViewModel>();
             List<UserListViewModel> tmpRepo = new List<UserListViewModel>();
             int currPage;
-            foreach (var user in repository)
+            try
             {
-                IList<string> result;
-                try
-                {
-                    result = await userManager.GetRolesAsync(user);
-                }
-                catch(Exception ex)
-                {
-                    throw ex;
-                }
+                foreach (var user in repository)
+            {
+                IList<string> result = await userManager.GetRolesAsync(user);
+               
                 string role = result[0];
                 role = localizer[role];
                 tmpRepo.Add(new UserListViewModel() { User = user, Role = role, Id = user.Id });
@@ -115,6 +104,11 @@ namespace AlarmRegistrationSystem.Controllers
                 .OrderBy(m => m.Id)
                 .Skip((currPage - 1) * pageSize)
                 .Take(pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             return model;
         }
 
@@ -167,15 +161,6 @@ namespace AlarmRegistrationSystem.Controllers
             {
                 ErrorAlert(ex, localizer["database"], "Unable to Change User Password Absolutely.");
             }
-
-            if(!result.Succeeded || !result2.Succeeded)
-            {
-                TempData["Message"] = localizer["passworderror"]; 
-            }
-            else
-            {
-                TempData["Message"] = localizer["userpassword"] + ": " + SpecifiedUserName + " " + localizer["waschanged"] + ".";
-            }
             return RedirectToAction("ListUsers");
         }
 
@@ -200,22 +185,13 @@ namespace AlarmRegistrationSystem.Controllers
             {
                 ErrorAlert(ex, localizer["database"] , "Unable to Change User Password.");
             }
-            
-            if(result.Succeeded)
-            {
-                TempData["Message"] = localizer["userpassword"] + ": " + SpecifiedUserName + " " + localizer["waschanged"] + ".";
-            }
-            else
-            {
-                TempData["Message"] = localizer["passworderror"];
-            }
             return RedirectToAction("ListUsers");
         }
 
         [Authorize]
         public async Task<IActionResult> DeleteUser(string uniqueUserName, string searchRole, string searchText, string currentPage)
         {
-            ListViewModel<Models.ViewModels.UserListViewModel> model;
+            ListViewModel<UserListViewModel> model;
             try
             {
                 AppUser user = await userManager.FindByNameAsync(uniqueUserName);
@@ -234,10 +210,14 @@ namespace AlarmRegistrationSystem.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> CreateAccount(string returnurl = "/Admin/Index")
+        public async Task<IActionResult> CreateAccount(string userId = null,string returnurl = "/Admin/Index")
         {
             string controller = returnurl.GetControllerFromPath();
             string action = returnurl.GetActionFromPath();
+            if(action == null)
+            {
+                action = "List";
+            }
             if(roles == null)
             {
                 try
@@ -255,6 +235,23 @@ namespace AlarmRegistrationSystem.Controllers
                 model.roles = roles;
                 model.Controller = controller;
                 model.Action = action;
+                if(userId != null)
+                {
+                    AppUser user = await userManager.FindByIdAsync(userId);
+                    model.Email = user.Email;
+                    model.FirstName = user.FirstName;
+                    model.SecondName = user.SecondName;
+                    model.UserName = user.UserName;
+                    try
+                    {
+                        var role = await userManager.GetRolesAsync(user);
+                        model.Role = role.First();
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorAlert(ex, localizer["database"], "Unable to Edit Account because database Exception");
+                    }
+                }
                 return View(model);
             }
             else
@@ -280,34 +277,63 @@ namespace AlarmRegistrationSystem.Controllers
         {
             if (model != null)
             {
-                AppUser user = new AppUser
-                {
-                    FirstName = model.FirstName,
-                    SecondName = model.SecondName,
-                    Email = model.Email,
-                    UserName = model.UserName
-                };
                 string password = GenerateRandomPassword(new CustomizedPasswordOptions());
                 string path = Configuration["Data:UserDataFile:Path"];
                 string fileName = Configuration["Data:UserDataFile:FileName"];
-                user.SaveToExcel(password,fileName,path);
-                IdentityResult result = IdentityResult.Failed();
-                try
+                AppUser user = null;
+                if (model.UserId == null)
                 {
-                    result = await userManager.CreateAsync(user, password);
-                }
-                catch(Exception ex)
-                {
-                    ErrorAlert(ex, localizer["database"], "Unable to Create Account. CreateAsync Exception");
-                }
-                if (result.Succeeded)
-                {
-                    if (await roleManager.FindByNameAsync(model.Role) != null)
+                    user = new AppUser
                     {
-                        await userManager.AddToRoleAsync(user, model.Role);
+                        FirstName = model.FirstName,
+                        SecondName = model.SecondName,
+                        Email = model.Email,
+                        UserName = model.UserName
+                    };
+                    IdentityResult result = IdentityResult.Failed();
+                    try
+                    {
+                        result = await userManager.CreateAsync(user, password);
+                        user.SaveToExcel(password, fileName, path);
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorAlert(ex, localizer["database"], "Unable to Create Account. CreateAsync Exception");
+                    }
+                    if (result.Succeeded)
+                    {
+                        if (await roleManager.FindByNameAsync(model.Role) != null)
+                        {
+                            await userManager.AddToRoleAsync(user, model.Role);
+                        }
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        user = await userManager.FindByIdAsync(model.UserId);
+                        user.UserName = model.UserName;
+                        user.FirstName = model.FirstName;
+                        user.SecondName = model.SecondName;
+                        user.Email = model.Email;
+                        var roles = await userManager.GetRolesAsync(user);
+                        if (model.Role != roles.First())
+                        {
+                            await userManager.RemoveFromRoleAsync(user, roles.First());
+                            await userManager.AddToRoleAsync(user, model.Role);
+                        }
+                        await userManager.UpdateAsync(user);
+                        user.SaveToExcel(password, fileName, path);
+                    }
+                    catch(Exception ex)
+                    {
+                        ErrorAlert(ex, localizer["database"], "Unable to Update Account. Database Exception");
                     }
                 }
             }
+            ErrorAlert(new Exception(""), localizer["database"], "Unable to Create Account. CreateAsync Exception");
+
             return RedirectToAction(nameof(ListUsers));
         }
 
@@ -411,7 +437,7 @@ namespace AlarmRegistrationSystem.Controllers
             {
                 try
                 {
-                    value = await VerifyUserName(tmpUserName);
+                    value = await VerifyUserName(tmpUserName, null);
                 }
                 catch(Exception ex)
                 {
@@ -448,7 +474,7 @@ namespace AlarmRegistrationSystem.Controllers
                 
                 try
                 {
-                    value = await VerifyUserName(userName);
+                    value = await VerifyUserName(userName, null);
                 }
                 catch(Exception ex)
                 {
@@ -501,9 +527,17 @@ namespace AlarmRegistrationSystem.Controllers
             return new string(chars.ToArray());
         }
 
-        public async Task<bool> VerifyUserName(string UserName)
+        public async Task<bool> VerifyUserName(string UserName, string UserId)
         {
-            IdentityUser user = null;
+            if(UserId != null)
+            {
+                AppUser tmpuser = await userManager.FindByIdAsync(UserId);
+                if(UserName == tmpuser.UserName)
+                {
+                    return true;
+                }
+            }
+            IdentityUser user;
             try
             {
                 user = await userManager.FindByNameAsync(UserName);
@@ -524,9 +558,17 @@ namespace AlarmRegistrationSystem.Controllers
             }
         }
 
-        public async Task<bool> VerifyEmail(string Email)
+        public async Task<bool> VerifyEmail(string Email, string UserId)
         {
-            IdentityUser user = null;
+            if(UserId != null)
+            {
+                AppUser tmpuser = await userManager.FindByIdAsync(UserId);
+                if (Email == tmpuser.Email)
+                {
+                    return true;
+                }
+            }
+            IdentityUser user;
 
             try 
             {

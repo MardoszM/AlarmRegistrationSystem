@@ -1,0 +1,15 @@
+﻿@addTagHelper AlarmRegistrationSystem.Infrastructure.PageLinkTagHelper, AlarmRegistrationSystem
+@model Models.ViewModels.ManageSubassembliesViewModel
+
+<div class="row border-top no-padding-left no-padding-right padding-top">
+    @foreach (var item in Model.Subassemblies)
+    {
+        <label id="@item.Id" class="col no-padding-left padding-right2">
+            <input class="checkbox" type="checkbox" />
+            <span>@item.Name</span>
+        </label>
+    }
+</div>
+<div class=" row col s12 l12 right-align">
+    <ul class="pagination" page-model="@Model.PagingInfo" page-class-neutral="pageButton"></ul>
+</div>

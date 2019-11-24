@@ -2,7 +2,7 @@
 @model Models.ViewModels.ListViewModel<Models.ViewModels.UserListViewModel>
 
 
-<table class="striped">
+<table class="responsive-table">
     <thead>
         <tr>
             <th>@Localizer["name"]</th>
@@ -29,6 +29,11 @@
                             <li>
                                 <a asp-action="ChangePasswordAbsolutely" asp-controller="Account" asp-route-userName="@user.User.UserName" asp-route-administrator="true">
                                     <i class="fas fa-edit"></i>@Localizer["changepassword"]
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-action="CreateAccount" asp-controller="Account" asp-route-userId="@user.User.Id" asp-route-returnurl="/Account/ListUsers">
+                                    <i class="fas fa-edit"></i>@Localizer["edit"]
                                 </a>
                             </li>
                             <li>
@@ -61,21 +66,3 @@
 <div class=" row col s12 l12 right-align">
     <ul class="pagination" page-model="@Model.PagingInfo" page-class-neutral="pageButton"></ul>
 </div>
-<div id="ShowMessage"></div>
-<script src="~/Scripts.js" type="text/javascript"></script>
-<script src="~/lib/jquery/dist/jquery.js" type="text/javascript"></script>
-<script src="~/lib/materialize/dist/js/materialize.js" type="text/javascript"></script>
-<script>
-    var $url = '/System/CheckError';
-    var $func = function (result) {
-        $('#ShowError').html(result);
-    }
-    AjaxAndFunc($url, $func, null);
-</script>
-<script>
-    var $url = '/System/CheckMessage';
-    var $func = function (result) {
-        $('#ShowMessage').html(result);
-    }
-    AjaxAndFunc($url, $func, null);
-</script>

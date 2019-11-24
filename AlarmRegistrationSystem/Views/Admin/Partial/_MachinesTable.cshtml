@@ -1,6 +1,6 @@
 ﻿@addTagHelper AlarmRegistrationSystem.Infrastructure.PageLinkTagHelper, AlarmRegistrationSystem
 @model Models.ViewModels.ListViewModel<Models.Machine>
-<table class="striped">
+<table class="responsive-table">
     <thead>
         <tr>
             <th>@Localizer["id"]</th>
@@ -72,21 +72,3 @@
 <div class=" row col s12 l8 right-align push-l4">
     <ul class="pagination" page-model="@Model.PagingInfo" page-class-neutral="pageButton"></ul>
 </div>
-<div id="ShowMessage"></div>
-<script src="~/Scripts.js" type="text/javascript"></script>
-<script src="~/lib/jquery/dist/jquery.js" type="text/javascript"></script>
-<script src="~/lib/materialize/dist/js/materialize.js" type="text/javascript"></script>
-<script>
-        var $url = '/System/CheckError';
-        var $func = function (result) {
-            $('#ShowError').html(result);
-        }
-        AjaxAndFunc($url, $func, null);
-    </script>
-<script>
-        var $url = '/System/CheckMessage';
-        var $func = function (result) {
-            $('#ShowMessage').html(result);
-        }
-        AjaxAndFunc($url, $func, null);
-    </script>

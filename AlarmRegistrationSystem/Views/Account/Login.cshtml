@@ -1,22 +1,28 @@
 ﻿@model Models.ViewModels.LoginViewModel
 @{ 
     ViewData["Title"] = Localizer["login"];
+    if (ViewBag.returnUrl != null)
+    {
+        //Model.ReturnUrl = ViewBag.returnUrl as string;
+    }
 }
 <!DOCTYPE html>
-<html>
+
+<html class="max-height">
 <head>
     <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" href="~/lib/materialize/dist/css/materialize.css" />
     <link rel="stylesheet" href="~/lib/Font-Awesome/css/all.css" />
     <link rel="stylesheet" href="~/Style.css" />
 </head>
-<body>
+<body class="log-background">
     <div class="row log-form">
-        <div class="col s10 m6 l4 log-justify">
-            <div class="row">
+        <div class="col s10 m6 l4 log-justify log-element">
+            <div class="row valign-wrapper">
                 <h3 class="teal-text">@Localizer["loginpanel"]</h3>
             </div>
             <form asp-action="Login" asp-controller="Account">
+                <input type="hidden" asp-for="ReturnUrl" value="@ViewBag.returnUrl" />
                 <div class="row">
                     <div class="red-text darken-2">@Html.ValidationMessage("Error")</div>
                 </div>

@@ -1,0 +1,40 @@
+﻿@model Models.ViewModels.DisplayNotificationViewModel
+@foreach (Models.Description description in Model.Descriptions)
+{
+    <div class="col s12 list">
+        <div class="left-align col s6" style="padding-left:2rem">
+            <span class="teal-text text-darken-2">@Localizer["author"].Value: </span>
+            <span class="deep-orange-text">@description.Author</span>
+        </div>
+        <div class="right-align col s6">
+            <span class="teal-text text-darken-2">@Localizer["lastmodification"].Value: </span>
+            <span class="orange-text">@description.LastModification.ToString("dd/MM/yy H:mm")</span>
+        </div>
+        <div class="col s2 right right-align">
+            @if (this.User.Identity.Name == description.Author || this.User.IsInRole("Administrators"))
+            {
+                <a class='dropdown-trigger black-text text-bold' href='' data-target='@description.DescriptionID'>...</a>
+                <ul id='@description.DescriptionID' class='dropdown-content'>
+                    <li>
+                        <a asp-action="AddDescription" asp-controller="Notification"
+                           asp-route-notificationId="@description.NotificationID"
+                           asp-route-descriptionId="@description.DescriptionID">
+                            <i class="fas fa-edit"></i>@Localizer["edit"]
+                        </a>
+                    </li>
+                    <li>
+                        <a class="DoAndReload modal-trigger" data-target="modal1"
+                           data-mainform="Form"
+                           data-mainforminput="DeleteDescription"
+                           data-deleteobjectid="@description.DescriptionID">
+                            <i class="far fa-trash-alt"></i>@Localizer["delete"]
+                        </a>
+                    </li>
+                </ul>
+            }
+        </div>
+        <div>
+            <span class="black-text col s12 left-align">@description.Text</span>
+        </div>
+    </div>
+}

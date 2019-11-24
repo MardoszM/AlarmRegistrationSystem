@@ -5,6 +5,7 @@
 }
 
 <form id="Form" asp-action="CreateAccount" asp-controller="Account" method="post">
+    <input id="UserId" type="hidden" asp-for="UserId" />
     <div class="row">
         <div class="col s12">
             <div class="row">
@@ -34,7 +35,7 @@
             <div class="row">
                 <div class="input-field col l4 m6 s9 push-l1 push-m2">
                     <i class="fas fa-user-tag prefix"></i>
-                    <input id="UserInput" asp-for="UserName" type="text" class="validate" />
+                    <input id="UserInput" asp-for="UserName" type="text" class="validate disabled" />
                     <label id="UserLabel" asp-for="UserName">@Localizer["username"]</label>
                     <span asp-validation-for="UserName" class="helper-text left-align red-text darken-1"></span>
                 </div>
@@ -42,17 +43,10 @@
             <div class="row">
                 <div class="input-field col l4 m6 s9 push-l1 push-m2 left-align">
                     <i class="fas fa-id-card prefix"></i>
-                    <select asp-for="Role">
+                    <select class="roles" asp-for="Role">
                         @foreach (string role in Model.roles)
                         {
-                            @if (role == Model.roles.First())
-                            {
-                                <option value="@role" selected>@Localizer[role]</option>
-                            }
-                            else
-                            {
                                 <option value="@role">@Localizer[role]</option>
-                            }
                         }
                     </select>
                     <label>@Localizer["accounttype"]</label>
@@ -82,21 +76,24 @@
         $(document).ready(function () {
             $('select').formSelect();
         });
-
-        $("#SNameInput, #FNameInput").keyup(function () {
-            var secondName = $('#SNameInput').val();
-            var firstName = $('#FNameInput').val();
-            if (firstName.length !== 0 && secondName.length !== 0)
-            {
-                $url = "/Account/GenerateUserName";
-                var func = function (result) {
-                    $('#UserInput').val(result).addClass('valid').change();
-                    $('#UserLabel').addClass('active');
+        if ($("#UserId").val() == '') {
+            $("#SNameInput, #FNameInput").keyup(function () {
+                var secondName = $('#SNameInput').val();
+                var firstName = $('#FNameInput').val();
+                if (firstName.length !== 0 && secondName.length !== 0) {
+                    $url = "/Account/GenerateUserName";
+                    var func = function (result) {
+                        $('#UserInput').val(result).addClass('valid').change();
+                        $('#UserLabel').addClass('active');
+                    }
+                    $data = $('#Form').serialize();
+                    AjaxAndFunc($url, func, $data);
                 }
-                $data = $('#Form').serialize();
-                AjaxAndFunc($url, func,$data);
-            }
-        })
+            })
+        }
+        else {
+            $('#UserInput').attr('readonly', 'readonly');
+        }
 
     </script>
 }
