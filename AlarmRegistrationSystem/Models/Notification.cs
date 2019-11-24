@@ -13,6 +13,18 @@ namespace AlarmRegistrationSystem.Models
         Active, In_repair, On_hold, Finish
     }
 
+    public class EmergencySubassembly
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class NotificationES
+    {
+        public int Id { get; set; }
+        public int NotificationId { get; set; }
+        public int ESId { get; set; }
+    }
     public class Notification
     {
         internal int notificationId;
@@ -37,7 +49,7 @@ namespace AlarmRegistrationSystem.Models
 
         public bool State { get; set; }
 
-        [Remote(action: "VerifyId", controller: "Admin", ErrorMessage = "idtaken.", AdditionalFields = nameof(MachineID))]
+        [Remote(action: "VerifyId", controller: "Admin", ErrorMessage = "idtaken", AdditionalFields = nameof(MachineID))]
         [Required(ErrorMessage = "enteruniqueid")]
         [StringLength(15, MinimumLength = 3, ErrorMessage = "uniqueidlength")]
         [RegularExpression("^[a-zA-Z0-9]*$", ErrorMessage = "uniqueidchars")]

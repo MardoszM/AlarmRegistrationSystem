@@ -1,12 +1,19 @@
 ﻿@model Models.ViewModels.ReportAccidentViewModel
 @{
-    ViewData["Title"] = Localizer["reportaccident"];
+    ViewData["Title"] = Model.Notification?.NotificationID != 0 ? Localizer["reportaccident"] : Localizer["editnotification"];
     Layout = "_Layout";
 }
 
 
 <div class="row">
     <form asp-controller="Notification" asp-action="AddNotification" method="post" class="col s12">
+        @if (Model.Notification?.NotificationID != 0)
+        {
+            <input type="hidden" asp-for="Notification.NotificationID" />
+            <input type="hidden" asp-for="Notification.State" />
+            <input id="declarant" type="hidden" asp-for="Notification.Declarant" />
+            <input type="hidden" asp-for="Notification.CreationDate" />
+        }
         <div class="row">
             <div class="col s10 input-field col l4 m6 s9 offset-l1 offset-m2">
                 <i class="fas fa-fingerprint prefix"></i>
@@ -23,13 +30,13 @@
             <div class="input-field col s12 m7 l5 offset-l1 offset-m2">
                 <i class="fas fa-keyboard prefix"></i>
                 <textarea id="textarea" asp-for="Notification.MainDescription" class="materialize-textarea" data-length="1000"></textarea>
-                <label asp-for="Notification.MainDescription">@Localizer["accidentdescription"]</label>
+                <label asp-for="Notification.MainDescription" for="textarea">@Localizer["accidentdescription"]</label>
                 <span asp-validation-for="Notification.MainDescription" class="helper-text left-align red-text darken-1"></span>
             </div>
         </div>
         <div class="row">
             <div class="col l6 m9 s12 right-align">
-                <a asp-controller="@Model.Controller" asp-action="@Model.Action" class="btn waves-effect waves-light orange darken-2">
+                <a id="back" class="btn waves-effect waves-light orange darken-2">
                     @Localizer["cancel"]
                     <i class="fas fa-times"></i>
                 </a>
@@ -46,6 +53,10 @@
 
     <script>
         $(document).ready(function () {
+            $.validator.setDefaults({
+               onkeyup: false
+            })
+
             $('.tooltipped').tooltip();
             $('textarea#textarea').characterCounter();
             $('#Notification_MachineUniqueID').change(function () {
@@ -67,10 +78,17 @@
                 }
                 $('input.autocomplete').autocomplete({
                     data: codes,
+                    onAutocomplete: function () { $("#autocomplete-input").keyup() }
                      });
             }
             AjaxAndFunc($url, $func, null);
-            
+
+            if ($("#declarant").val().length != 0) {
+                $("#autocomplete-input").prop("disabled", true);
+            }
+            $("#back").click(function(){
+                parent.history.back();
+            })
         });
     </script>
 }

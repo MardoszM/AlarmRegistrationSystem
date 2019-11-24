@@ -1,0 +1,199 @@
+﻿@model Models.ViewModels.ManageSubassembliesViewModel
+
+@{
+    ViewData["Title"] = Localizer["managesubasseblies"];
+    Layout = "_Layout";
+}
+
+<div id="menageBar" class="row col s12 l8 push-l2 no-margin">
+    <form id="Form" class="search-form" asp-controller="Notification" asp-action="ManageSubassemblies" data-container="SubassembliesTable">
+        <input id="CurrentPage" type="hidden" name="currentPage" value="1" />
+        <div class="row no-padding no-margin">
+            <div class="input-field col s6 no-padding-sides no-margin-top">
+                <input id="Subassemblyname" class="col s6 l5 small-text" type="text" />
+                <label for="Subassemblyname" style="left:0;">@Localizer["subassemblyname"]</label>
+                <button disabled id="AddSubassembly" type="button" class="col waves-effect waves-light btn fontsize_08 align_btn_to_inputfield left margin-left7 mobile-no-margin-left">
+                    <i class="fas  fa-folder-plus fontsize_1"></i>
+                    @Localizer["add"]
+                </button>
+            </div>
+            <div class="col s6 right right-align no-padding-sides">
+                <button data-target="modal1" id="DeleteAllUnused" type="button" class="modal-trigger waves-effect waves-light btn red lighten-1 fontsize_08 align_btn_to_inputfield">
+                    <i class="fas fa-trash-alt fontsize_1"></i>
+                    @Localizer["deleteallunused"]
+                </button>
+            </div>
+        </div>
+        <div class="row no-padding no-margin">
+            <div class="col s4 l4 left left-align no-padding-sides">
+                <input class="ChangeValue" type="hidden" />
+                <button data-target="modal2" disabled id="ChangeSubassembly" type="button" class="modal-trigger waves-effect waves-light btn fontsize_08 align_btn_to_inputfield">
+                    <i class="fas fa-exchange-alt fontsize_1"></i>
+                    @Localizer["change"]
+                </button>
+            </div>
+            <div class="col s4 input-field no-margin-top ask">
+                <input id="NewSubassembly" type="text" name="searchText" />
+                <label for="NewSubassembly">@Localizer["search"]</label>
+            </div>
+            <div class="col s4 l4 right right-align">
+                <button data-target="modal1" disabled id="DeleteSubassembly" type="button" class="modal-trigger waves-effect waves-light btn red lighten-1 fontsize_08 align_btn_to_inputfield">
+                    <i class="fas fa-folder-minus fontsize_1"></i>
+                    @Localizer["delete"]
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="SubassembliesTable" class="row col l8 push-l2">
+    @await Html.PartialAsync("Partial/Subassemblies_Table")
+</div>
+
+
+<div id="modal1" class="modal">
+    <div class="modal-content">
+        <p>@Localizer["wantdeletesubassembly"] </p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" id="SubassemblyAgree" class="modal-true waves-effect waves-light btn-flat">@Localizer["yes"]</a>
+        <a href="#!" class="modal-close waves-effect waves-light btn-flat">@Localizer["no"]</a>
+    </div>
+</div>
+
+<div id="modal2" class="modal">
+    <div class="modal-content">
+        <h5>@Localizer["exchangeparts"] </h5>
+        <div class="content row">
+            <div class="input-field col l3 m5 s6 push-l2 push-m1">
+                <input id="origin" class="bottomline" type="text" value=" " name="origin">
+                <label for="origin">@Localizer["origin"]</label>
+            </div>
+            <div class="input-field col l3 m5 s6 push-l4 push-m1">
+                <input id="replacement" type="text" value=" " name="replacement">
+                <label for="replacement">@Localizer["replacement"]</label>
+            </div>
+        </div>
+        <div>
+            <button id="Exchange" class="waves-effect waves-light btn">@Localizer["exchange"]</button>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" id="SubassemblyAgree2" class="modal-true waves-effect waves-light btn-flat">@Localizer["yes"]</a>
+        <a href="#!" class="modal-close waves-effect waves-light btn-flat">@Localizer["no"]</a>
+    </div>
+</div>
+
+@section scripts{
+
+    <script src="~/Scripts.js" type="text/javascript"></script>
+    <script>
+        function DisableButtons() {
+            $("#ChangeSubassembly").attr("disabled", "disabled");
+            $("#DeleteSubassembly").attr("disabled", "disabled");
+        }
+        $(document).ready(function () {
+            $('.modal').modal();
+            searchActivator('Form');
+            $("#AddSubassembly").on("click", function () {
+                $(this).attr("disabled", "disabled");
+                let name = $('#Subassemblyname').val();
+                if (name.length >= 5) {
+                    $url = "/Notification/AddSubassembly";
+                    data = "name=" + name;
+                    func = function (result) {
+                        $('#Subassemblyname').val('');
+                        if (result[0] !== "false") {
+                            $('#SubassembliesTable').html(result);
+                            DisableButtons();
+                        }
+                        else {
+                            M.toast({ html: result[1], classes: "teal darken-3", displayLength: 2500 });
+                        }
+                    }
+                    AjaxAndFunc($url, func, data);
+                }
+            })
+
+            $("#ChangeSubassembly").on("click", function () {
+                let name = $('input:checkbox:checked').closest("label").find("span")
+                    .map(function () { return $.trim($(this).text()); }).get(0);
+                let name2 = $('input:checkbox:checked').closest("label").find("span")
+                    .map(function () { return $.trim($(this).text()); }).get(1);
+                $('#origin').val(name);
+                $('#replacement').val(name2);
+            });
+
+            $('#DeleteAllUnused').on("click", function () {
+                $url = "/Notification/DeleteAllUnusedSubassemblies";
+                $("#SubassemblyAgree").attr("data-url", $url);
+                $("#SubassemblyAgree").attr("data-data", " ");
+            });
+
+            $('#DeleteSubassembly').on("click", function () {
+                subassemblies = $('input:checkbox:checked').closest("label").find("span").map(function () { return $.trim( $(this).text() ); }).get();
+                $url = "/Notification/DeleteSubassembly";
+                data = subassemblies;
+                $("#SubassemblyAgree").attr("data-url", $url);
+                $("#SubassemblyAgree").attr("data-data", data);
+            });
+
+            $('#SubassemblyAgree').on("click", function (me) {
+                $url = $(this).attr("data-url");
+                data = $(this).attr("data-data").split(",");
+                data = { subassemblies: data },
+                func = function (result) {
+                    if (result[0] !== "false") {
+                        $('#SubassembliesTable').html(result);
+                        DisableButtons();
+                    }
+                    else {
+                        M.toast({ html: result[1], classes: "teal darken-3", displayLength: 2500 });
+                    }
+                $('#modal1').modal("close");
+                }
+                AjaxAndFunc($url, func, data);
+            })
+
+            $('#SubassemblyAgree2').on("click", function () {
+                let part1 = $('#origin').val();
+                let part2 = $('#replacement').val();
+                $url = "/Notification/ExchangeParts";
+                data = { part1: part1, part2: part2 };
+                func = function (result) {
+                    if (result !== null) {
+                        $('#SubassembliesTable').html(result);
+                        $('#modal2').modal("close");
+                    }
+                };
+                AjaxAndFunc($url, func, data);
+            });
+
+            $('#Exchange').on("click", function () {
+                ChangeButtonValues("origin", "replacement");
+            });
+
+            $('#Subassemblyname').on("keyup", function (event) {
+                let newItemLength = $(this).val().replace(/ /g, '').length;
+                ManageAttr("AddSubassembly", "disabled", "disabled", newItemLength >= 5 ? true : false);
+                if (event.key === "Enter") {
+                    $('#AddSubassembly').click();
+                }
+            });
+        });
+
+        $(document).on('click', '.pageButton', function () {
+            changeCurrentPage(this);
+        });
+
+        $(document).ajaxComplete(function () {
+            $('input[type="checkbox"]').on("change", function () {
+                let checkedSum = $('input:checkbox:checked').length;
+                ManageAttr("ChangeSubassembly", "disabled", "disabled", checkedSum === 2 ? true : false);
+                ManageAttr("DeleteSubassembly", "disabled", "disabled", checkedSum > 0 ? true : false);
+            });
+        });
+    </script>
+}
+
+

@@ -46,7 +46,8 @@ namespace AlarmRegistrationSystem.Components
                 Links = links,
                 FirstName = user.FirstName,
                 SecondName = user.SecondName,
-                Email = user.Email
+                Email = user.Email,
+                UserName = user.UserName
             };
 
             return View(model);

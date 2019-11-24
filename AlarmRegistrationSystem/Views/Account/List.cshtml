@@ -20,9 +20,9 @@
                 </div>
             </div>
             <div class="col s6 push-l2">
-                <div class="row input-field">
+                <div class="input-field ask">
                     <i class="fas fa-search prefix"></i>
-                    <input id="icon_prefix" type="text" class="validate" name="searchText">
+                    <input id="icon_prefix" type="text" class="validate ask" name="searchText">
                     <label for="icon_prefix">@Localizer["search"]</label>
                 </div>
             </div>
@@ -44,9 +44,11 @@
         $(document).ready(function () {
             $('select').formSelect();
             $('.dropdown-trigger').dropdown();
-            searchActivator('Form');
             $('.modal').modal();
         });
+
+        searchActivator('Form');
+
         $(document).ajaxComplete(function () {
             $('.dropdown-trigger').dropdown();
             $('.modal').modal();

@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AlarmRegistrationSystem.Controllers.SystemFunctionality;
+using AlarmRegistrationSystem.Hubs;
 using AlarmRegistrationSystem.Infrastructure;
 using AlarmRegistrationSystem.Models;
 using AlarmRegistrationSystem.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -14,38 +17,23 @@ using Microsoft.Extensions.Logging;
 namespace AlarmRegistrationSystem.Controllers
 {
     [Authorize(Roles = "Administrators")]
-    public class AdminController : Controller
+    public class AdminController : BasicController
     {
         private IMachineRepository repository;
         private int pageSize = 10;
-        private ILogger<AdminController> logger;
-        private readonly IStringLocalizer<SharedResources> localizer;
 
-
-        public AdminController(IMachineRepository repository, ILogger<AdminController> logger, IStringLocalizer<SharedResources> localizer)
+        public AdminController(IMachineRepository repository, ILogger<AdminController> logger, IStringLocalizer<SharedResources> localizer, IHubContext<ChatHub> connector) :base(connector, localizer, logger)
         {
             this.repository = repository;
-            this.logger = logger;
-            this.localizer = localizer;
-        }
-
-        private void ErrorAlert(Exception ex, string errorText, string logErrorText)
-        {
-            TempData["Error"] = errorText;
-            logger.LogError(ex + " || " + logErrorText);        
         }
 
         private ListViewModel<Machine> RepositoryFilter(string state, string searchText, string currentPage)
         {
             IQueryable<Machine> repo;
+            PagingInfo PageModel;
             try
             {
                 repo = repository.Machines;
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
 
             int currPage;
             if (!Int32.TryParse(currentPage, out currPage))
@@ -71,7 +59,7 @@ namespace AlarmRegistrationSystem.Controllers
                 currPage = 1;
             }
 
-            PagingInfo PageModel = new PagingInfo()
+            PageModel = new PagingInfo()
             {
                 CurrentPage = currPage,
                 ItemsPerPage = pageSize,
@@ -82,6 +70,11 @@ namespace AlarmRegistrationSystem.Controllers
                 .OrderBy(m => m.MachineID)
                 .Skip((currPage - 1) * pageSize)
                 .Take(pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             ListViewModel <Machine>viewModel = new ListViewModel<Machine>()
             {
                 Objects = repo,
@@ -168,20 +161,8 @@ namespace AlarmRegistrationSystem.Controllers
                     value = false;
                     ErrorAlert(ex, localizer["database"], "Unable to Edit Machine because FirstOrDefault / SaveMachine (database) Exception");
                 }
-
-                if(value)
-                {
-                    if (tmpMachine == null)
-                    {
-                        TempData["Message"] = localizer["machineadded"];
-                    }
-                    else
-                    {
-                        TempData["Message"] = localizer["machineeddited"];
-                    }
+                return RedirectToAction(model.ReturnUrl.GetActionFromPath(), model.ReturnUrl.GetControllerFromPath());
                 }
-                return Redirect(model.ReturnUrl);
-            }
             else
             {
                 return View("EditMachine", model);
@@ -203,7 +184,7 @@ namespace AlarmRegistrationSystem.Controllers
             }
             if(machine != null)
             {
-                TempData["Message"] = localizer["machinedeleted"];
+                SendMessageToCaller(localizer["machinedeleted"]);
             }
             ListViewModel<Machine> viewModel = null;
             try
@@ -220,13 +201,11 @@ namespace AlarmRegistrationSystem.Controllers
             return View("Partial/_MachinesTable", viewModel);
         }
 
-        public IActionResult CreateMachine(string returnUrl = nameof(Index)) => View("EditMachine", new EditMachineViewModel() {
+        public IActionResult CreateMachine(string returnUrl = "Home/Index") => View("EditMachine", new EditMachineViewModel() {
         Machine = new Machine(),
         ReturnUrl = returnUrl,
         NewMachine = true
         });
-
-        public IActionResult Index() => View();
 
         public bool VerifyId(EditMachineViewModel model)
        {

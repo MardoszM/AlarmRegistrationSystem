@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="~/lib/materialize/dist/css/materialize.css" />
     <link rel="stylesheet" href="~/lib/Font-Awesome/css/all.css" />
     <link rel="stylesheet" href="~/Style.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     @RenderSection("styles", false)
     <title>@ViewBag.Title</title>
@@ -16,7 +17,7 @@
                 <i class="fas fa-bars fa-2x black-text"></i>
             </a>
         </div>
-        <div class="col s10 white-text offset-s3">
+        <div class="col s6 white-text offset-s1 offset-m4 offset-l2">
             <h5 class="hide-on-med-and-down no-margin valign-wrapper">
                 <a href="/home/index" class="white-text valign-wrapper">
                     <img src="~/android-chrome-192x192.png" style="width:3rem;" />
@@ -31,21 +32,13 @@
             </h5>
         </div>
 
-        <div class="input-field col l3 no-margin selectwhite">
-                <select id="language">
+        <div class="input-field col l3 m5 no-margin selectwhite">
+                <select id="language" class="red">
                     <option id="culturepl" value="pl">Polish (Polski)</option>
                     <option id="cultureen" value="en">English (English)</option>
                 </select>
         </div>
-        @*<div class="row no-margin">
-            <a class="pad-015" asp-action="SetLanguage" asp-controller="System" asp-route-returnUrl="@Context.Request.Path" asp-route-culture="pl">
-                <img class="col responsive-img" src="~/Images/pl_Flag.png" />
-            </a>
 
-            <a class="pad-015" asp-action="SetLanguage" asp-controller="System" asp-route-returnUrl="@Context.Request.Path" asp-route-culture="en">
-                <img class="col responsive-img" src="~/Images/en_Flag.png" />
-            </a>
-        </div>*@
     </div>
     <div class="row">
 
@@ -60,17 +53,17 @@
             </div>
             <div class="footer-copyright section">
                 <div class="row col s12">
-                    <h6>&copy 2019 Alarm Registration System, All rights reserved.</h6>
+                    <h6>&copy 2019-2020 Alarm Registration System, All rights reserved.</h6>
                 </div>
             </div>
         </div>
     </div>
-
     <script src="~/lib/jquery/dist/jquery.js" type="text/javascript"></script>
     <script src="~/lib/materialize/dist/js/materialize.js" type="text/javascript"></script>
     <script src="~/Scripts.js" type="text/javascript"></script>
-
+    <script src="~/lib/signalr/dist/browser/signalr.js" type="text/javascript"></script>
     <script>
+        InitSignalR();
         $(document).ready(function () {
             $('.sidenav').sidenav();
             $("#language").change(function () {
@@ -85,15 +78,11 @@
             }
             AjaxAndFunc(url, func, null);
         });
+        var text = '@TempData["Error"]';
+        if (text !== '') {
+            M.toast({ html: text, classes: "amber darken-1 special", displayLength: 2500 });
+        }
     </script>
     @RenderSection("scripts", required: false)
 </body>
 </html>
-<div id="ShowError">
-    @if (TempData["Error"] != null)
-    {
-        <script type="text/javascript">
-            M.toast({ html: "@TempData["Error"]", classes: "amber darken-1 special", displayLength: 2500 });
-        </script>
-    }
-</div>

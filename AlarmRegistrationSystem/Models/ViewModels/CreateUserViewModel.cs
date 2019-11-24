@@ -9,6 +9,7 @@ namespace AlarmRegistrationSystem.Models.ViewModels
 {
     public class CreateUserViewModel
     {
+        public string UserId { get; set; }
         [Required(ErrorMessage = "entername")]
         [StringLength(maximumLength: 30, ErrorMessage = "namelength", MinimumLength = 2)]
         [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "namechars")]
@@ -20,12 +21,12 @@ namespace AlarmRegistrationSystem.Models.ViewModels
         public string SecondName { get; set; }
         [Required(ErrorMessage = "enterusername")]
         
-        [Remote(action: "VerifyUserName", controller: "Account", ErrorMessage = "usernametaken")]
+        [Remote(action: "VerifyUserName", controller: "Account", ErrorMessage = "usernametaken", AdditionalFields = "UserId")]
         [StringLength(maximumLength:15, ErrorMessage = "usernamelength", MinimumLength = 5)]
         [RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "usernamechars")]
         public string UserName { get; set; }
 
-        [Remote(action: "VerifyEmail", controller: "Account", ErrorMessage = "emailtaken")]
+        [Remote(action: "VerifyEmail", controller: "Account", ErrorMessage = "emailtaken", AdditionalFields = "UserId")]
         [Required(ErrorMessage = "enteremail")]
         [EmailAddress(ErrorMessage = "wrongemail")]
         public string Email { get; set; }
