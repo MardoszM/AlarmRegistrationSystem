@@ -14,6 +14,8 @@ namespace AlarmRegistrationSystem.Models
 
         IQueryable<NotificationES> NotificationEs { get; }
 
+        IQueryable<Brake> Brakes { get; }
+
         bool SaveNotification(Notification notification);
         Notification DeleteNotification(int Id);
 
@@ -25,6 +27,9 @@ namespace AlarmRegistrationSystem.Models
 
         bool SaveNotificationES(NotificationES notificationES);
         NotificationES DeleteNotificationES(int notificationESId);
+
+        bool SaveBrake(Brake brake);
+        Brake DeleteBrake(int brakeId);
 
     }
 }

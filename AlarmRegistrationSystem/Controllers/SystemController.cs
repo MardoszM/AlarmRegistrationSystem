@@ -31,5 +31,10 @@ namespace AlarmRegistrationSystem.Controllers
             return CultureInfo.CurrentCulture.Name;
         }
 
+        public string Translate(string text)
+        {
+            return localizer[text];
+        }
+
     }
 }

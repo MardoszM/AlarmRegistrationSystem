@@ -1,0 +1,29 @@
+﻿@model Models.ViewModels.GraphDataViewModel
+
+<div id="Graph" class="row col l8 push-l2 hide" style="height: 30rem;"></div>
+
+<table class="responsive-table">
+    <thead>
+        <tr>
+            <th>@Model.ObjectName</th>
+            <th>@Model.Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.GraphData.Count == 0)
+        {
+        <tr>
+            <td class="center red-text text-darken-2 text-bold" colspan="2">@Localizer["noenoughtdata"]</td>
+        </tr>
+    }
+        @foreach (var item in Model.GraphData)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Quantity</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+

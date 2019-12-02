@@ -46,7 +46,6 @@ namespace AlarmRegistrationSystem.Controllers.SystemFunctionality
         protected void ErrorAlert(Exception ex, string errorText, string logErrorText)
         {
             logger.LogError(ex + " || " + logErrorText);
-            //SendErrorToCaller(errorText);
             TempData["Error"] = errorText;
         }
     }

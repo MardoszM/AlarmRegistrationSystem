@@ -125,19 +125,26 @@ function ChipsInit() {
                 placeholder: placeholder,
                 secondaryPlaceholder: secondaryplaceholder,
                 onChipAdd: function (e, data) {
-                    let $url = "/Notification/AddSubassembly";
                     let name = data.childNodes[0].textContent;
-                    let $data = "name=" + name + "&notificationId=" + notificationId;
-                    if (hasRight) {
-                        AjaxAndFunc($url, null, $data);
+                    if (name.length >= 5) {
+                        let $url = "/Notification/AddSubassembly";
+                        let $data = "name=" + name + "&notificationId=" + notificationId;
+                        if (hasRight) {
+                            AjaxAndFunc($url, null, $data);
+                        }
+                    }
+                    else {
+                        $(".chip:contains(" + name + ")").remove();
                     }
                 },
                 onChipDelete: function (e, data) {
-                    let $url = "/Notification/DeleteNotificationSubassembly";
-                    let name = data.childNodes[0].textContent
-                    let $data = "notificationId=" + notificationId + "&name=" + name;
-                    if (hasRight) {
-                        AjaxAndFunc($url, null, $data);
+                    let name = data.childNodes[0].textContent;
+                    if (name.length >= 5) {
+                        let $url = "/Notification/DeleteNotificationSubassembly";
+                        let $data = "notificationId=" + notificationId + "&name=" + name;
+                        if (hasRight) {
+                            AjaxAndFunc($url, null, $data);
+                        }
                     }
                 }
             });
@@ -185,4 +192,17 @@ function InitSignalR() {
     var user = '@User.Identity.Name';
 
     connection.start();
+}
+
+function SendToastError(text) {
+    M.toast({ html: text, classes: "amber darken-1 special", displayLength: 5000 });
+}
+
+function Translate(text) {
+    var translation = $.ajax({
+        type: 'GET',
+        url: '/system/Translate?text=' + text,
+        async: false
+    }).responseText;
+    return translation;
 }

@@ -162,6 +162,13 @@ input[type="text"] + label {
     margin-top: 1rem;
 }
 
+.high1dot5{
+    height:1.5rem;
+}
+
+.canvasjs-chart-credit{
+    display:none;
+}
 @media only screen and (min-width: 993px) {
     .log-justify {
         margin-left: calc(50% - 33.333333%/2) !important;

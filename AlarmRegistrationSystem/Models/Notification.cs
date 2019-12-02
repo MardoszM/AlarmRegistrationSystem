@@ -27,7 +27,7 @@ namespace AlarmRegistrationSystem.Models
     }
     public class Notification
     {
-        internal int notificationId;
+        public int notificationId;
 
         public int NotificationID { get; set; }
         public string Declarant { get; set; }
@@ -41,6 +41,19 @@ namespace AlarmRegistrationSystem.Models
         public string MainDescription { get; set; }
         public DateTime CreationDate { get; set; }
 
+        public DateTime EndTime { get; set; }
+
+    }
+
+    public class Brake
+    {
+        public int brakeId { get; set; }
+
+        public int NotificationId { get; set; }
+
+        public DateTime From { get; set; }
+
+        public DateTime To { get; set; }
     }
 
     public class Machine

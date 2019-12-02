@@ -18,6 +18,8 @@ namespace AlarmRegistrationSystem.Models
 
         public IQueryable<NotificationES> NotificationEs => context.NotificationEs;
 
+        public IQueryable<Brake> Brakes => context.Brakes;
+
         public EFNotificationRepository(ApplicationDbContext ctx)
         {
             context = ctx;
@@ -294,8 +296,80 @@ namespace AlarmRegistrationSystem.Models
                 }
                 if (tmpnotificationES != null)
                 {
-                    tmpnotificationES.NotificationId = tmpnotificationES.NotificationId;
-                    tmpnotificationES.ESId = tmpnotificationES.ESId;
+                    tmpnotificationES.NotificationId = notificationES.NotificationId;
+                    tmpnotificationES.ESId = notificationES.ESId;
+                    value = true;
+                }
+            }
+            try
+            {
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return value;
+        }
+
+        public Brake DeleteBrake(int brakeId)
+        {
+            Brake brake = null;
+            try
+            {
+                brake = context.Brakes.FirstOrDefault(b => b.brakeId == brakeId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            if (brake != null)
+            {
+                try
+                {
+                    context.Brakes.Remove(brake);
+                    context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return brake;
+        }
+
+        public bool SaveBrake(Brake brake)
+        {
+            bool value = false;
+            if (brake.brakeId == 0)
+            {
+                try
+                {
+                    context.Brakes.Add(brake);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                value = true;
+            }
+            else
+            {
+                Brake tmpbrake = null;
+                try
+                {
+                    tmpbrake = context.Brakes.FirstOrDefault(b => b.brakeId == brake.brakeId);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                if (tmpbrake != null)
+                {
+                    tmpbrake.From = brake.From;
+                    tmpbrake.To = brake.To;
+                    tmpbrake.NotificationId = brake.NotificationId;
                     value = true;
                 }
             }

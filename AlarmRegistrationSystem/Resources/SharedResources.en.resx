@@ -186,6 +186,9 @@
   <data name="cannotdeleteanythig" xml:space="preserve">
     <value>Cannot delete anything</value>
   </data>
+  <data name="cantsetfinishwhenonhold" xml:space="preserve">
+    <value>You cannot change notification state from On hold to Finish</value>
+  </data>
   <data name="casenomachines" xml:space="preserve">
     <value>If there is no machine with the given code, please contact to the system administrator</value>
   </data>
@@ -474,11 +477,17 @@
   <data name="surname" xml:space="preserve">
     <value>Surname</value>
   </data>
+  <data name="switchrequirebrokenpart" xml:space="preserve">
+    <value>Changing the notification state require at least one part constituting main reason of failure</value>
+  </data>
   <data name="system" xml:space="preserve">
     <value>A system error has occurred. Contact the system administrator.</value>
   </data>
   <data name="unabletoaddnotification" xml:space="preserve">
     <value>Unable to add notification</value>
+  </data>
+  <data name="unexpectederror" xml:space="preserve">
+    <value>Unexpected error. Contact the administrator.</value>
   </data>
   <data name="uniqueidchars" xml:space="preserve">
     <value>Allowed characters: [a-z] [A-Z] [0-9]</value>
@@ -521,6 +530,9 @@
   </data>
   <data name="waschanged" xml:space="preserve">
     <value>was changed.</value>
+  </data>
+  <data name="whyonhold" xml:space="preserve">
+    <value>Please enter why the notification should be suspended</value>
   </data>
   <data name="wrongemail" xml:space="preserve">
     <value>Given e-mail is incorrect</value>

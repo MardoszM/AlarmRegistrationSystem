@@ -15,5 +15,6 @@ namespace AlarmRegistrationSystem.Models
         public DbSet<Description> Descriptions { get; set; }
         public DbSet<EmergencySubassembly> EmergencySubassemblies { get; set; }
         public DbSet<NotificationES> NotificationEs { get; set; }
+        public DbSet<Brake> Brakes { get; set; }
     }
 }

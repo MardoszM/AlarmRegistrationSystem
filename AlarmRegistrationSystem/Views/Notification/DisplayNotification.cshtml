@@ -37,7 +37,7 @@
         {
             <div class="input-field col l2 push-l1 push-m2 no-margin left-align">
                 <select id="notificationState">
-                    @foreach (string value in Enum.GetNames(Model.Notification.State.GetType()))
+                    @foreach (string value in Enum.GetNames(Model.Notification.State.GetType()).Where(v => v != "Active"))
                     {
                         @if (value == Model.Notification.State.ToString())
                         {
@@ -114,9 +114,8 @@
         }
     </div>
 </div>
-@if (!Model.IsMore)
-{
-    <div class="row col l6 m8 s12 push-l1 push-m2">
+
+    <div id="addelement" class="row col l6 m8 s12 push-l1 push-m2" hidden>
         <form asp-action="AddDescription" asp-controller="Notification" method="get">
             <input type="hidden" value="@Model.Notification.NotificationID" name="notificationId" />
             <button type="submit" class="btn btn-block center-block">
@@ -125,10 +124,8 @@
             </button>
         </form>
     </div>
-}
-else
-{
-    <div class="row col l6 m8 s12 push-l1 push-m2">
+
+    <div id="showdocumentation" class="row col l6 m8 s12 push-l1 push-m2" hidden>
         <form asp-action="ShowDocumentation" asp-controller="Notification" method="post">
             <input type="hidden" value="@Model.Notification.NotificationID" name="notificationId" />
             <button type="submit" class="btn btn-block center-block">
@@ -137,15 +134,28 @@ else
             </button>
         </form>
     </div>
-}
+
 
 <div id="modal1" class="modal">
     <div class="modal-content">
         <p>@Localizer["wantdeletedescription"] </p>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-true waves-effect waves-light btn-flat">@Localizer["yes"]</a>
+        <a href="#!" id="wantdelete" class="modal-true waves-effect waves-light btn-flat">@Localizer["yes"]</a>
         <a href="#!" class="modal-close waves-effect waves-light btn-flat">@Localizer["no"]</a>
+    </div>
+</div>
+
+<div id="modal2" class="modal">
+    <div class="modal-content">
+        <p>@Localizer["whyonhold"] </p>
+            <textarea class="col l8 push-l2 validate materialize-textarea black-text" id="onholddescription" minlength="20" data-length="1000"></textarea>
+            <span class="col l8 push-l2 left-align helper-text" data-error="@Localizer["longerdescriptiontext"]"></span>
+        
+    </div>
+    <div class="modal-footer right right-align">
+        <a href="#!" id="setState" class="modal-true waves-effect waves-light btn-flat" disabled="disabled">@Localizer["yes"]</a>
+        <a href="#!" id="backSelected" class="modal-close waves-effect waves-light btn-flat">@Localizer["no"]</a>
     </div>
 </div>
 
@@ -155,32 +165,111 @@ else
         $(document).ready(function () {
             $('.dropdown-trigger').dropdown();
             $('#modal1').modal();
+            $('#modal2').modal({dismissible: false});
+            $("select").formSelect();
+            $('#onholddescription').characterCounter();
+
+            $('#onholddescription').on('keyup', function () {
+                if ($(this).val().length >= 20) {
+                    $('#setState').removeAttr("disabled");
+                }
+                else {
+                    $('#setState').attr("disabled", "disabled");
+                }
+            });
+            if ($('#DescriptionsCollection .list').length < 3) {
+                $('#addelement').removeAttr('hidden');
+            }
+            else {
+                $('#showdocumentation').removeAttr('hidden');
+            }
 
             ChipsInit();
 
+            var selected = $('#notificationState option[selected]').val();
+
             //Change Notification State on switch change
             $('#notificationState').change(function () {
-                $url = "/Notification/changeNotificationnState";
-                let notificationId = new URLSearchParams(window.location.search).get('notificationId');
-                $data = "notificationId=" + notificationId + "&state=" + $(this).val();
-                AjaxAndFunc($url, null, $data);
+                if ($('#parts > .chip').length > 0) {
+                    if ($(this).val() == 'On_hold') {
+                        var element = document.getElementById('modal2');
+                        var modal = M.Modal.getInstance(element);
+                        $('#setState').attr('data-state', 'On_hold');
+                        modal.open();
+                    }
+                    else if ($(this).val() == 'Finish' && selected == 'On_hold')
+                    {
+                        $('#notificationState').val(selected).formSelect();
+                        SendToastError(Translate("cantsetfinishwhenonhold"));
+                    }
+                    else if ($(this).val() == 'Finish')
+                    {
+                        var element = document.getElementById('modal2');
+                        var modal = M.Modal.getInstance(element);
+                        $('#setState').attr('data-state', 'Finish');
+                        modal.open();
+                    }
+                    else {
+                        $url = "/Notification/changeNotificationnState";
+                        let notificationId = new URLSearchParams(window.location.search).get('notificationId');
+                        $data = "notificationId=" + notificationId + "&state=" + $(this).val();
+                        selected = $('#notificationState option').val();
+                        AjaxAndFunc($url, null, $data);
+                    }
+                }
+                else {
+                    $('#notificationState').val(selected).formSelect();
+                    SendToastError(Translate("switchrequirebrokenpart"));
+                }
 
             })
+
+            $('#backSelected').on('click', function () {
+                $('#notificationState').val(selected).formSelect();
+            });
         });
 
 
         $(document).ajaxComplete(function () {
             $('.dropdown-trigger').dropdown();
-            $('.modal').modal();
+            $('#modal1').modal();
+            $('#modal2').modal({dismissible: false});
+            if ($('#DescriptionsCollection .list').length < 3) {
+                $('#showdocumentation').attr('hidden', 'hidden');
+                $('#addelement').removeAttr('hidden');
+            }
         });    
 
         $(document).on('click', '.DoAndReload', function () {
             passAttr(this);
         });
 
-        $(document).on('click', '.modal-true', function () {
+        $(document).on('click', '#wantdelete', function () {
             $('#modal1').modal("close");
             deleteActivator(this, '/Notification/DeleteDescription');
+        });
+
+        $(document).on('click', '#setState', function () {
+            $('#modal2').modal("close");
+            let notificationId = new URLSearchParams(window.location.search).get('notificationId');
+            $url = "/Notification/AddDescriptionFinally";
+            let val = $('#onholddescription').val();
+            $('#onholddescription').val('').removeClass("valid").addClass("high1dot5");
+            if ($('#DescriptionsCollection .list').length == 3) {
+                $('#addelement').attr('hidden', 'hidden');
+                $('#showdocumentation').removeAttr('hidden');
+            }
+            $data = "text=" + val + "&NotificationID=" + notificationId;
+            func = function (result) {
+                if (result !== false) {
+                    $('#DescriptionsCollection').html(result);
+                }
+            };
+            AjaxAndFunc($url, func, $data);
+            let state = $('#setState').attr('data-state');
+            $url = "/Notification/changeNotificationnState";
+            $data = "notificationId=" + notificationId + "&state=" + state;
+            AjaxAndFunc($url, null, $data);
         });
 
     </script>

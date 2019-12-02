@@ -1,0 +1,128 @@
+﻿@model Models.ViewModels.GenerateReportViewModel
+@{
+    ViewData["Title"] = Localizer["generatereport"];
+    Layout = "_Layout";
+}
+
+<div class="row col s12 m10 l8 push-l2 push-m1">
+    <div class="col s6 m4 input-field">
+        <select id="options" class="col s6">
+            @foreach (var option in Model.Methods)
+            {
+                @if (Model.Methods.First() == option)
+                {
+                    <option value="@option[0]" selected>@option[1]</option>
+                }
+                else
+                {
+                    <option value="@option[0]">@option[1]</option>
+                }
+            }
+        </select>
+        <label>@Localizer["reportname"]</label>
+    </div>
+    <div class="col s6 right">
+        <div class="input-field col s6 m4 right">
+            <input id="to" type="text" class="datepicker" />
+            <label for="to">@Localizer["to"]</label>
+        </div>
+        <div class="input-field col s6 m4 right">
+            <input id="from" type="text" class="datepicker" />
+            <label for="from">@Localizer["from"]</label>
+        </div>
+    </div>
+</div>
+
+<div class="row col s12">
+    <button id="generator" class="waves-effect waves-light btn">@Localizer["generate"]</button>
+</div>
+
+<div id="ReportContent" class="row col s12 l8 push-l2"></div>
+
+@section scripts{
+    <script>
+    $(document).ready(function () {
+
+        $('#generator').on("click", function () {
+            let $url = "/Report/" + $('#options').val();
+            let fromelement = document.querySelector('#from');
+            let toelement = document.querySelector('#to');
+            let from = M.Datepicker.getInstance(fromelement);
+            let to = M.Datepicker.getInstance(toelement);
+            let fromdate = [from.date.getFullYear(), from.date.getMonth() + 1, from.date.getDate()];
+            let todate = [to.date.getFullYear(), to.date.getMonth() + 1, to.date.getDate()];
+            let $data = "from=" + fromdate + '&to=' + todate;
+            let func = function (result) {
+                $("#ReportContent").html(result);
+                $('#Graph').removeClass("hide");
+            };
+            AjaxAndFunc($url, func, $data);
+        });
+
+        var options = {
+                cancel: "@Localizer["back"]",
+                clear: "@Localizer["clear"]",
+                done: "@Localizer["done"]",
+                months: [
+                    '@Localizer["january"]',
+                    '@Localizer["february"]',
+                    '@Localizer["march"]',
+                    '@Localizer["april"]',
+                    '@Localizer["may"]',
+                    '@Localizer["june"]',
+                    '@Localizer["july"]',
+                    '@Localizer["august"]',
+                    '@Localizer["september"]',
+                    '@Localizer["october"]',
+                    '@Localizer["november"]',
+                    '@Localizer["december"]'],
+                monthsShort: [
+                    '@Localizer["jan"]',
+                    '@Localizer["feb"]',
+                    '@Localizer["mar"]',
+                    '@Localizer["apr"]',
+                    '@Localizer["may"]',
+                    '@Localizer["jun"]',
+                    '@Localizer["jul"]',
+                    '@Localizer["aug"]',
+                    '@Localizer["sep"]',
+                    '@Localizer["oct"]',
+                    '@Localizer["nov"]',
+                    '@Localizer["dec"]'
+                ],
+                weekdays: [
+                    '@Localizer["sunday"]',
+                    '@Localizer["monday"]',
+                    '@Localizer["tuesday"]',
+                    '@Localizer["wednesday"]',
+                    '@Localizer["thursday"]',
+                    '@Localizer["friday"]',
+                    '@Localizer["saturday"]'
+                ],
+                weekdaysShort: [
+                    '@Localizer["sun"]',
+                    '@Localizer["mon"]',
+                    '@Localizer["tue"]',
+                    '@Localizer["wed"]',
+                    '@Localizer["thi"]',
+                    '@Localizer["fri"]',
+                    '@Localizer["sat"]'
+                ]
+        }
+
+        var parts = '@Model.MinDateTime'.split(".");
+        $("#from").datepicker({
+            i18n: options,
+            defaultDate: new Date(parts[0],parts[1] - 1,parts[2]),
+            setDefaultDate: true
+        });
+        let today = new Date();
+        parts = [today.getFullYear(), today.getMonth(), today.getDate()];
+        $("#to").datepicker({
+            i18n: options,
+            defaultDate: new Date(parts[0],parts[1], parts[2]),
+            setDefaultDate: true
+        });
+    });
+    </script>
+}
