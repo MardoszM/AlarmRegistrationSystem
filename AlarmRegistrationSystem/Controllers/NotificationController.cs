@@ -68,6 +68,10 @@ namespace AlarmRegistrationSystem.Controllers
             }
             else
             {
+                ModelState.Remove("notification.notificationId");
+                ModelState.Remove("notification.CreationDate");
+                ModelState.Remove("notification.State");
+
                 if (ModelState.IsValid)
                 {
                     notification.CreationDate = DateTime.Now;
@@ -100,7 +104,12 @@ namespace AlarmRegistrationSystem.Controllers
             {
                 model.Notification = notificationRepository.Notifications
                     .FirstOrDefault(n => n.NotificationID == notificationID);
-                
+
+                if(model?.Notification == null)
+                {
+                    return NotFound();
+                }
+
                 model.MachineLocation = machineRepository.Machines
                     .Where(m => m.MachineUniqueId == model.Notification.MachineUniqueID)
                     .Select(m => m.Location).SingleOrDefault();
@@ -142,16 +151,9 @@ namespace AlarmRegistrationSystem.Controllers
                         break;
                     }
                 }
-                model.Descriptions = model.Descriptions.Take(howmany).ToList();
+                model.Descriptions = model.Descriptions?.Take(howmany).ToList();
             }
-                if (model != null && model.Notification != null && model.MachineLocation != null && model.Descriptions != null)
-            {
                 return View(model);
-            }
-            else
-            {
-                return NotFound();
-            }
         }
         public IActionResult AddDescription(int notificationId, int descriptionId)
         {
@@ -241,11 +243,21 @@ namespace AlarmRegistrationSystem.Controllers
                                 suma += desc;
                                 if (suma > 1500 || ile > 3)
                                 {
+                                    if (Request.IsAjaxRequest())
+                                    {
+                                        return Json(false);
+                                    }
                                     //wyswietlenie dokumentacji ostatnia strona
                                     return RedirectToAction("Index", "Home");
                                 }
                             }
                             int notificationId = description.NotificationID;
+                            if (Request.IsAjaxRequest())
+                            {
+                                DisplayNotificationViewModel model = new DisplayNotificationViewModel() { };
+                                model.Descriptions = notificationRepository.Descriptions.Where(d => d.NotificationID == notificationId).Take(3).ToList();
+                                return View("Partial/Description", model);
+                            }
                             return RedirectToAction("DisplayNotification", "Notification", new { notificationId = notificationId });
                         }
                     }
@@ -320,11 +332,44 @@ namespace AlarmRegistrationSystem.Controllers
         {
             try
             {
-                Notification notification = notificationRepository.Notifications.FirstOrDefault(n => n.NotificationID == notificationId);
-                if (notification != null && state != null)
+                int partsNb = notificationRepository.NotificationEs.Where(nes => nes.NotificationId == notificationId).Count();
+                if (partsNb > 0)
                 {
-                    notification.State = Enum.Parse<NotificationStates>(state);
-                    notificationRepository.SaveNotification(notification);
+                    if(!Enum.IsDefined(typeof(NotificationStates), Enum.Parse<NotificationStates>(state)))
+                    {
+                        SendErrorToCaller(localizer["unexpectederror"]);
+                    }
+                    Notification notification = notificationRepository.Notifications.FirstOrDefault(n => n.NotificationID == notificationId);
+                    if (notification != null && state != null)
+                    {
+                        if (Enum.Parse<NotificationStates>(state) == NotificationStates.Finish)
+                        {
+                            if(notification.State == NotificationStates.On_hold)
+                            {
+                                SendMessageToCaller(localizer["cantsetfinishwhenonhold"]);
+                                return;
+                            }
+                            notification.EndTime = DateTime.Now;
+                        }
+                        else if(Enum.Parse<NotificationStates>(state) == NotificationStates.On_hold)
+                        {
+                            Brake brake = new Brake() { NotificationId = notificationId, From = DateTime.Now };
+                            notificationRepository.SaveBrake(brake);
+                        }
+
+                        if (notification.State == NotificationStates.On_hold)
+                        {
+                            Brake brake = notificationRepository.Brakes
+                                .FirstOrDefault(b => b.NotificationId == notificationId && b.To == default(DateTime));
+                            brake.To = DateTime.Now;
+                        }
+                        notification.State = Enum.Parse<NotificationStates>(state);
+                        notificationRepository.SaveNotification(notification);
+                    }
+                }
+                else
+                {
+                    SendErrorToCaller(localizer["switchrequirebrokenpart"]);
                 }
             }
             catch(Exception ex)

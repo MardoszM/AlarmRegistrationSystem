@@ -99,14 +99,22 @@ namespace AlarmRegistrationSystem.Infrastructure
 
         public static string GetControllerFromPath(this string path)
         {
-            string controller = path.Split('/')[1];
+            if(path.First() == '/')
+            {
+                path = path.Remove(0,1);
+            }
+            string controller = path.Split('/')[0];
             return controller;
         }
 
         public static string GetActionFromPath(this string path)
         {
-            string controller = path.Split('/').Last();
-            return controller;
+            if (path.First() == '/')
+            {
+                path = path.Remove(0,1);
+            }
+            string action = path.Split('/')[1];
+            return action;
         }
     }
 }
