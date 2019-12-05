@@ -27,15 +27,14 @@ namespace AlarmRegistrationSystem.Controllers
             this.repository = repository;
         }
 
-        private ListViewModel<Machine> RepositoryFilter(string state, string searchText, string currentPage)
+        private ListViewModel<Machine> RepositoryFilter(string state, string searchText, string currentPage = "1")
         {
             IQueryable<Machine> repo;
             PagingInfo PageModel;
             try
             {
-                repo = repository.Machines;
-
             int currPage;
+            int count = repository.Machines.Count();
             if (!Int32.TryParse(currentPage, out currPage))
             {
                 currPage = 1;
@@ -43,30 +42,46 @@ namespace AlarmRegistrationSystem.Controllers
 
             if (searchText != null)
             {
-                repo = repo.Where(m =>
-                m.Brand.IsStringContains(searchText) ||
-                m.Location.IsStringContains(searchText) ||
-                m.MachineUniqueId.IsStringContains(searchText) ||
-                m.Model.IsStringContains(searchText));
-                currPage = 1;
+                    repo = (from m in repository.Machines
+                            where m.Brand.IsStringContains(searchText) ||
+                            m.Location.IsStringContains(searchText) ||
+                            m.MachineUniqueId.IsStringContains(searchText) ||
+                            m.Model.IsStringContains(searchText)
+                            select m)
+                            .Skip((currPage - 1) * pageSize)
+                            .Take(pageSize);
+                    count = (from m in repository.Machines
+                                 where m.Brand.IsStringContains(searchText) ||
+                                 m.Location.IsStringContains(searchText) ||
+                                 m.MachineUniqueId.IsStringContains(searchText) ||
+                                 m.Model.IsStringContains(searchText)
+                                 select m).Count();
+                    if((currPage * pageSize) > count)
+                    {
+                        currPage = 1;
+                    }
             }
 
             if (state != "" && state != null)
             {
                 state = char.ToUpper(state[0]) + state.Substring(1);
                 bool value = Boolean.Parse(state);
-                repo = repo.Where(m => m.State == value);
-                currPage = 1;
+                repo = repository.Machines.Where(m => m.State == value);
+                count = repository.Machines.Where(m => m.State == value).Count();
+                if ((currPage * pageSize) > count)
+                {
+                    currPage = 1;
+                }
             }
 
             PageModel = new PagingInfo()
             {
                 CurrentPage = currPage,
                 ItemsPerPage = pageSize,
-                TotalItems = repo.Count()
+                TotalItems = count
             };
 
-            repo = repo
+            repo = repository.Machines
                 .OrderBy(m => m.MachineID)
                 .Skip((currPage - 1) * pageSize)
                 .Take(pageSize);

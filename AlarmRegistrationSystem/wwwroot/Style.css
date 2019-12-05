@@ -123,7 +123,7 @@ input[type="text"] + label {
 }
 
 .no-padding-right{
-    padding-left:unset !important;
+    padding-right:unset !important;
 }
 
 .no-padding-sides{
@@ -168,6 +168,14 @@ input[type="text"] + label {
 
 .canvasjs-chart-credit{
     display:none;
+}
+
+.margin-top1{
+    margin-top: 1rem;
+}
+
+.margin-top2{
+    margin-top: 2rem;
 }
 @media only screen and (min-width: 993px) {
     .log-justify {

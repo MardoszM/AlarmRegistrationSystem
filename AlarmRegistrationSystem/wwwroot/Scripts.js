@@ -4,6 +4,49 @@
     return key ? p[key] : p;
 }
 
+function setUrlParam(url, keyParam, valueParam) {
+    var key = encodeURIComponent(keyParam),
+        value = encodeURIComponent(valueParam);
+
+    var baseUrl = url.split('?')[0],
+        newParam = key + '=' + value,
+        params = '?' + newParam;
+
+    if (url.split('?')[1] === undefined) {
+        urlQueryString = '';
+    } else {
+        urlQueryString = '?' + url.split('?')[1];
+    }
+
+    if (urlQueryString) {
+        var updateRegex = new RegExp('([\?&])' + key + '[^&]*');
+        var removeRegex = new RegExp('([\?&])' + key + '=[^&;]+[&;]?');
+
+        if (value === undefined || value === null ) {
+            params = urlQueryString.replace(removeRegex, "$1");
+            params = params.replace(/[&;]$/, "");
+
+        } else if (urlQueryString.match(updateRegex) !== null) {
+            params = urlQueryString.replace(updateRegex, "$1" + newParam);
+ 
+        } else if (urlQueryString === '') {
+            params = '?' + newParam;
+        } else {
+            params = urlQueryString + '&' + newParam;
+        }
+    }
+
+    params = params === '?' ? '' : params;
+
+    return baseUrl + params;
+}
+
+function updateUrlQuery(key, value) {
+    url = location.search;
+    let url2 = setUrlParam(url, key, value);
+    window.history.pushState({ path: url2 }, '', url2);
+}
+
 var delay = (function () {
     var timer = 0;
     return function (callback, ms) {
@@ -13,16 +56,28 @@ var delay = (function () {
 })();
 
 function searchActivator(formid) {
-    $(document).on('change', '.search-form select, .search-form input', function () {
-        console.log("a");
+    $(document).on('change', '.search-form select[class=askActive]', function () {
         var $container = $(this).closest('form').data('container');
-        sendForm($container, formid);
+        var func = function () {
+            updateUrlQuery("searchRole", $(".search-form").find("#StateOption option:selected").val());
+        };
+        sendForm($container, formid, func);
     });
-    $(document).on('keyup', '.search-form input',function () {
+    $(document).on('change', '.search-form input[class*=askActive]', function () {
+        var $container = $(this).closest('form').data('container');
+        var func = function () {
+            updateUrlQuery("currentPage", $("#CurrentPage").attr("value"));
+        };
+        sendForm($container, formid, func);
+    });
+    $(document).on('keyup', '.search-form input[class*=askActive]', function () {
         var obj = this;
+        var func = function () {
+            updateUrlQuery("searchText", $(".search-form").find("input[id*=search]").val());
+        };
         delay(function () {
             var $container = $(obj).closest('form').data('container');
-            sendForm($container, formid);
+            sendForm($container, formid, func);
         }, 250);
     });
 }
@@ -32,7 +87,7 @@ function sendForm(container, formid,func = null) {
     var $url = $form.attr('action');
     var $data = $form.serialize();
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         data: $data,
         url: $url,
         success: function (result) {
@@ -42,9 +97,25 @@ function sendForm(container, formid,func = null) {
     });
 }
 
+function sendFormPOST(container, formid, func = null) {
+    var $form = $('#' + formid);
+    var $url = $form.attr('action');
+    var $data = $form.serialize();
+    $.ajax({
+        type: 'POST',
+        data: $data,
+        url: $url,
+        success: function (result) {
+            if (func !== null) { func(); }
+            $('#' + container).html(result);
+        }
+    });
+}
+
 function changeCurrentPage(obj) {
     var page = $(obj).attr("value");
     $('#CurrentPage').attr("value", page).trigger("change");
+    updateUrlQuery("currentPage", page);
 }
 
 function deleteActivator(obj, action) {
@@ -58,7 +129,7 @@ function deleteActivator(obj, action) {
     var func = (function () {
         $('#' + mainForm).attr('action', oldAction);
     });
-    sendForm(container, mainForm, func);
+    sendFormPOST(container, mainForm, func);
 }
 
 function passAttr(trigger, args) {
@@ -81,6 +152,19 @@ function AjaxAndFunc($url, func, $data) {
         success: function (result) {
             if (func !== null)
             {
+                func(result);
+            }
+        }
+    });
+}
+
+function AjaxAndFuncGET($url, func, $data) {
+    $.ajax({
+        type: 'GET',
+        url: $url,
+        data: $data,
+        success: function (result) {
+            if (func !== null) {
                 func(result);
             }
         }
@@ -180,7 +264,6 @@ function ChangeButtonValues(id1, id2) {
 function InitSignalR() {
     var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
     connection.on("ReceiveMessage", function (user, message) {
-        console.log(message[0]);
         if (message[0] === "Message") {
             M.toast({ html: message[1], classes: "teal darken-3", displayLength: 2500 });
         }
@@ -205,4 +288,12 @@ function Translate(text) {
         async: false
     }).responseText;
     return translation;
+}
+
+function randomRgba(opacity) {
+    let a = Math.floor((Math.random() * 255) + 1);
+    let b = Math.floor((Math.random() * 255) + 1);
+    let c = Math.floor((Math.random() * 255) + 1);
+    let array = ["rgba(" + a + ", " + b + ", " + c + ", " + opacity + ")", "rgba(" + a + ", " + b + ", " + c + ", 1)"];
+    return array;
 }

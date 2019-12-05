@@ -1,29 +1,111 @@
 ﻿@model Models.ViewModels.GraphDataViewModel
+@if (Model.GraphData.Count == 0)
+{
+    <div class="row col s12 center">
+        <h3 class="red-text text-darken-3">@Localizer["noenoughtdatatogeneratereport"]</h3>
+    </div>
+}
+else
+{
+    <canvas id="myChart"></canvas>
 
-<div id="Graph" class="row col l8 push-l2 hide" style="height: 30rem;"></div>
-
-<table class="responsive-table">
-    <thead>
-        <tr>
-            <th>@Model.ObjectName</th>
-            <th>@Model.Value</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.GraphData.Count == 0)
-        {
-        <tr>
-            <td class="center red-text text-darken-2 text-bold" colspan="2">@Localizer["noenoughtdata"]</td>
-        </tr>
-    }
-        @foreach (var item in Model.GraphData)
-        {
+    <table id="tablepdf" class="responsive-table margin-top2" style="background-color:white;">
+        <thead>
             <tr>
-                <td>@item.Name</td>
-                <td>@item.Quantity</td>
+                <th class="center">@Model.ObjectName</th>
+                <th class="center">@Model.Value</th>
+                @if (Model.GraphData.Any(d => d.WorstSubassemblies != null))
+                {
+                    <th class="center">@Model.Extra</th>
+                }
             </tr>
-        }
+        </thead>
+        <tbody>
+            @if (Model.GraphData.Count == 0)
+            {
+                <tr>
+                    <td class="center red-text text-darken-2 text-bold" colspan="2">@Localizer["noenoughtdata"]</td>
+                </tr>
+            }
+            @foreach (var item in Model.GraphData)
+            {
+                <tr>
+                    <td class="center text-bold"><a class="teal-text" href="@(Model.DocumentationURL + item.Name)">@item.Name</a></td>
+                    <td class="center">@item.Quantity</td>
+                    @if (Model.GraphData.Any(d => d.WorstSubassemblies != null))
+                    {
+                        <td class="center">@item.WorstSubassemblies</td>
+                    }
+                </tr>
+            }
         </tbody>
     </table>
 
+    <div class="row col s12 right-align no-padding-right margin-top1">
+        <button id="export" class="waves-effect waves-light btn grey lighten-1"><i class="fas fa-download"></i></button>
+    </div>
+}
 
+<script type="text/javascript" src="~/lib/node_modules/chart.js/dist/Chart.min.js"></script>
+<script type="text/javascript" src="~/lib/jsPDF-1.3.2/dist/jspdf.min.js"></script>
+<script src="~/lib/jsPDF-1.3.2/dist/jspdf.plugin.autotable.min.js"></script>
+<script>
+    $("td:contains('@Localizer["noenoughtdata"]')").addClass("red-text");
+
+    $("#export").on("click", function () {
+        var canvas = $('#myChart').get(0);
+        var graph = canvas.toDataURL('image/png', 1.0);
+        var pdf = new jsPDF('l', 'mm', 'a4', true);
+        pdf.addImage(graph, 'png', 10, 10, 280, 180);
+        pdf.addPage();
+        pdf.setPage(2);
+        pdf.autoTable({ html: '#tablepdf' });
+        pdf.save('Report.pdf');
+    });
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var trueLabels = JSON.parse('@Html.Raw(Json.Serialize(Model.GraphData.Select(d => d.Name).ToArray()))');
+    var trueDatas = JSON.parse('@Html.Raw(Json.Serialize(Model.GraphData.Select(d => d.Quantity).ToArray()))');
+    var backgroundcolors = [];
+    var bordercolors = [];
+    for (i = 0; i < trueLabels.length; i++) {
+        array = randomRgba("0.7");
+        backgroundcolors[i] = array[0];
+        bordercolors[i] = array[1];
+    }
+    var title = '@Model.Title';
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: trueLabels,
+                datasets: [{
+                    label: '# @Model.Unit',
+                    data: trueDatas,
+                    backgroundColor: backgroundcolors,
+                    borderColor: bordercolors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: title
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            },
+            plugins: {
+                beforeDraw: function (chart, easing) {
+                    var ctx = chart.ctx;
+                    ctx.save();
+                    ctx.fillStyle = "rgba(255,255,255)";
+                    ctx.fillRect(0, 0, chart.width, chart.height);
+                    ctx.restore();
+                }
+            }
+        });
+</script>

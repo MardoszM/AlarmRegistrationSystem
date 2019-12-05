@@ -82,7 +82,7 @@ namespace AlarmRegistrationSystem.Infrastructure
 
                 for(int i = start; i <= end; i++)
                 {
-                    if (i <= PageModel.TotalPages)
+                    if (i <= PageModel.TotalPages && i >= 1)
                     {
                         if (i == PageModel.CurrentPage)
                         {

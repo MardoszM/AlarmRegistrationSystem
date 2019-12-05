@@ -45,9 +45,9 @@ namespace AlarmRegistrationSystem.Models
 
     }
 
-    public class Brake
+    public class JoiningPeriod
     {
-        public int brakeId { get; set; }
+        public int JoiningPeriodId { get; set; }
 
         public int NotificationId { get; set; }
 

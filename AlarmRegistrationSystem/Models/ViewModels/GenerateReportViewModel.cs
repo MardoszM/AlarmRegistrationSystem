@@ -8,6 +8,5 @@ namespace AlarmRegistrationSystem.Models.ViewModels
     public class GenerateReportViewModel
     {
         public string MinDateTime { get; set; }
-        public List<string[]> Methods = new List<string[]>();
     }
 }

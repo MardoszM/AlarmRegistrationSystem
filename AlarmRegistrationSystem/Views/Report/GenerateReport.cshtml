@@ -1,27 +1,26 @@
-﻿@model Models.ViewModels.GenerateReportViewModel
+﻿@model string
 @{
     ViewData["Title"] = Localizer["generatereport"];
     Layout = "_Layout";
 }
 
 <div class="row col s12 m10 l8 push-l2 push-m1">
-    <div class="col s6 m4 input-field">
+    <div class="col s12 m5 input-field">
         <select id="options" class="col s6">
-            @foreach (var option in Model.Methods)
-            {
-                @if (Model.Methods.First() == option)
-                {
-                    <option value="@option[0]" selected>@option[1]</option>
-                }
-                else
-                {
-                    <option value="@option[0]">@option[1]</option>
-                }
-            }
+            <optgroup label="@Localizer["machines"]">
+                <option value="MachineAllReport" selected>@Localizer["machineallreport"]</option>
+                <option value="MachineBrandReport">@Localizer["machinebrandreport"]</option>
+                <option value="MachineBrandModelReport">@Localizer["machinebrandmodelreport"]</option>
+            </optgroup>
+            <optgroup label="@Localizer["users"]">
+                <option value="MechanicsNotificationsQuantityReport">@Localizer["mechanicsquantityreport"]</option>
+                <option value="MechanicsAverageEndTimeReport">@Localizer["mechanicsaveragetimereport"]</option>
+                <option value="EmployeesNotificationsQuantityReport">@Localizer["employeesquantityreport"]</option>
+            </optgroup>
         </select>
         <label>@Localizer["reportname"]</label>
     </div>
-    <div class="col s6 right">
+    <div class="col s12 m6 right">
         <div class="input-field col s6 m4 right">
             <input id="to" type="text" class="datepicker" />
             <label for="to">@Localizer["to"]</label>
@@ -44,6 +43,7 @@
     $(document).ready(function () {
 
         $('#generator').on("click", function () {
+            $("#myChart").empty();
             let $url = "/Report/" + $('#options').val();
             let fromelement = document.querySelector('#from');
             let toelement = document.querySelector('#to');
@@ -54,9 +54,13 @@
             let $data = "from=" + fromdate + '&to=' + todate;
             let func = function (result) {
                 $("#ReportContent").html(result);
-                $('#Graph').removeClass("hide");
+                $('#generator').addClass("hide");
             };
             AjaxAndFunc($url, func, $data);
+        });
+
+        $("#options, #from, #to").on("change", function () {
+            $("#generator").removeClass("hide");
         });
 
         var options = {
@@ -81,7 +85,7 @@
                     '@Localizer["feb"]',
                     '@Localizer["mar"]',
                     '@Localizer["apr"]',
-                    '@Localizer["may"]',
+                    '@Localizer["mays"]',
                     '@Localizer["jun"]',
                     '@Localizer["jul"]',
                     '@Localizer["aug"]',
@@ -104,13 +108,22 @@
                     '@Localizer["mon"]',
                     '@Localizer["tue"]',
                     '@Localizer["wed"]',
-                    '@Localizer["thi"]',
+                    '@Localizer["thu"]',
                     '@Localizer["fri"]',
                     '@Localizer["sat"]'
+                ],
+                weekdaysAbbrev: [
+                    '@Localizer["sday"]',
+                    '@Localizer["mday"]',
+                    '@Localizer["tuday"]',
+                    '@Localizer["wday"]',
+                    '@Localizer["tday"]',
+                    '@Localizer["fday"]',
+                    '@Localizer["satday"]',
                 ]
         }
 
-        var parts = '@Model.MinDateTime'.split(".");
+        var parts = '@Model'.split(".");
         $("#from").datepicker({
             i18n: options,
             defaultDate: new Date(parts[0],parts[1] - 1,parts[2]),

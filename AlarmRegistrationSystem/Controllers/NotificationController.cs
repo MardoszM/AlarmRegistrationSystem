@@ -353,15 +353,15 @@ namespace AlarmRegistrationSystem.Controllers
                         }
                         else if(Enum.Parse<NotificationStates>(state) == NotificationStates.On_hold)
                         {
-                            Brake brake = new Brake() { NotificationId = notificationId, From = DateTime.Now };
-                            notificationRepository.SaveBrake(brake);
+                            JoiningPeriod period = new JoiningPeriod() { NotificationId = notificationId, From = DateTime.Now };
+                            notificationRepository.SaveJoiningPeriod(period);
                         }
 
                         if (notification.State == NotificationStates.On_hold)
                         {
-                            Brake brake = notificationRepository.Brakes
+                            JoiningPeriod period = notificationRepository.JoiningPeriods
                                 .FirstOrDefault(b => b.NotificationId == notificationId && b.To == default(DateTime));
-                            brake.To = DateTime.Now;
+                            period.To = DateTime.Now;
                         }
                         notification.State = Enum.Parse<NotificationStates>(state);
                         notificationRepository.SaveNotification(notification);
@@ -490,17 +490,30 @@ namespace AlarmRegistrationSystem.Controllers
             int count = 0;
             try
             {
-                subassemblies = notificationRepository.EmergencySubassemblies
-                    .Skip(currentPage - 1)
+                if (searchText != null)
+                {
+                    subassemblies = (from es in notificationRepository.EmergencySubassemblies
+                                     where es.Name.IsStringContains(searchText)
+                                     select es)
+                                    .Skip((currentPage - 1) * subassembliesPageSize)
+                                    .Take(subassembliesPageSize)
+                                    .ToList();
+                    count = (from es in notificationRepository.EmergencySubassemblies
+                             where es.Name.IsStringContains(searchText)
+                             select es).Count();
+                    if(currentPage*subassembliesPageSize > count)
+                    {
+                        currentPage = 1;
+                    }
+                }
+                else
+                {
+                    subassemblies = notificationRepository.EmergencySubassemblies
+                    .Skip((currentPage - 1) * subassembliesPageSize)
                     .Take(subassembliesPageSize)
                     .ToList();
-                if(searchText != null)
-                {
-                    subassemblies = subassemblies
-                        .Where(e => e.Name.IsStringContains(searchText))
-                        .ToList();
+                    count = notificationRepository.EmergencySubassemblies.Count();
                 }
-                count = notificationRepository.EmergencySubassemblies.Count();
             }
             catch(Exception ex)
             {

@@ -18,7 +18,7 @@ namespace AlarmRegistrationSystem.Models
 
         public IQueryable<NotificationES> NotificationEs => context.NotificationEs;
 
-        public IQueryable<Brake> Brakes => context.Brakes;
+        public IQueryable<JoiningPeriod> JoiningPeriods => context.JoiningPeriods;
 
         public EFNotificationRepository(ApplicationDbContext ctx)
         {
@@ -312,23 +312,23 @@ namespace AlarmRegistrationSystem.Models
             return value;
         }
 
-        public Brake DeleteBrake(int brakeId)
+        public JoiningPeriod DeleteJoiningPeriod(int joiningPeriodId)
         {
-            Brake brake = null;
+            JoiningPeriod period = null;
             try
             {
-                brake = context.Brakes.FirstOrDefault(b => b.brakeId == brakeId);
+                period = context.JoiningPeriods.FirstOrDefault(j => j.JoiningPeriodId == joiningPeriodId);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
 
-            if (brake != null)
+            if (period != null)
             {
                 try
                 {
-                    context.Brakes.Remove(brake);
+                    context.JoiningPeriods.Remove(period);
                     context.SaveChanges();
                 }
                 catch (Exception ex)
@@ -336,17 +336,17 @@ namespace AlarmRegistrationSystem.Models
                     throw ex;
                 }
             }
-            return brake;
+            return period;
         }
 
-        public bool SaveBrake(Brake brake)
+        public bool SaveJoiningPeriod(JoiningPeriod period)
         {
             bool value = false;
-            if (brake.brakeId == 0)
+            if (period.JoiningPeriodId == 0)
             {
                 try
                 {
-                    context.Brakes.Add(brake);
+                    context.JoiningPeriods.Add(period);
                 }
                 catch (Exception ex)
                 {
@@ -356,20 +356,20 @@ namespace AlarmRegistrationSystem.Models
             }
             else
             {
-                Brake tmpbrake = null;
+                JoiningPeriod tmpperiod = null;
                 try
                 {
-                    tmpbrake = context.Brakes.FirstOrDefault(b => b.brakeId == brake.brakeId);
+                    tmpperiod = context.JoiningPeriods.FirstOrDefault(j => j.JoiningPeriodId == period.JoiningPeriodId);
                 }
                 catch (Exception ex)
                 {
                     throw ex;
                 }
-                if (tmpbrake != null)
+                if (tmpperiod != null)
                 {
-                    tmpbrake.From = brake.From;
-                    tmpbrake.To = brake.To;
-                    tmpbrake.NotificationId = brake.NotificationId;
+                    tmpperiod.From = period.From;
+                    tmpperiod.To = period.To;
+                    tmpperiod.NotificationId = period.NotificationId;
                     value = true;
                 }
             }
