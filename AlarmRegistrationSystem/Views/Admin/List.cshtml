@@ -6,12 +6,12 @@
 
 <div>
     <form id="Form" class="search-form" asp-action="ListMachines" asp-controller="Admin" data-container="MachinesTable">
-        <input id="CurrentPage" name="currentPage" type="hidden" value="1" />
+        <input id="CurrentPage" class="askActive" name="currentPage" type="hidden" value="1" />
         <input id="DeleteId" name="uniqueId" type="hidden" value="" />
         <div class="row col s12 m12 l8 push-l2">
             <div class="col s6 l4">
                 <div class="input-field col s12">
-                    <select id="StateOption" name="state">
+                    <select id="StateOption" class="askActive" name="state">
                         <option value="" selected>@Localizer["all"]</option>
                         <option value="true">@Localizer["active"]</option>
                         <option value="false">@Localizer["inactive"]</option>
@@ -22,7 +22,7 @@
             <div class="col s6 push-l2" style="overflow: hidden;">
                 <div class="input-field ask">
                     <i class="fas fa-search prefix"></i>
-                    <input id="icon_prefix" type="text" class="validate" name="searchText">
+                    <input id="icon_prefix search" type="text" class="askActive validate" name="searchText">
                     <label for="icon_prefix">@Localizer["search"]</label>
                 </div>
             </div>

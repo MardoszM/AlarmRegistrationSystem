@@ -171,6 +171,18 @@
   <data name="all" xml:space="preserve">
     <value>Wszystkie</value>
   </data>
+  <data name="apr" xml:space="preserve">
+    <value>Kw</value>
+  </data>
+  <data name="april" xml:space="preserve">
+    <value>Kwiecień</value>
+  </data>
+  <data name="aug" xml:space="preserve">
+    <value>Sier</value>
+  </data>
+  <data name="august" xml:space="preserve">
+    <value>Sierpień</value>
+  </data>
   <data name="author" xml:space="preserve">
     <value>Autor</value>
   </data>
@@ -201,11 +213,20 @@
   <data name="changepasswordabsolutely" xml:space="preserve">
     <value>Zmien Haslo bezwzględnie</value>
   </data>
+  <data name="clear" xml:space="preserve">
+    <value>Wyczyść</value>
+  </data>
   <data name="currentpassword" xml:space="preserve">
     <value>Obecne Haslo</value>
   </data>
   <data name="database" xml:space="preserve">
     <value>Baza danych jest niedostepna. Skontaktuj sie z administratorem systemu.</value>
+  </data>
+  <data name="dec" xml:space="preserve">
+    <value>Gr</value>
+  </data>
+  <data name="december" xml:space="preserve">
+    <value>Grudzień</value>
   </data>
   <data name="delete" xml:space="preserve">
     <value>Usun</value>
@@ -225,6 +246,9 @@
   <data name="documentationfornotification" xml:space="preserve">
     <value>Dokumentacja dla zgloszenia numer</value>
   </data>
+  <data name="done" xml:space="preserve">
+    <value>Zatwierdź</value>
+  </data>
   <data name="edit" xml:space="preserve">
     <value>Edytuj</value>
   </data>
@@ -242,6 +266,9 @@
   </data>
   <data name="emailtaken" xml:space="preserve">
     <value>Podany adres e-mail jest już zajęty</value>
+  </data>
+  <data name="employeesquantityreport" xml:space="preserve">
+    <value>Raport pracowników względem ilości dodanych zgłoszeń.</value>
   </data>
   <data name="Employes" xml:space="preserve">
     <value>Pracownicy</value>
@@ -288,11 +315,38 @@
   <data name="exchangeparts" xml:space="preserve">
     <value>Zamien odwolania do czesci w zgloszeniach</value>
   </data>
+  <data name="fday" xml:space="preserve">
+    <value>S</value>
+  </data>
+  <data name="feb" xml:space="preserve">
+    <value>Lut</value>
+  </data>
+  <data name="february" xml:space="preserve">
+    <value>Luty</value>
+  </data>
   <data name="finish" xml:space="preserve">
     <value>Zakonczone</value>
   </data>
   <data name="forgotpassword" xml:space="preserve">
     <value>Zapomnialem Hasla</value>
+  </data>
+  <data name="forperiodfrom" xml:space="preserve">
+    <value>za okres od</value>
+  </data>
+  <data name="fri" xml:space="preserve">
+    <value>pt</value>
+  </data>
+  <data name="friday" xml:space="preserve">
+    <value>Piątek</value>
+  </data>
+  <data name="from" xml:space="preserve">
+    <value>od</value>
+  </data>
+  <data name="generate" xml:space="preserve">
+    <value>Wygeneruj</value>
+  </data>
+  <data name="generatereport" xml:space="preserve">
+    <value>Generuj raport</value>
   </data>
   <data name="homepage" xml:space="preserve">
     <value>Strona Domowa</value>
@@ -311,6 +365,24 @@
   </data>
   <data name="isempty" xml:space="preserve">
     <value>jest pusta.</value>
+  </data>
+  <data name="jan" xml:space="preserve">
+    <value>St</value>
+  </data>
+  <data name="january" xml:space="preserve">
+    <value>Styczeń</value>
+  </data>
+  <data name="jul" xml:space="preserve">
+    <value>Lip</value>
+  </data>
+  <data name="july" xml:space="preserve">
+    <value>Lipiec</value>
+  </data>
+  <data name="jun" xml:space="preserve">
+    <value>Cz</value>
+  </data>
+  <data name="june" xml:space="preserve">
+    <value>Czerwiec</value>
   </data>
   <data name="lastmodification" xml:space="preserve">
     <value>Ostatnia modyfikacja</value>
@@ -348,6 +420,15 @@
   <data name="machineadded" xml:space="preserve">
     <value>Maszyna zostala dodana</value>
   </data>
+  <data name="machineallreport" xml:space="preserve">
+    <value>Raport wszystkich maszyn</value>
+  </data>
+  <data name="machinebrandmodelreport" xml:space="preserve">
+    <value>Raport maszyn względem marki i modelu</value>
+  </data>
+  <data name="machinebrandreport" xml:space="preserve">
+    <value>Raport maszyn względem marki</value>
+  </data>
   <data name="machinecode" xml:space="preserve">
     <value>Kod Maszyny</value>
   </data>
@@ -357,11 +438,20 @@
   <data name="machineeddited" xml:space="preserve">
     <value>Maszyna została edytowana</value>
   </data>
+  <data name="machinefailures" xml:space="preserve">
+    <value>Awarie maszyn</value>
+  </data>
   <data name="machineidtaken" xml:space="preserve">
     <value>Maszyna o takim kodzie nie istnieje w systemie</value>
   </data>
   <data name="machinelocation" xml:space="preserve">
     <value>Lokacja maszyny</value>
+  </data>
+  <data name="machinename" xml:space="preserve">
+    <value>Identyfikator maszyny</value>
+  </data>
+  <data name="machines" xml:space="preserve">
+    <value>Maszyny</value>
   </data>
   <data name="machinewasadded" xml:space="preserve">
     <value>Maszyna została dodana</value>
@@ -372,11 +462,41 @@
   <data name="managesubasseblies" xml:space="preserve">
     <value>Zarzadzaj podzespolami</value>
   </data>
+  <data name="mar" xml:space="preserve">
+    <value>Mrz</value>
+  </data>
+  <data name="march" xml:space="preserve">
+    <value>Marzec</value>
+  </data>
+  <data name="may" xml:space="preserve">
+    <value>Maj</value>
+  </data>
+  <data name="mays" xml:space="preserve">
+    <value>Maj</value>
+  </data>
+  <data name="mday" xml:space="preserve">
+    <value>W</value>
+  </data>
   <data name="Mechanics" xml:space="preserve">
     <value>Mechanicy</value>
   </data>
+  <data name="mechanicsaveragetimereport" xml:space="preserve">
+    <value>Raport mechaników względem średnich czasów zakończenia</value>
+  </data>
+  <data name="mechanicsquantityreport" xml:space="preserve">
+    <value>Raport mechaników względem ilości zakończonych zgłoszeń</value>
+  </data>
   <data name="model" xml:space="preserve">
     <value>Model</value>
+  </data>
+  <data name="mon" xml:space="preserve">
+    <value>pon</value>
+  </data>
+  <data name="monday" xml:space="preserve">
+    <value>Poniedziałek</value>
+  </data>
+  <data name="mostemergencysubassemblies" xml:space="preserve">
+    <value>Najbardziej awaryjne części</value>
   </data>
   <data name="name" xml:space="preserve">
     <value>Imie</value>
@@ -393,11 +513,35 @@
   <data name="no" xml:space="preserve">
     <value>Nie</value>
   </data>
+  <data name="noenoughtdata" xml:space="preserve">
+    <value>Zbyt malo danych</value>
+  </data>
+  <data name="noenoughtdatatogeneratereport" xml:space="preserve">
+    <value>Nie ma wystarczającej ilości danych do wygenerowania raportu</value>
+  </data>
   <data name="nomachines" xml:space="preserve">
     <value>Brak Maszyn</value>
   </data>
+  <data name="notificationamount" xml:space="preserve">
+    <value>Liczba zgłoszeń</value>
+  </data>
+  <data name="notifications" xml:space="preserve">
+    <value>zgloszen</value>
+  </data>
   <data name="nousers" xml:space="preserve">
     <value>Brak Uzytkownikow</value>
+  </data>
+  <data name="nov" xml:space="preserve">
+    <value>Lis</value>
+  </data>
+  <data name="november" xml:space="preserve">
+    <value>Listopad</value>
+  </data>
+  <data name="oct" xml:space="preserve">
+    <value>Paź</value>
+  </data>
+  <data name="october" xml:space="preserve">
+    <value>Październik</value>
   </data>
   <data name="on_hold" xml:space="preserve">
     <value>Wstrzymane</value>
@@ -441,11 +585,32 @@
   <data name="reportaccident" xml:space="preserve">
     <value>Zglos awarie</value>
   </data>
+  <data name="reportname" xml:space="preserve">
+    <value>Rodzaj raportu</value>
+  </data>
+  <data name="sat" xml:space="preserve">
+    <value>sob</value>
+  </data>
+  <data name="satday" xml:space="preserve">
+    <value>N</value>
+  </data>
+  <data name="saturday" xml:space="preserve">
+    <value>Sobota</value>
+  </data>
+  <data name="sday" xml:space="preserve">
+    <value>P</value>
+  </data>
   <data name="search" xml:space="preserve">
     <value>Wyszukaj</value>
   </data>
   <data name="secondaryplaceholder" xml:space="preserve">
     <value>Dodaj kolejna czesc</value>
+  </data>
+  <data name="sep" xml:space="preserve">
+    <value>Wrz</value>
+  </data>
+  <data name="september" xml:space="preserve">
+    <value>Wrzesień</value>
   </data>
   <data name="shorterdescriptiontext" xml:space="preserve">
     <value>Opis musi być krotszy</value>
@@ -477,6 +642,12 @@
   <data name="subbassemblynameyouwanttoadd" xml:space="preserve">
     <value>Nazwa czesci</value>
   </data>
+  <data name="sun" xml:space="preserve">
+    <value>nd</value>
+  </data>
+  <data name="sunday" xml:space="preserve">
+    <value>Niedziela</value>
+  </data>
   <data name="surname" xml:space="preserve">
     <value>Nazwisko</value>
   </data>
@@ -485,6 +656,27 @@
   </data>
   <data name="system" xml:space="preserve">
     <value>Wystapil blad systemu. Skontaktuj sie z administratorem systemu.</value>
+  </data>
+  <data name="tday" xml:space="preserve">
+    <value>P</value>
+  </data>
+  <data name="thu" xml:space="preserve">
+    <value>czw</value>
+  </data>
+  <data name="thursday" xml:space="preserve">
+    <value>Czwartek</value>
+  </data>
+  <data name="to" xml:space="preserve">
+    <value>do</value>
+  </data>
+  <data name="tuday" xml:space="preserve">
+    <value>Ś</value>
+  </data>
+  <data name="tue" xml:space="preserve">
+    <value>wt</value>
+  </data>
+  <data name="tuesday" xml:space="preserve">
+    <value>Wtorek</value>
   </data>
   <data name="unabletoaddnotification" xml:space="preserve">
     <value>Nie udalo sie dodac zgloszenia</value>
@@ -519,6 +711,9 @@
   <data name="userpassword" xml:space="preserve">
     <value>Haslo uzytkownika</value>
   </data>
+  <data name="users" xml:space="preserve">
+    <value>Użytkownicy</value>
+  </data>
   <data name="wantdeletedescription" xml:space="preserve">
     <value>Na pewno chcesz usunac komponent dokumentacji z bazy?</value>
   </data>
@@ -533,6 +728,15 @@
   </data>
   <data name="waschanged" xml:space="preserve">
     <value>zostalo zmienione.</value>
+  </data>
+  <data name="wday" xml:space="preserve">
+    <value>C</value>
+  </data>
+  <data name="wed" xml:space="preserve">
+    <value>śr</value>
+  </data>
+  <data name="wednesday" xml:space="preserve">
+    <value>Środa</value>
   </data>
   <data name="whyonhold" xml:space="preserve">
     <value>Prosze wpisac dlaczego zgloszenie zostaje wstrzymane</value>

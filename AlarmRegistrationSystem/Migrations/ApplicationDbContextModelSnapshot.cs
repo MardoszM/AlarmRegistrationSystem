@@ -19,23 +19,6 @@ namespace AlarmRegistrationSystem.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("AlarmRegistrationSystem.Models.Brake", b =>
-                {
-                    b.Property<int>("brakeId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("From");
-
-                    b.Property<int>("NotificationId");
-
-                    b.Property<DateTime>("To");
-
-                    b.HasKey("brakeId");
-
-                    b.ToTable("Brakes");
-                });
-
             modelBuilder.Entity("AlarmRegistrationSystem.Models.Description", b =>
                 {
                     b.Property<int>("DescriptionID")
@@ -68,6 +51,23 @@ namespace AlarmRegistrationSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EmergencySubassemblies");
+                });
+
+            modelBuilder.Entity("AlarmRegistrationSystem.Models.JoiningPeriod", b =>
+                {
+                    b.Property<int>("JoiningPeriodId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("From");
+
+                    b.Property<int>("NotificationId");
+
+                    b.Property<DateTime>("To");
+
+                    b.HasKey("JoiningPeriodId");
+
+                    b.ToTable("JoiningPeriods");
                 });
 
             modelBuilder.Entity("AlarmRegistrationSystem.Models.Machine", b =>

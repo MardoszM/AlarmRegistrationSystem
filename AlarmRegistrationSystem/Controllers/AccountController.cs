@@ -59,16 +59,10 @@ namespace AlarmRegistrationSystem.Controllers
             ListViewModel<UserListViewModel> model = new ListViewModel<UserListViewModel>();
             List<UserListViewModel> tmpRepo = new List<UserListViewModel>();
             int currPage;
+            bool value = true;
+            int count = repository.Count();
             try
             {
-                foreach (var user in repository)
-            {
-                IList<string> result = await userManager.GetRolesAsync(user);
-               
-                string role = result[0];
-                role = localizer[role];
-                tmpRepo.Add(new UserListViewModel() { User = user, Role = role, Id = user.Id });
-            }
 
             if (!Int32.TryParse(currentPage, out currPage))
             {
@@ -77,33 +71,76 @@ namespace AlarmRegistrationSystem.Controllers
 
             if(searchText != null)
             {
-                tmpRepo = tmpRepo
-                    .Where(u =>
-                (u.User.FirstName + u.User.SecondName).IsStringContains(searchText.Replace(" ", "")) ||
-                u.User.UserName.IsStringContains(searchText) ||
-                u.User.Email.IsStringContains(searchText)
-                ).ToList();
-                currPage = 1;
-            }
-            if(searchRole != null)
-            {
-                searchRole = localizer[searchRole];
-            }
-            else
-            {
-                searchRole = "";
-            }
-            if (searchRole != "" && searchRole != null)
-            {
-                tmpRepo = tmpRepo.Where(u => u.Role == searchRole).ToList();
-                currPage = 1;
+                    value = false;
+                List<AppUser> users = (from u in repository
+                            where (u.FirstName + u.SecondName).IsStringContains(searchText) ||
+                            u.UserName.IsStringContains(searchText) ||
+                            u.Email.IsStringContains(searchText)
+                            select u)
+                            .Skip((currPage - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToList();
+                foreach(var user in users)
+                {
+                    IList<string> result = await userManager.GetRolesAsync(user);
+                    string role = result[0];
+                    role = localizer[role];
+                    tmpRepo.Add(new UserListViewModel() { User = user, Role = role, Id = user.Id });
+                }
+                count = (from u in repository
+                            where (u.FirstName + u.SecondName).IsStringContains(searchText) ||
+                            u.UserName.IsStringContains(searchText) ||
+                            u.Email.IsStringContains(searchText)
+                            select u).Count();
+                if(currPage * pageSize > count)
+                {
+                    currPage = 1;
+                }
             }
 
-            model.PagingInfo = new PagingInfo() { CurrentPage = currPage, ItemsPerPage = pageSize, TotalItems = tmpRepo.Count() };
-            model.Objects = tmpRepo
-                .OrderBy(m => m.Id)
-                .Skip((currPage - 1) * pageSize)
-                .Take(pageSize);
+            if (searchRole != null)
+            {
+                    value = false;
+                var users = await userManager.GetUsersInRoleAsync(searchRole);
+                    count = users.Count();
+                    users = users
+                        .Skip((currPage - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToList();
+                foreach (var user in users)
+                {
+                    IList<string> result = await userManager.GetRolesAsync(user);
+                    string role = result[0];
+                    role = localizer[role];
+                    tmpRepo.Add(new UserListViewModel() { User = user, Role = role, Id = user.Id });
+                }
+                if (currPage * pageSize > count)
+                {
+                    currPage = 1;
+                }
+            }
+
+            if(value)
+            {
+                    var users = repository
+                        .OrderBy(u => u.Id)
+                        .Skip((currPage - 1) * pageSize)
+                        .Take(pageSize);
+                    foreach(var user in users)
+                    {
+                        IList<string> result = await userManager.GetRolesAsync(user);
+                        string role = result[0];
+                        role = localizer[role];
+                        tmpRepo.Add(new UserListViewModel() { User = user, Role = role, Id = user.Id });
+                    }
+            }
+            if((currPage - 1) * pageSize > count)
+                {
+                    currPage = 1;
+                }
+
+            model.PagingInfo = new PagingInfo() { CurrentPage = currPage, ItemsPerPage = pageSize, TotalItems = count };
+                model.Objects = tmpRepo;
             }
             catch (Exception ex)
             {
